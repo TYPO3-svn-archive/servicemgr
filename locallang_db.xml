@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Language labels for database tables/fields belonging to extension 'servicemgr'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="tx_servicemgr_events">Events</label>
+			<label index="tx_servicemgr_events.datetime">Date &amp; Time</label>
+			<label index="tx_servicemgr_events.subject">Subject</label>
+			<label index="tx_servicemgr_events.public">Public?</label>
+			<label index="tx_servicemgr_events.series">Series</label>
+			<label index="tx_servicemgr_events.tags">Tags</label>
+			<label index="tx_servicemgr_events.requiredteams">Required teams</label>
+			<label index="tx_servicemgr_events.documents">Documents</label>
+			<label index="tx_servicemgr_events.notes">Notes</label>
+			<label index="tx_servicemgr_series">Series</label>
+			<label index="tx_servicemgr_series.name">Name</label>
+			<label index="tx_servicemgr_tags">Tags</label>
+			<label index="tx_servicemgr_tags.name">Name</label>
+			<label index="tx_servicemgr_tags.parrent">Parrent Tag</label>
+			<label index="tx_servicemgr_teamtype">Team Categorys</label>
+			<label index="tx_servicemgr_teamtype.name">Name</label>
+			<label index="tx_servicemgr_dutyschedule">Duty schedule</label>
+			<label index="tx_servicemgr_dutyschedule.event">Event</label>
+			<label index="tx_servicemgr_statistics">Statistics</label>
+			<label index="tx_servicemgr_statistics.recordid">Record id</label>
+			<label index="tx_servicemgr_statistics.type.I.0">Main</label>
+			<label index="tx_servicemgr_statistics.type.I.1">Sermon</label>
+			<label index="tx_servicemgr_statistics.type.I.2">document</label>
+			<label index="tx_servicemgr_statistics.type">type</label>
+			<label index="tx_servicemgr_statistics.hit">hit</label>
+			<label index="tx_servicemgr_sermons">Sermons</label>
+			<label index="tx_servicemgr_sermons.event">Event</label>
+			<label index="tx_servicemgr_sermons.title">Title</label>
+			<label index="tx_servicemgr_sermons.file">File</label>
+			<label index="tx_servicemgr_sermons.filedate">Upload date</label>
+			<label index="tx_servicemgr_sermons.playtime">Playtime</label>
+			<label index="tx_servicemgr_sermons.filesize">Filesize</label>
+			<label index="tx_servicemgr_sermons.bitrate">Bitrate</label>
+			<label index="tx_servicemgr_sermons.album">Album/Series</label>
+			<label index="fe_users.tx_servicemgr_image">Image</label>
+			<label index="fe_users.tx_servicemgr_description">Description</label>
+			<label index="fe_groups.tx_servicemgr_leaders">leader(s)</label>
+			<label index="fe_groups.tx_servicemgr_categroy">Category</label>
+			<label index="fe_groups.tx_servicemgr_isteam">is team?</label>
+			<label index="fe_groups.tx_servicemgr_dutyschedule">in Dutyschedule?</label>
+			<label index="fe_groups.tx_servicemgr_image">Image</label>
+			<label index="fe_groups.tx_servicemgr_description">Description</label>
+			<label index="fe_groups.tx_servicemgr_asteaminschedule">As one team in duty schedule?</label>
+			<label index="tt_content.list_type_eventpreview">Event preview</label>
+			<label index="tt_content.list_type_pi2">Sermon archive</label>
+			<label index="tt_content.list_type_pi3">Sermon administration</label>
+			<label index="tt_content.list_type_pi4">Teams</label>
+			<label index="tt_content.list_type_pi5">Duty schedule</label>
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="tx_servicemgr_events">Veranstaltungen</label>
+			<label index="tx_servicemgr_events.datetime">Datum und Uhrzeit</label>
+			<label index="tx_servicemgr_events.subject">Thema</label>
+			<label index="tx_servicemgr_events.public">Öffentlich?</label>
+			<label index="tx_servicemgr_events.series">Serie</label>
+			<label index="tx_servicemgr_events.tags">Tags</label>
+			<label index="tx_servicemgr_events.requiredteams">beteiligte Teams</label>
+			<label index="tx_servicemgr_events.documents">Dokumente</label>
+			<label index="tx_servicemgr_events.notes">Bemerkungen</label>
+			<label index="tx_servicemgr_series">Serien</label>
+			<label index="tx_servicemgr_series.name">Name</label>
+			<label index="tx_servicemgr_tags">Tags</label>
+			<label index="tx_servicemgr_tags.name">Name</label>
+			<label index="tx_servicemgr_tags.parrent">Übergeordnetes Tag</label>
+			<label index="tx_servicemgr_teamtype">Team-Kategorien</label>
+			<label index="tx_servicemgr_teamtype.name">Name</label>
+			<label index="tx_servicemgr_dutyschedule">Dienstplan</label>
+			<label index="tx_servicemgr_dutyschedule.event">Veranstaltung</label>
+			<label index="tx_servicemgr_statistics">Statistiken</label>
+			<label index="tx_servicemgr_statistics.recordid">Element-ID</label>
+			<label index="tx_servicemgr_statistics.type.I.0">Hauptelement</label>
+			<label index="tx_servicemgr_statistics.type.I.1">Predigt</label>
+			<label index="tx_servicemgr_statistics.type.I.2">Document</label>
+			<label index="tx_servicemgr_statistics.type">Typ</label>
+			<label index="tx_servicemgr_statistics.hit">Hit</label>
+			<label index="tx_servicemgr_sermons">Predigten</label>
+			<label index="tx_servicemgr_sermons.event">Veranstaltung</label>
+			<label index="tx_servicemgr_sermons.title">Titel</label>
+			<label index="tx_servicemgr_sermons.file">Datei</label>
+			<label index="tx_servicemgr_sermons.filedate">Upload Datum</label>
+			<label index="tx_servicemgr_sermons.playtime">Dauer</label>
+			<label index="tx_servicemgr_sermons.filesize">Dateigröße</label>
+			<label index="tx_servicemgr_sermons.bitrate">Bitrate</label>
+			<label index="tx_servicemgr_sermons.album">Album/Serie</label>
+			<label index="fe_users.tx_servicemgr_image">Bild</label>
+			<label index="fe_users.tx_servicemgr_description">Beschreibung</label>
+			<label index="fe_groups.tx_servicemgr_leaders">Leiter</label>
+			<label index="fe_groups.tx_servicemgr_categroy">Kategorie</label>
+			<label index="fe_groups.tx_servicemgr_isteam">Team?</label>
+			<label index="fe_groups.tx_servicemgr_dutyschedule">im Dienstplan?</label>
+			<label index="fe_groups.tx_servicemgr_image">Bild</label>
+			<label index="fe_groups.tx_servicemgr_description">Beschreibung</label>
+			<label index="fe_groups.tx_servicemgr_asteaminschedule">Als ein Team im Dienstplan?</label>
+			<label index="tt_content.list_type_eventpreview">Programmvorschau</label>
+			<label index="tt_content.list_type_pi2">Predigtarchiv</label>
+			<label index="tt_content.list_type_pi3">Predigt-Verwaltung</label>
+			<label index="tt_content.list_type_pi4">Teams</label>
+			<label index="tt_content.list_type_pi5">Dienstplan</label>
+		</languageKey>
+	</data>
+</T3locallang>
