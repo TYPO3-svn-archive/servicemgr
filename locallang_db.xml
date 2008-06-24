@@ -38,6 +38,7 @@
 			<label index="tx_servicemgr_sermons.filedate">Upload date</label>
 			<label index="tx_servicemgr_sermons.playtime">Playtime</label>
 			<label index="tx_servicemgr_sermons.filesize">Filesize</label>
+			<label index="tx_servicemgr_sermons.mimetype">MIME type</label>
 			<label index="tx_servicemgr_sermons.bitrate">Bitrate</label>
 			<label index="tx_servicemgr_sermons.album">Album/Series</label>
 			<label index="fe_users.tx_servicemgr_image">Image</label>
@@ -88,6 +89,7 @@
 			<label index="tx_servicemgr_sermons.filedate">Upload Datum</label>
 			<label index="tx_servicemgr_sermons.playtime">Dauer</label>
 			<label index="tx_servicemgr_sermons.filesize">Dateigröße</label>
+			<label index="tx_servicemgr_sermons.mimetype">MIME-Typ</label>
 			<label index="tx_servicemgr_sermons.bitrate">Bitrate</label>
 			<label index="tx_servicemgr_sermons.album">Album/Serie</label>
 			<label index="fe_users.tx_servicemgr_image">Bild</label>

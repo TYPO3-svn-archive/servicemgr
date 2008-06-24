@@ -5,8 +5,11 @@ audioFileUploadPath = fileadmin/sermons
   # cat=basic; type=string; label=Document Upload Directory
 documentUploadPath = fileadmin/programme
 
-  # cat=basic; type=string; label=Allowed Audio Filetypes:seperated by ','
+  # cat=basic/Sermons; type=string; label=Allowed Audio Filetypes:seperated by ','
 allowedAudioType = mp3
 
-  # cat=basic; type=string; label=Genre of sermons
+  # cat=basic/Sermons; type=string; label=Genre of sermons
 sermonGenre = Predigt
+
+  # cat=basic/Sermons; type=string; label=Prefix for filename of sermons
+sermonPrefix = Sermon

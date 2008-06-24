@@ -321,7 +321,6 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 			}
 
 			$countAudioPerEvent = $this->getAudiosPerEvent($eventId);
-			t3lib_div::debug($countAudioPerEvent);
 			$newFileName = $singleEvent['uid'].'-'.date('Ymd',$singleEvent['datetime']).'-'.$countAudioPerEvent.'.'.$uploadData['extension'];
 
 			if (!is_dir($uploadPath)) {

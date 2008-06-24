@@ -166,7 +166,7 @@ $TCA["tx_servicemgr_sermons"] = array (
 		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_servicemgr_sermons.gif',
 	),
 	"feInterface" => array (
-		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, title, file, filedate, playtime, filesize, bitrate, album",
+		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, title, file, filedate, playtime, filesize, mimetype, bitrate, album",
 	)
 );
 

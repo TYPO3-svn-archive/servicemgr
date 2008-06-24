@@ -117,7 +117,12 @@ class tx_servicemgr_pi1 extends tx_servicemgr {
         		
         		//create link to sermon archive?
         		if ($this->tx_servicemgr->generalConf['SermonArchivePID']) {
-        			$markerArray['###SUBJECT###'] = $this->pi_linkToPage($row['subject'],$this->tx_servicemgr->generalConf['SermonArchivePID'],$target='',$urlParameters=array('tx_servicemgr_pi2[eventId]'=>$row['uid']));	
+        			$markerArray['###SUBJECT###'] = $this->pi_linkToPage(
+        				$row['subject'],
+        				$this->tx_servicemgr->generalConf['SermonArchivePID'],
+        				$target='',
+        				$urlParameters=array('tx_servicemgr_pi2[eventId]'=>$row['uid'])
+        			);
         		} else {
         			$markerArray['###SUBJECT###'] = $row['subject'];
         		}

@@ -128,7 +128,15 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 					$markerArray['###FILETITLE###'] = $sermon['title'];
         			$markerArray['###SIZE###'] = $this->formatBytes($sermon['filesize']);
         			$markerArray['###LENGTH###'] = $this->formatTime($sermon['playtime']);
-        			$markerArray['###DOWNLOAD###'] = 'DL';
+        			$markerArray['###DOWNLOAD###'] = $this->pi_linkToPage(
+        				'DL',
+        				$GLOBALS['TSFE']->id,
+        				$target='',
+        				$urlParameters = array(
+        					'eID' => 'tx_servicemgr_download',
+        					'sermonid'=>$sermon['uid']
+        				)
+        			);
         			$markerArray['###PLAY###'] = 'Play';
         			$liste2 .= $this->cObj->substituteMarkerArrayCached($filearray,$markerArray);
 				}

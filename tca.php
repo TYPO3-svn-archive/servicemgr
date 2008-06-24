@@ -683,6 +683,13 @@ $TCA["tx_servicemgr_sermons"] = array (
 				"type" => "none",
 			)
 		),
+		"mimetype" => Array (		
+			"exclude" => 1,		
+			"label" => "LLL:EXT:servicemgr/locallang_db.xml:tx_servicemgr_sermons.mimetype",		
+			"config" => Array (
+				"type" => "none",
+			)
+		),
 		"bitrate" => Array (		
 			"exclude" => 1,		
 			"label" => "LLL:EXT:servicemgr/locallang_db.xml:tx_servicemgr_sermons.bitrate",		
