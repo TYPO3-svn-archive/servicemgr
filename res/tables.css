@@ -1,0 +1,11 @@
+@charset "utf-8";
+.tx_servicemgr_pi3 div { padding: 2px; }
+.tx_servicemgr_pi3 #date { clear: none; float: left; left: 300px; position: absolute; }
+.tx_servicemgr_pi3 #subject { clear: none; float: left; }
+.tx_servicemgr_pi3 #preacher { clear: left; float: left; }
+.tx_servicemgr_pi3 #tags { clear: both; float: none; }
+.tx_servicemgr_pi3 #tagcontainer { float: left; height: 120px; width: 250px; overflow: auto; padding: 7px; clear: right; border: thin dashed #424242; }
+.tx_servicemgr_pi3 #taglabel { clear: left; float: left; width: 50px; }
+.tx_servicemgr_pi3 #filediv { clear: both; float: left; width: 100%; }
+.tx_servicemgr_pi3 #submit { clear: both; float: right; }
+.tx_servicemgr_pi3 #uploadform { width: 450px; }
