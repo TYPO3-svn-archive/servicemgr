@@ -9,12 +9,14 @@
 			<label index="audiofiles">Sermon files</label>
 			<label index="uploadTitle">Upload new sermon</label>
 			<label index="ERROR.wrongEventKey">no event selected</label>
+			<label index="ERROR.largeFile">The file you uploaded is to large.</label>
 			<label index="wrongFileExtension">this file type is not allowed as audio file</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="audiofiles">Predigtdateien</label>
 			<label index="uploadTitle">Eine neue Predigt hochladen</label>
 			<label index="ERROR.wrongEventKey">keine Veranstaltung ausgewählt</label>
+			<label index="ERROR.largeFile">Die hochgeladene Datei ist zu groß.</label>
 			<label index="wrongFileExtension">Dieser Dateityp ist als Audiodatei nicht erlaubt.</label>
 		</languageKey>
 	</data>

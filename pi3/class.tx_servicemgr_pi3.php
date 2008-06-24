@@ -304,7 +304,6 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 		$uploadPath = $this->extConf['audioFileUploadPath'];
 		$allPreachers = $this->getTeamMembers($this->generalConf['PreacherTeamUID']);
 		$allSeries = $this->getSeries();
-		t3lib_div::debug($uploadData);
 
 		if ($uploadData['error'] == 0) {
 			$uploadData['extension'] = $this->fileExtension($uploadData['name']);
@@ -331,7 +330,8 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 				return $this->pi_getLL('error');
 			}
 
-			$tx_mp3class = t3lib_div::makeInstance('tx_servicemgr_mp3');
+			$tx_mp3class = t3lib_div::makeInstance('tx_servicemgr_mp3'); //initiate mp3-/id3-functions
+			
 			foreach ($this->piVars['upload']['preachers'] as $singlePreacher) {
 				$fileInformation['artist'][] = $allPreachers[$singlePreacher]['name'];
 			}
@@ -339,13 +339,13 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 		    $fileInformation['title'] = $singleEvent['subject'];
 			$fileInformation['year'] = date('Y', $singleEvent['datetime']);
 		    $fileInformation['genre'] = $this->extConf['sermonGenre'];
-		    $tx_mp3class->setAudioInformation($uploadPath.'/'.$newFileName, $fileInformation);
+		    
+		    $tx_mp3class->setAudioInformation($uploadPath.'/'.$newFileName, $fileInformation); //write id3-tags to file
 
-		    $fileInformation = $tx_mp3class->getAudioInformation(PATH_site.$uploadPath.'/'.$newFileName);
+		    $fileInformation = $tx_mp3class->getAudioInformation(PATH_site.$uploadPath.'/'.$newFileName); //get playtime, bitrate, etc.
+		    $title = $singleEvent['subject'];
 		    if ($countAudioPerEvent > 0) {
-		    	$title = $singleEvent['subject'].' '.($countAudioPerEvent + 1);
-		    } else {
-		    	$title = $singleEvent['subject'];
+		    	$title .= ($countAudioPerEvent + 1);
 		    }
 		    $actTime = mktime();
 		    
@@ -360,20 +360,12 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 		    	'filedate' => filemtime(PATH_site.$uploadPath.'/'.$newFileName),
 		    	'playtime' => $fileInformation['playtime'],
 		    	'filesize' => $uploadData['size'],
+		    	'mimetype' => $uploadData['type'],
 		    	'bitrate' => $fileInformation['bitrate'],
 		    	'album' => $singleEvent['series']
 			);
-			$insertData['l18n_diffsource'] = serialize($insertData);
-			//t3lib_div::debug($insertData,'insertData');
-			#$tce->admin = 1;
-			#$new_BE_USER->user["admin"]=1;
-			//$tce->stripslashes_values = 0;
-			//$tce->start($insertData,array());
-			//$tce->process_datamap();
-			$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery(
-				'tx_servicemgr_sermons', 
-				$insertData
-			);
+			$insertData['l18n_diffsource'] = serialize(array('title'=>'','event'=>'','file'=>''));
+			$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_servicemgr_sermons', $insertData);
 			$dutyUID = $GLOBALS['TYPO3_DB']->sql_insert_id();
 
 			// get schedule data for event
@@ -383,9 +375,7 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 			}
 			$duty[$this->generalConf['PreacherTeamUID']] = $this->piVars['upload']['preachers'];
 
-			$updateArray = array (
-				'duty' => serialize($duty)
-			);
+			$updateArray = array('duty' => serialize($duty));
 			$res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
 				'tx_servicemgr_dutyschedule', 
 				'uid='.$dutyUID, 
@@ -396,11 +386,11 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 			switch ($uploadData['error']) {
 				CASE 1:
 				CASE 2:
-
+					return $this->pi_getLL('ERROR.largeFile');
 					break;
 
 				DEFAULT:
-
+					return $this->pi_getLL('error');
 			}
 		}
 	}

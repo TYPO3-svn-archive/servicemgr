@@ -15,7 +15,7 @@
 			<label index="submitform">Submit</label>
 			<label index="file">File</label>
 			<label index="preacher">Preacher</label>
-			<label index="error">Error</label>
+			<label index="error">unknown Error</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="back">Zurück</label>
@@ -27,7 +27,7 @@
 			<label index="submitform">Senden</label>
 			<label index="file">Datei</label>
 			<label index="preacher">Prediger</label>
-			<label index="error">Fehler</label>
+			<label index="error">unbekannter Fehler</label>
 		</languageKey>
 	</data>
 </T3locallang>
