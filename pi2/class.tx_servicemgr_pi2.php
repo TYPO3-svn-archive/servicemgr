@@ -37,13 +37,13 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 	var $extKey        = 'servicemgr';	// The extension key.
 	var $pi_checkCHash = true;
 	var $template;
-	
+
 	/**
 	 * The main method of the PlugIn
 	 *
 	 * @param	string		$content: The PlugIn content
 	 * @param	array		$conf: The PlugIn configuration
-	 * @return	The content that is displayed on the website
+	 * @return	The		content that is displayed on the website
 	 */
 	function main($content,$conf)	{
 		$this->conf=$conf;
@@ -67,7 +67,7 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 			$this->template = 'EXT:servicemgr/res/tables.tmpl';
 		}
 		$this->template = $this->cObj->fileResource($this->template);
-		
+
 		if (!$this->piVars['eventId']) {
 			$content = $this->listView();
 		} else {
@@ -75,7 +75,7 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 				<strong>This is a few paragraphs:</strong><br />
 				<p>This is line 1</p>
 				<p>This is line 2</p>
-		
+
 				<h3>This is a form:</h3>
 				<form action="'.$this->pi_getPageLink($GLOBALS['TSFE']->id).'" method="POST">
 					<input type="hidden" name="no_cache" value="1">
@@ -86,12 +86,17 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 				<p>You can click here to '.$this->pi_linkToPage('get to this page again',$GLOBALS['TSFE']->id).'</p>
 			';
 		}
-		
+
 		return $this->pi_wrapInBaseClass($content);
 	}
-	
+
+	/**
+	 * [Describe function...]
+	 *
+	 * @return	[type]		...
+	 */
 	function listView() {
-		
+
 		//Template preparation
 		#Subpart
         $subpart = $this->cObj->getSubpart($this->template,'###SERMONLIST###');
@@ -101,28 +106,28 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
         $singlerow = $this->cObj->getSubpart($subpart,'###ROW###');
         #file array
         $filearray = $this->cObj->getSubpart($subpart,'###FILES###');
-		
+
         //substitue table header in template file
         $markerArray['###HDATE###'] = $this->pi_getLL('date');
         $markerArray['###HSUBJECT###'] = $this->pi_getLL('subject');
         $markerArray['###HFILE###'] = $this->pi_getLL('file');
         $subpartArray['###HEADERROW###'] = $this->cObj->substituteMarkerArrayCached($headerrow,$markerArray);
-		
-		
+
+
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
         	'uid, datetime, subject',   #select
         	'tx_servicemgr_events', #from
         	'hidden=0 and deleted=0'  #where
         );
-        
+
 		//substitue table rows in template
         if ($res) {
         	while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
         		$markerArray['###DATE###'] = date('d.m.Y', $row['datetime']);
 				$markerArray['###SUBJECT###'] = $row['subject'];
-				       		
+
 				$sermons = $this->getAudioFiles($row['uid']);
-				
+
 				$liste2='';
 				foreach ($sermons as $sermon) {
 					$markerArray['###FILETITLE###'] = $sermon['title'];
@@ -141,20 +146,20 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
         			$liste2 .= $this->cObj->substituteMarkerArrayCached($filearray,$markerArray);
 				}
 				$subpartArray['###FILES###']=$liste2;
-                $liste .= $this->cObj->substituteMarkerArrayCached($singlerow,$markerArray,$subpartArray); 
+                $liste .= $this->cObj->substituteMarkerArrayCached($singlerow,$markerArray,$subpartArray);
             }
             $subpartArray['###ROW###']=$liste;
         }
-        
+
         return $this->cObj->substituteMarkerArrayCached($subpart,$markerArray,$subpartArray,array()); ;
 	}
-	
+
 	/**
 	 * formats bytes in Bytes, Kilobytes or Megabytes
 	 * output with two positions after decimal point
 	 *
-	 * @param	integer	$bytes
-	 * @return 	string	
+	 * @param	integer		$bytes
+	 * @return	string
 	 */
 	function formatBytes($bytes) {
 		$bytes = intval($bytes);
@@ -170,16 +175,16 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 			}
 		} else {
 			$bytes .= ' B';
-		} 
+		}
 		return $bytes;
 	}
-	
+
 	/**
 	 * splits seconds in seconds, minutes and hours
-	 * output like 'hh:mm:ss Std', 'm:ss Min', ... 
+	 * output like 'hh:mm:ss Std', 'm:ss Min', ...
 	 *
-	 * @param	integer	$seconds: time in seconds
-	 * @return	string	formated time
+	 * @param	integer		$seconds: time in seconds
+	 * @return	string		formated time
 	 */
 	function formatTime($seconds) {
 		$seconds = intval($seconds);
@@ -218,7 +223,13 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 		}
 		return $content;
 	}
-	
+
+	/**
+	 * [Describe function...]
+	 *
+	 * @param	[type]		$path: ...
+	 * @return	[type]		...
+	 */
 	function getFileSizeFormarted($path) {
 		if (@file_exists($path)) {
 			$filesize = formatBytes(filesize($path));

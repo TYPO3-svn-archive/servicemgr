@@ -21,8 +21,10 @@
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+define('T3UNIT_TESTING','1');
 
-require_once (t3lib_extMgm::extPath('servicemgr').'class.tx_servicemgr.php');
+require_once(PATH_tslib.'class.tslib_eidtools.php');
+require_once (t3lib_extMgm::extPath('servicemgr').'class.tx_servicemgr_download.php');
 
  /**
   * Testcase for checking the servicemgr extension
@@ -33,10 +35,22 @@ require_once (t3lib_extMgm::extPath('servicemgr').'class.tx_servicemgr.php');
   * @package	TYPO3
   * @subpackage tx_servicemgr
   */
-class tx_servicemgr_testcase extends tx_t3unit_testcase {
+class tx_servicemgr_download_testcase extends tx_t3unit_testcase {
 
-	function test_dummy() {
-		self::assertEquals('-','-','-');
+	function test_str2download() {
+		$txSMgr_download = new tx_servicemgr_download;
+		$result = $txSMgr_download->str2download('Ähmm, döses String - ist [ein] Test.string!');
+		self::assertEquals($result, 'Aehmm-doeses-String-ist-ein-Teststring', 'str2download result: '.$result);
+		$result = $txSMgr_download->str2download('Ähmm, döses String - ist [ein] Test.string!', false);
+		self::assertEquals($result, 'Aehmm-doeses-String-ist-ein-Test.string', 'str2download result: '.$result);
+	}
+	
+	function test_fileExtension() {
+		$txSMgr_download = new tx_servicemgr_download;
+		$result = $txSMgr_download->fileExtension('hallo.hgt');
+		self::assertEquals($result, 'hgt', 'fileExtension result: '.$result);
+		$result = $txSMgr_download->fileExtension('ha.llo.xgud');
+		self::assertEquals($result, 'xgud', 'fileExtension result: '.$result);
 	}
 }
 

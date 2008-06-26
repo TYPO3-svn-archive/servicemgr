@@ -1,11 +1,24 @@
 @charset "utf-8";
-.tx_servicemgr_pi3 div { padding: 2px; }
-.tx_servicemgr_pi3 #date { clear: none; float: left; left: 300px; position: absolute; }
-.tx_servicemgr_pi3 #subject { clear: none; float: left; }
-.tx_servicemgr_pi3 #preacher { clear: left; float: left; }
-.tx_servicemgr_pi3 #tags { clear: both; float: none; }
-.tx_servicemgr_pi3 #tagcontainer { float: left; height: 120px; width: 250px; overflow: auto; padding: 7px; clear: right; border: thin dashed #424242; }
-.tx_servicemgr_pi3 #taglabel { clear: left; float: left; width: 50px; }
-.tx_servicemgr_pi3 #filediv { clear: both; float: left; width: 100%; }
-.tx_servicemgr_pi3 #submit { clear: both; float: right; }
-.tx_servicemgr_pi3 #uploadform { width: 450px; }
+.tx-servicemgr-pi3 #uploadform {background-color: #FFFFF4; width: 450px; }
+.tx-servicemgr-pi3 div { padding: 2px; }
+.tx-servicemgr-pi3 #date { clear: right; float: left; left: 30px; position: relative; width: 200px; }
+.tx-servicemgr-pi3 #subject { clear: left; float: left; }
+.tx-servicemgr-pi3 #preacher { clear: left; }
+.tx-servicemgr-pi3 #tags { clear: both; float: none; }
+.tx-servicemgr-pi3 #tagcontainer { border: thin dashed #424242; clear: right; height: 120px; overflow: auto; padding: 7px; width: 250px; }
+.tx-servicemgr-pi3 #taglabel { clear: left; float: left; width: 50px; }
+.tx-servicemgr-pi3 #filediv { clear: both; width: 100%; }
+.tx-servicemgr-pi3 #submit { height: 30px; width: 100%;  }
+.tx-servicemgr-pi3 #submit input { clear: both; float: right; }
+.tx_servicemgr_errormsg { background-color: #FFCCCC; border: 1px solid #FF3333; clear: both; font-family: Arial,Helvetica,sans-serif; font-size: small; font-weight: bold; margin: 5px; padding: 7px; }
+
+.eventsingleview { font-family: Arial, Helvetica, sans-serif; width: 450px; }
+.eventsingleview h2 { padding-bottom: 1px; margin-bottom: 0px; }
+.eventsingleview h3 { padding: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 7px; margin-left: 0px; }
+.eventsingleview h4 { padding: 0px; margin: 0px; }
+.eventsingleview #esv-information { padding-left: 7px; }
+.eventsingleview #esv-date { color: #8B8B8B; font-size: small; }
+.eventsingleview #esv-information .value { left: 85px; position: absolute; }
+/*.eventsingleview .esv-audio-id3 .value { left: 100px; position: absolute; float: left; }*/
+.eventsingleview #esv-audiocontainer { background-color: #FFFFC6; padding-bottom: 7px; padding-left: 5px; padding-top: 3px; margin-top: 10px; }
+.eventsingleview .esv-audio-id3 { font-size: small; padding: 4px; width: 80%; background-color: #FFFDE6; margin: 4px; border: 1px dashed #000000; }

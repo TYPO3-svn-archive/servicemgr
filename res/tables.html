@@ -7,24 +7,46 @@
 </head>
 
 <body>
-<form method="post" action="action">
-<!--- ###UPLOADFORM### -->
-<div id="uploadform">###TITLE###
-  <div id="postData">
-  	<div id="subject">###HSUBJECT###: ###SUBJECT###</div><div id="date">###HDATE###: ###DATE###</div>
-    <div id="preacher"><label for="preacher">Prediger:</label>&nbsp;<input type="text" name="preacher" value="###PREDIGER###"/></div>
-    <div id="tags">
-    	<div id="taglabel">Tags:</div>
-        <div id="tagcontainer">
-        	
+<form method="post" action="action"><!--- ###UPLOADFORM### -->
+<div id="uploadform" class="tx-servicemgr-pi3">###TITLE###
+<div id="postData">
+<div id="subject">###HSUBJECT###: ###SUBJECT###</div>
+<div id="date">###HDATE###: ###DATE###</div>
+<div id="preacher"><label for="preacher">Prediger:</label>&nbsp;<input
+	type="text" name="preacher" value="###PREDIGER###" /></div>
+<div id="tags">
+<div id="taglabel">Tags:</div>
+<div id="tagcontainer"></div>
+</div>
+<div id="filediv"><label for="file">Datei:</label>&nbsp;<input
+	type="file" id="file" name="file" size="45" /></div>
+<div id="submit"><input type="submit" value="Senden" /></div>
+</div>
+</div>
+<!--- ###UPLOADFORM### --></form>
+
+
+<div class="tx_servicemgr_errormsg">ERRORMSG #1</div>
+
+<div class="eventsingleview">
+	<h2>Event Title</h2>
+	<div id="esv-information">
+		<div id="esv-date"><span class="label">Datum:</span>&nbsp;<span	class="value">20.60.2008, 20.00 h</span></div>
+		<div id="esv-series"><span class="label">Series:</span>&nbsp;<span class="value">GEWO 2008</span></div>
+		<div id="esv-tags"><span class="label">Tags:</span>&nbsp;<span class="value">D16, 2008, GEWO, Hallelujaabend</span></div>
+	</div>
+	<div id="esv-audiocontainer">
+	<div id="esv-audio1" class="esv-audioitem"></div>
+	<div id="esv-audio2" class="esv-audioitem-multi">
+		<h3>Event Title 1</h3>
+		<div class="esv-audio-preacher">Predigt: Hans Mustermann</div>
+		<div class="esv-audio-id3">
+			<h4>Meta-Informationen</h4>
+			Dauer:&nbsp;<span class="value">8.51 Min</span><br />
+			<span class="label">Bitrate:</span>&nbsp;<span class="value">16000 Bit</span><br />
+			<span class="label">Dateigr&ouml;&szlig;e:</span>&nbsp;<span class="value">5,23 MB</span></div>
 		</div>
 	</div>
-    <div id="filediv"><label for="file">Datei:</label>&nbsp;<input type="file" id="file" name="file" size="45"/>
 </div>
-    <div id="submit"><input type="submit" value="Senden" /></div>
-  </div>
-</div>
-<!--- ###UPLOADFORM### -->
-</form>
 </body>
 </html>

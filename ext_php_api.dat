@@ -1,202 +1,56 @@
-a:2:{s:4:"meta";a:3:{s:5:"title";s:10:"servicemgr";s:5:"descr";s:0:"";s:7:"options";a:2:{s:10:"usageCount";s:1:"1";s:19:"includeCodeAbstract";s:1:"1";}}s:5:"files";a:4:{s:14:"MD5_f3cd996c04";a:5:{s:8:"filename";s:23:"class.tx_servicemgr.php";s:8:"filesize";i:7657;s:6:"header";N;s:3:"DAT";a:11:{i:1;a:7:{s:6:"header";s:42:"class tx_servicemgr extends tslib_pibase {";s:5:"class";i:1;s:11:"parentClass";s:13:"tx_servicemgr";s:7:"content";a:2:{i:0;s:332:"	var $prefixId		= 'tx_servicemgr';		// Same as class name
-	var $scriptRelPath	= 'class.tx_servicemgr.php';	// Path to this script relative to the extension dir.
-	var $extKey			= 'servicemgr';	// The extension key.
-	var $extConf;		// extension conf from TYPO3_CONF_VARS
-	var $generalConf;	// TypoScript conf for plugin.tx_servicemgr
-";i:1;i:-1;}s:12:"content_size";i:332;s:13:"content_lines";i:5;s:6:"atLine";i:28;}i:3;a:6:{s:6:"header";s:20:"function tx_init() {";s:11:"parentClass";s:13:"tx_servicemgr";s:7:"content";a:2:{i:0;s:542:"		$this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['servicemgr']);
+a:2:{s:4:"meta";a:3:{s:5:"title";s:10:"servicemgr";s:5:"descr";s:0:"";s:7:"options";a:2:{s:10:"usageCount";s:1:"1";s:19:"includeCodeAbstract";N;}}s:5:"files";a:4:{s:14:"MD5_f3cd996c04";a:5:{s:8:"filename";s:23:"class.tx_servicemgr.php";s:8:"filesize";i:8839;s:6:"header";a:5:{s:4:"text";s:158:"
 
-		$this->generalConf = t3lib_div::makeInstance('t3lib_tsparser_ext');
-		$this->generalConf->tt_track = 0;
-		$this->generalConf->init();
-		$sys_page = t3lib_div::makeInstance('t3lib_pageSelect');
-		$rootLine = $sys_page->getRootLine($GLOBALS['TSFE']->id);
-		$this->generalConf->runThroughTemplates($rootLine);
-		$this->generalConf->generateConfig();
-		$this->generalConf = $this->generalConf->setup['plugin.']['tx_servicemgr.'];
-		return true;
-	}
+Top level class for the 'servicemgr' extension.
 
-	";i:1;i:0;}s:12:"content_size";i:542;s:13:"content_lines";i:13;s:6:"atLine";i:35;}i:5;a:7:{s:6:"header";s:22:"function tx_loadLL() {";s:11:"parentClass";s:13:"tx_servicemgr";s:4:"cDat";a:3:{s:4:"text";s:69:"
+Class contains general functions for the servicemgr-extension.
+All plugin classes extend this class.
+
+$Id:
+";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}s:5:"other";a:3:{i:0;s:45:"@author		Peter Schuster <typo3@peschuster.de>";i:1;s:15:"@package		TYPO3";i:2;s:26:"@subpackage 	tx_servicemgr";}s:11:"other_index";a:3:{s:7:"@author";a:1:{i:0;s:36:"Peter Schuster <typo3@peschuster.de>";}s:8:"@package";a:1:{i:0;s:6:"TYPO3 ";}s:11:"@subpackage";a:1:{i:0;s:14:"tx_servicemgr ";}}}s:3:"DAT";a:12:{i:1;a:8:{s:6:"header";s:42:"class tx_servicemgr extends tslib_pibase {";s:5:"class";i:1;s:11:"parentClass";s:13:"tx_servicemgr";s:4:"cDat";a:5:{s:4:"text";s:158:"
+
+Top level class for the 'servicemgr' extension.
+
+Class contains general functions for the servicemgr-extension.
+All plugin classes extend this class.
+
+$Id:
+";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}s:5:"other";a:3:{i:0;s:45:"@author		Peter Schuster <typo3@peschuster.de>";i:1;s:15:"@package		TYPO3";i:2;s:26:"@subpackage 	tx_servicemgr";}s:11:"other_index";a:3:{s:7:"@author";a:1:{i:0;s:36:"Peter Schuster <typo3@peschuster.de>";}s:8:"@package";a:1:{i:0;s:6:"TYPO3 ";}s:11:"@subpackage";a:1:{i:0;s:14:"tx_servicemgr ";}}}s:7:"content";s:0:"";s:12:"content_size";i:334;s:13:"content_lines";i:6;s:6:"atLine";i:40;}i:3;a:7:{s:6:"header";s:20:"function tx_init() {";s:11:"parentClass";s:13:"tx_servicemgr";s:4:"cDat";a:3:{s:4:"text";s:54:"
+
+Functions sets conf values and gets TypoScript conf
+";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:7:"boolean";i:1;s:38:"returns true when initiated succesfull";}}s:7:"content";s:0:"";s:12:"content_size";i:542;s:13:"content_lines";i:13;s:6:"atLine";i:52;}i:5;a:7:{s:6:"header";s:22:"function tx_loadLL() {";s:11:"parentClass";s:13:"tx_servicemgr";s:4:"cDat";a:3:{s:4:"text";s:69:"
 
 loads LOCAL_LANG out of locallang_common.xml in extension base dir
-";s:5:"param";a:1:{i:0;a:2:{i:0;s:5:"array";i:1;s:24:"$oldLL: LOCAL_LANG array";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"
-		if ($this->LOCAL_LANG_loaded !== 1) {
-			$this->pi_loadLL();
-		}
-
-		//locallang_common.xml is in extension basepath
-		$basePath = t3lib_extMgm::extPath($this->extKey).'locallang_common.xml';
-
-		//load locallang_common.xml
-		$tempLOCAL_LANG = t3lib_div::readLLfile($basePath,$this->LLkey,$GLOBALS['TSFE']->renderCharset);
-
-		//locallang_common.xml and locallang.xml get mer
-[...]
-					}
-						}
-					}
-				}
-			}
-		}
-		$this->LOCAL_LANG = $oldLL;
-
-		//set flag
-		$this->LOCAL_LANG_COMMON_loaded = 1;
-	}
-
-	";i:1;i:1;}s:12:"content_size";i:857;s:13:"content_lines";i:34;s:6:"atLine";i:55;}i:7;a:7:{s:6:"header";s:51:"function getTeamMembers($teamUID, $fillName=true) {";s:11:"parentClass";s:13:"tx_servicemgr";s:4:"cDat";a:3:{s:4:"text";s:53:"
+";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:4:"void";i:1;s:0:"";}}s:7:"content";s:0:"";s:12:"content_size";i:857;s:13:"content_lines";i:34;s:6:"atLine";i:71;}i:7;a:7:{s:6:"header";s:51:"function getTeamMembers($teamUID, $fillName=true) {";s:11:"parentClass";s:13:"tx_servicemgr";s:4:"cDat";a:3:{s:4:"text";s:53:"
 
 Returns all fe_users being part of a specific team
-";s:5:"param";a:2:{i:0;a:2:{i:0;s:7:"integer";i:1;s:31:"$teamUID:		UID of specific team";}i:1;a:2:{i:0;s:7:"boolean";i:1;s:74:"$fillName:	when true and column name is empty username gets copied to name";}}s:6:"return";a:2:{i:0;s:5:"array";i:1;s:49:"uid, username, name, usergroup of all teammembers";}}s:7:"content";a:2:{i:0;s:507:"		//get alle fe_users from database
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-        	'uid, username, name, usergroup',   #select
-        	'fe_users', #from
-        	'usergroup<>\'\' AND deleted=0'  #where
-		);
-
-		// dump arrays
-		$returnValue = array();
-
-		if ($res) {
-			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-
-				//fillName
-				if ($fillName &
-[...]
- there is a result -> return
-		if (count($returnValue) !== 0) {
-			return $returnValue;
-		} else {
-			return false;
-		}
-	}
-
-	";i:1;i:1;}s:12:"content_size";i:770;s:13:"content_lines";i:33;s:6:"atLine";i:97;}i:9;a:7:{s:6:"header";s:20:"function getTags() {";s:11:"parentClass";s:13:"tx_servicemgr";s:4:"cDat";a:3:{s:4:"text";s:33:"
+";s:5:"param";a:2:{i:0;a:2:{i:0;s:7:"integer";i:1;s:31:"$teamUID:		UID of specific team";}i:1;a:2:{i:0;s:7:"boolean";i:1;s:74:"$fillName:	when true and column name is empty username gets copied to name";}}s:6:"return";a:2:{i:0;s:5:"array";i:1;s:49:"uid, username, name, usergroup of all teammembers";}}s:7:"content";s:0:"";s:12:"content_size";i:770;s:13:"content_lines";i:33;s:6:"atLine";i:113;}i:9;a:7:{s:6:"header";s:20:"function getTags() {";s:11:"parentClass";s:13:"tx_servicemgr";s:4:"cDat";a:3:{s:4:"text";s:57:"
 
 Returns all tags from database
-";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:5:"array";i:1;s:63:"tags as array with key=uid and uid, name, parrent as properties";}}s:7:"content";a:2:{i:0;s:509:"		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-        	'uid, name, parrent',   #select
-        	'tx_servicemgr_tags', #from
-        	'hidden=0 AND deleted=0'  #where
-		);
+gets uid, name, parrent
+";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:5:"array";i:1;s:26:"tags as array with key=uid";}}s:7:"content";s:0:"";s:12:"content_size";i:457;s:13:"content_lines";i:22;s:6:"atLine";i:153;}i:11;a:7:{s:6:"header";s:35:"function getSingleEvent($eventId) {";s:11:"parentClass";s:13:"tx_servicemgr";s:4:"cDat";a:3:{s:4:"text";s:55:"
 
-		// dump arrays
-		$returnValue = array();
+gets information about an single event from database
+";s:5:"param";a:1:{i:0;a:2:{i:0;s:7:"integer";i:1;s:22:"$eventId: UID of event";}}s:6:"return";a:2:{i:0;s:5:"array";i:1;s:77:"uid, datetime, subject, public, series, tags, requiredteams, documents, notes";}}s:7:"content";s:0:"";s:12:"content_size";i:406;s:13:"content_lines";i:15;s:6:"atLine";i:182;}i:13;a:7:{s:6:"header";s:22:"function getSeries() {";s:11:"parentClass";s:13:"tx_servicemgr";s:4:"cDat";a:3:{s:4:"text";s:77:"
 
-		if ($res) {
-		while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+Returns all available series from database
+gets uid and name of all series
+";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:5:"array";i:1;s:15:"array key = uid";}}s:7:"content";s:0:"";s:12:"content_size";i:502;s:13:"content_lines";i:25;s:6:"atLine";i:204;}i:15;a:7:{s:6:"header";s:38:"function getSingleSchedule($eventId) {";s:11:"parentClass";s:13:"tx_servicemgr";s:4:"cDat";a:3:{s:4:"text";s:42:"
 
-				// fill return value with tags
-				$returnValue[$row['uid']] = $row;
-			}
-		}
+Returns single schedule out of database
+";s:5:"param";a:1:{i:0;a:2:{i:0;s:7:"integer";i:1;s:22:"$eventId: UID of event";}}s:6:"return";a:2:{i:0;s:5:"array";i:1;s:24:"unserialized duty column";}}s:7:"content";s:0:"";s:12:"content_size";i:433;s:13:"content_lines";i:18;s:6:"atLine";i:236;}i:17;a:7:{s:6:"header";s:34:"function getAudioFiles($eventId) {";s:11:"parentClass";s:13:"tx_servicemgr";s:4:"cDat";a:3:{s:4:"text";s:86:"
 
-		//if there is a result -> return
-		if (count($returnValue) !== 0) {
-			return $returnValue;
-		} else {
-			return false;
-		}
-	}
+get all sermon entries in database for specific event
+return array is 2 dimensional
+";s:5:"param";a:1:{i:0;a:2:{i:0;s:7:"integer";i:1;s:22:"$eventId: UID of event";}}s:6:"return";a:2:{i:0;s:5:"array";i:1;s:41:"2-dimensional! (e.g. content[0]['title'])";}}s:7:"content";s:0:"";s:12:"content_size";i:443;s:13:"content_lines";i:17;s:6:"atLine";i:262;}i:19;a:7:{s:6:"header";s:38:"function getAudiosPerEvent($eventId) {";s:11:"parentClass";s:13:"tx_servicemgr";s:4:"cDat";a:3:{s:4:"text";s:53:"
 
-	";i:1;i:0;}s:12:"content_size";i:509;s:13:"content_lines";i:25;s:6:"atLine";i:136;}i:11;a:7:{s:6:"header";s:35:"function getSingleEvent($eventId) {";s:11:"parentClass";s:13:"tx_servicemgr";s:4:"cDat";a:3:{s:4:"text";s:25:"
+Returns number of audio files for a specific event
+";s:5:"param";a:1:{i:0;a:2:{i:0;s:7:"integer";i:1;s:22:"$eventId: UID of event";}}s:6:"return";a:2:{i:0;s:7:"integer";i:1;s:20:"number of audiofiles";}}s:7:"content";s:0:"";s:12:"content_size";i:53;s:13:"content_lines";i:3;s:6:"atLine";i:286;}i:21;a:4:{s:6:"header";s:34:"function fileExtension($filename){";s:11:"parentClass";s:13:"tx_servicemgr";s:4:"cDat";a:3:{s:4:"text";s:35:"
 
-[Describe function...]
-";s:5:"param";a:1:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:13:"$eventId: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:406:"		$resEvent = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-        	'uid, datetime, subject, public, series, tags, requiredteams, documents, notes',   #select
-        	'tx_servicemgr_events', #from
-        	'uid='.$eventId.' and hidden=0 and deleted=0',  #where
-			'', '',
-			'0,1' #limit
-		);
+extracts extension from filename
+";s:5:"param";a:1:{i:0;a:2:{i:0;s:6:"string";i:1;s:23:"$filename: name of file";}}s:6:"return";a:2:{i:0;s:6:"string";i:1;s:39:"extension of file (without leading dot)";}}s:6:"atLine";i:296;}i:23;a:7:{s:6:"header";s:30:"function throwErrorMsg($msg) {";s:11:"parentClass";s:13:"tx_servicemgr";s:4:"cDat";a:3:{s:4:"text";s:34:"
 
-		if ($resEvent) {
-			return $GLOBALS['TYPO3_DB']->sql_fetch_assoc($resEvent);
-		} else {
-			return false;
-		}
-	}
-
-	";i:1;i:0;}s:12:"content_size";i:406;s:13:"content_lines";i:15;s:6:"atLine";i:168;}i:13;a:7:{s:6:"header";s:22:"function getSeries() {";s:11:"parentClass";s:13:"tx_servicemgr";s:4:"cDat";a:3:{s:4:"text";s:25:"
-
-[Describe function...]
-";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:502:"		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-        	'uid, name',   #select
-        	'tx_servicemgr_series', #from
-        	'hidden=0 AND deleted=0'  #where
-		);
-
-		// dump arrays
-		$returnValue = array();
-
-		if ($res) {
-		while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-
-				// fill return value with tags
-				$returnValue[$row['uid']] = $row;
-			}
-		}
-
-		//if there is a result -> return
-		if (count($returnValue) !== 0) {
-			return $returnValue;
-		} else {
-			return false;
-		}
-	}
-
-	";i:1;i:0;}s:12:"content_size";i:502;s:13:"content_lines";i:25;s:6:"atLine";i:189;}i:15;a:7:{s:6:"header";s:38:"function getSingleSchedule($eventId) {";s:11:"parentClass";s:13:"tx_servicemgr";s:4:"cDat";a:3:{s:4:"text";s:25:"
-
-[Describe function...]
-";s:5:"param";a:1:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:13:"$eventId: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:350:"		$resSchedule = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-			'uid, event, duty', #select
-			'tx_servicemgr_dutyschedule', #from
-			'event='.$eventId.' and hidden=0 and deleted=0' #where
-		);
-
-		if ($resSchedule) {
-			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($resSchedule);
-			return unserialize($row['duty']);
-		} else {
-			return false;
-		}
-	}
-
-	";i:1;i:0;}s:12:"content_size";i:350;s:13:"content_lines";i:14;s:6:"atLine";i:221;}i:17;a:6:{s:6:"header";s:34:"function getAudioFiles($eventId) {";s:11:"parentClass";s:13:"tx_servicemgr";s:7:"content";a:2:{i:0;s:503:"		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-        	'uid, event, title, file, filedate, playtime, bitrate, album',   #select
-        	'tx_servicemgr_sermons', #from
-        	'event='.$eventId.' and hidden=0 and deleted=0'  #where
-		);
-
-		$resultVar = array();
-		if ($res) {
-			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-				$resultVar[] = $row;
-			}
-			if (count($resultVar) == 1) {
-				$resultVar = $resultVar[0];
-			}
-			return $resultVar;
-		} else {
-			return false;
-		}
-	}
-
-	";i:1;i:0;}s:12:"content_size";i:503;s:13:"content_lines";i:20;s:6:"atLine";i:242;}i:19;a:3:{s:6:"header";s:38:"function getAudiosPerEvent($eventId) {";s:11:"parentClass";s:13:"tx_servicemgr";s:6:"atLine";i:269;}i:21;a:7:{s:6:"header";s:34:"function fileExtension($filename){";s:11:"parentClass";s:13:"tx_servicemgr";s:4:"cDat";a:3:{s:4:"text";s:25:"
-
-[Describe function...]
-";s:5:"param";a:1:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:14:"$filename: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:330:"		$parts = split('\.', $filename);
-		$parts = array_reverse($parts, false);
-		return $parts[0];
-	}
-
-} //end class
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/servicemgr/class.tx_servicemgr.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/servicemgr/class.tx_servicemgr.php']);
-}
-
-?>";i:1;i:0;}s:12:"content_size";i:330;s:13:"content_lines";i:11;s:6:"atLine";i:279;}}s:10:"usageCount";a:11:{s:12:"H_61f4d620ba";a:5:{s:3:"ALL";a:2:{s:12:"makeinstance";i:2;s:5:"TOTAL";i:2;}s:14:"MD5_bf1677f53f";a:3:{s:8:"fileName";s:49:"eventpreview/class.tx_servicemgr_eventpreview.php";s:12:"makeinstance";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_064d3c83d7";a:3:{s:8:"fileName";s:31:"pi2/class.tx_servicemgr_pi2.php";s:12:"makeinstance";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:27;s:15:"_functionHeader";s:42:"class tx_servicemgr extends tslib_pibase {";}s:12:"H_7520ccd188";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:1;s:15:"_functionHeader";s:20:"function tx_init() {";}s:12:"H_31ab76f135";a:5:{s:3:"ALL";a:2:{s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:14:"MD5_bf1677f53f";a:3:{s:8:"fileName";s:49:"eventpreview/class.tx_servicemgr_eventpreview.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:1;s:15:"_functionHeader";s:22:"function tx_loadLL() {";}s:12:"H_a988cd6923";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:24:"_searchtime_milliseconds";d:4;s:15:"_functionHeader";s:51:"function getTeamMembers($teamUID, $fillName=true) {";}s:12:"H_241272894f";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:2;s:15:"_functionHeader";s:20:"function getTags() {";}s:12:"H_2af806951d";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:24:"_searchtime_milliseconds";d:3;s:15:"_functionHeader";s:35:"function getSingleEvent($eventId) {";}s:12:"H_7e41c4f0ac";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:3;s:15:"_functionHeader";s:22:"function getSeries() {";}s:12:"H_cbea73f5cc";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:24:"_searchtime_milliseconds";d:5;s:15:"_functionHeader";s:38:"function getSingleSchedule($eventId) {";}s:12:"H_81a0569bf5";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_f3cd996c04";a:3:{s:8:"fileName";s:23:"class.tx_servicemgr.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:2;s:15:"_functionHeader";s:34:"function getAudioFiles($eventId) {";}s:12:"H_8b602428cf";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:4;s:15:"_functionHeader";s:38:"function getAudiosPerEvent($eventId) {";}s:12:"H_0286c98b5d";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:3;s:15:"_functionHeader";s:34:"function fileExtension($filename){";}}}s:14:"MD5_c3000d98fc";a:5:{s:8:"filename";s:27:"class.tx_servicemgr_mp3.php";s:8:"filesize";i:3981;s:6:"header";N;s:3:"DAT";a:3:{i:1;a:8:{s:6:"header";s:25:"class tx_servicemgr_mp3 {";s:5:"class";i:1;s:11:"parentClass";s:17:"tx_servicemgr_mp3";s:4:"cDat";a:3:{s:4:"text";s:898:"
+Returns formarted error message
+";s:5:"param";a:1:{i:0;a:2:{i:0;s:6:"string";i:1;s:19:"$msg: error message";}}s:6:"return";a:2:{i:0;s:6:"string";i:1;s:23:"formarted error message";}}s:7:"content";s:0:"";s:12:"content_size";i:284;s:13:"content_lines";i:8;s:6:"atLine";i:308;}}s:10:"usageCount";a:12:{s:12:"H_61f4d620ba";a:2:{s:24:"_searchtime_milliseconds";d:30;s:15:"_functionHeader";s:42:"class tx_servicemgr extends tslib_pibase {";}s:12:"H_7520ccd188";a:6:{s:3:"ALL";a:2:{s:11:"objectUsage";i:3;s:5:"TOTAL";i:3;}s:14:"MD5_3e4188e179";a:3:{s:8:"fileName";s:31:"pi1/class.tx_servicemgr_pi1.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_064d3c83d7";a:3:{s:8:"fileName";s:31:"pi2/class.tx_servicemgr_pi2.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:2;s:15:"_functionHeader";s:20:"function tx_init() {";}s:12:"H_31ab76f135";a:6:{s:3:"ALL";a:2:{s:11:"objectUsage";i:3;s:5:"TOTAL";i:3;}s:14:"MD5_3e4188e179";a:3:{s:8:"fileName";s:31:"pi1/class.tx_servicemgr_pi1.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_064d3c83d7";a:3:{s:8:"fileName";s:31:"pi2/class.tx_servicemgr_pi2.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:2;s:15:"_functionHeader";s:22:"function tx_loadLL() {";}s:12:"H_a988cd6923";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:24:"_searchtime_milliseconds";d:3;s:15:"_functionHeader";s:51:"function getTeamMembers($teamUID, $fillName=true) {";}s:12:"H_241272894f";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:2;s:15:"_functionHeader";s:20:"function getTags() {";}s:12:"H_2af806951d";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:24:"_searchtime_milliseconds";d:4;s:15:"_functionHeader";s:35:"function getSingleEvent($eventId) {";}s:12:"H_7e41c4f0ac";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:3;s:15:"_functionHeader";s:22:"function getSeries() {";}s:12:"H_cbea73f5cc";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:24:"_searchtime_milliseconds";d:5;s:15:"_functionHeader";s:38:"function getSingleSchedule($eventId) {";}s:12:"H_81a0569bf5";a:6:{s:3:"ALL";a:2:{s:11:"objectUsage";i:3;s:5:"TOTAL";i:3;}s:14:"MD5_f3cd996c04";a:3:{s:8:"fileName";s:23:"class.tx_servicemgr.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_064d3c83d7";a:3:{s:8:"fileName";s:31:"pi2/class.tx_servicemgr_pi2.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:5;s:15:"_functionHeader";s:34:"function getAudioFiles($eventId) {";}s:12:"H_8b602428cf";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:4;s:15:"_functionHeader";s:38:"function getAudiosPerEvent($eventId) {";}s:12:"H_0286c98b5d";a:5:{s:3:"ALL";a:2:{s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:14:"MD5_d791a92e49";a:3:{s:8:"fileName";s:32:"class.tx_servicemgr_download.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:4;s:15:"_functionHeader";s:34:"function fileExtension($filename){";}s:12:"H_7da2d71145";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:8;s:5:"TOTAL";i:8;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:8;s:5:"TOTAL";i:8;}s:24:"_searchtime_milliseconds";d:4;s:15:"_functionHeader";s:30:"function throwErrorMsg($msg) {";}}}s:14:"MD5_d791a92e49";a:5:{s:8:"filename";s:32:"class.tx_servicemgr_download.php";s:8:"filesize";i:4898;s:6:"header";N;s:3:"DAT";a:5:{i:1;a:8:{s:6:"header";s:29:"class tx_servicemgr_download{";s:5:"class";i:1;s:11:"parentClass";s:22:"tx_servicemgr_download";s:4:"cDat";a:3:{s:4:"text";s:898:"
 
 ************************************************************
  Copyright notice
@@ -220,168 +74,64 @@ if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/service
 
  This copyright notice MUST APPEAR in all copies of the script!
 **************************************************************/
-";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:2:"
-	";i:1;i:-1;}s:12:"content_size";i:2;s:13:"content_lines";i:1;s:6:"atLine";i:25;}i:3;a:4:{s:6:"header";s:37:"function getAudioInformation($path) {";s:11:"parentClass";s:17:"tx_servicemgr_mp3";s:4:"cDat";a:3:{s:4:"text";s:36:"
+";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";s:0:"";s:12:"content_size";i:241;s:13:"content_lines";i:3;s:6:"atLine";i:25;}i:3;a:6:{s:6:"header";s:17:"function main() {";s:11:"parentClass";s:22:"tx_servicemgr_download";s:7:"content";s:0:"";s:12:"content_size";i:708;s:13:"content_lines";i:21;s:6:"atLine";i:30;}i:5;a:7:{s:6:"header";s:35:"function getProperties($sermonId) {";s:11:"parentClass";s:22:"tx_servicemgr_download";s:4:"cDat";a:3:{s:4:"text";s:25:"
+
+[Describe function...]
+";s:5:"param";a:1:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:14:"$sermonId: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";s:0:"";s:12:"content_size";i:807;s:13:"content_lines";i:20;s:6:"atLine";i:58;}i:7;a:4:{s:6:"header";s:34:"function fileExtension($filename){";s:11:"parentClass";s:22:"tx_servicemgr_download";s:4:"cDat";a:3:{s:4:"text";s:35:"
+
+extracts extension from filename
+";s:5:"param";a:1:{i:0;a:2:{i:0;s:6:"string";i:1;s:23:"$filename: name of file";}}s:6:"return";a:2:{i:0;s:6:"string";i:1;s:39:"extension of file (without leading dot)";}}s:6:"atLine";i:85;}i:9;a:7:{s:6:"header";s:48:"function str2download($str, $replaceDots=true) {";s:11:"parentClass";s:22:"tx_servicemgr_download";s:4:"cDat";a:3:{s:4:"text";s:74:"
+
+replaces not allowed chars in string for preparing filename downloading
+";s:5:"param";a:2:{i:0;a:2:{i:0;s:6:"string";i:1;s:18:"$str: input string";}i:1;a:2:{i:0;s:7:"boolean";i:1;s:47:"$replaceDots: when true '.' is replaced with ''";}}s:6:"return";a:2:{i:0;s:6:"string";i:1;s:15:"formated string";}}s:7:"content";s:0:"";s:12:"content_size";i:1353;s:13:"content_lines";i:45;s:6:"atLine";i:98;}}s:10:"usageCount";a:5:{s:12:"H_c8dbec31c6";a:4:{s:3:"ALL";a:2:{s:12:"makeinstance";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d791a92e49";a:3:{s:8:"fileName";s:32:"class.tx_servicemgr_download.php";s:12:"makeinstance";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:20;s:15:"_functionHeader";s:29:"class tx_servicemgr_download{";}s:12:"H_a212299ace";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d791a92e49";a:3:{s:8:"fileName";s:32:"class.tx_servicemgr_download.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:1;s:15:"_functionHeader";s:17:"function main() {";}s:12:"H_ea587f7737";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d791a92e49";a:3:{s:8:"fileName";s:32:"class.tx_servicemgr_download.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:1;s:15:"_functionHeader";s:35:"function getProperties($sermonId) {";}s:12:"H_0286c98b5d";a:5:{s:3:"ALL";a:2:{s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:14:"MD5_d791a92e49";a:3:{s:8:"fileName";s:32:"class.tx_servicemgr_download.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:5;s:15:"_functionHeader";s:34:"function fileExtension($filename){";}s:12:"H_1b5f0e6eaa";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d791a92e49";a:3:{s:8:"fileName";s:32:"class.tx_servicemgr_download.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:1;s:15:"_functionHeader";s:48:"function str2download($str, $replaceDots=true) {";}}}s:14:"MD5_c3000d98fc";a:5:{s:8:"filename";s:27:"class.tx_servicemgr_mp3.php";s:8:"filesize";i:3985;s:6:"header";N;s:3:"DAT";a:3:{i:1;a:8:{s:6:"header";s:25:"class tx_servicemgr_mp3 {";s:5:"class";i:1;s:11:"parentClass";s:17:"tx_servicemgr_mp3";s:4:"cDat";a:3:{s:4:"text";s:898:"
+
+************************************************************
+ Copyright notice
+
+ (c) 2008 Peter Schuster <typo3@peschuster.de>
+ All rights reserved
+
+ This script is part of the TYPO3 project. The TYPO3 project is
+ free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ The GNU General Public License can be found at
+ http://www.gnu.org/copyleft/gpl.html.
+
+ This script is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ This copyright notice MUST APPEAR in all copies of the script!
+**************************************************************/
+";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";s:0:"";s:12:"content_size";i:2;s:13:"content_lines";i:1;s:6:"atLine";i:25;}i:3;a:4:{s:6:"header";s:37:"function getAudioInformation($path) {";s:11:"parentClass";s:17:"tx_servicemgr_mp3";s:4:"cDat";a:3:{s:4:"text";s:36:"
 
 Get ID3-Information from MP3-File
 ";s:5:"param";a:1:{i:0;a:2:{i:0;s:6:"string";i:1;s:5:"$path";}}s:6:"return";a:2:{i:0;s:5:"array";i:1;s:0:"";}}s:6:"atLine";i:33;}i:5;a:7:{s:6:"header";s:55:"function setAudioInformation($path, $fileInformation) {";s:11:"parentClass";s:17:"tx_servicemgr_mp3";s:4:"cDat";a:3:{s:4:"text";s:26:"
 
 Writes tags to MP3-file
-";s:5:"param";a:2:{i:0;a:2:{i:0;s:6:"string";i:1;s:5:"$path";}i:1;a:2:{i:0;s:5:"array";i:1;s:16:"$fileInformation";}}s:6:"return";a:2:{i:0;s:14:"boolean/string";i:1;s:17:"true or error msg";}}s:7:"content";a:2:{i:0;s:507:"		if (t3lib_extMgm::isLoaded('t3getid3')) {
-			require_once(t3lib_extMgm::extPath('t3getid3').'getid3/getid3.php');
-		} else {
-			die('GetID3() Library not loaded!');
-		}
-
-		// Get a new instance of the GetID3 library
-		$getID3 = t3lib_div::makeInstance('getID3');
-		$getID3->setOption(array('encoding'=>'UTF-8'));
-
-		if (t3lib_extMgm::isLoaded('t3getid3')) {
-			require_once
-[...]
-cemgr_mp3.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/servicemgr/class.tx_servicemgr_mp3.php']);
-}
-
-?>";i:1;i:1;}s:12:"content_size";i:1557;s:13:"content_lines";i:56;s:6:"atLine";i:76;}}s:10:"usageCount";a:3:{s:12:"H_acc1ad1a6b";a:4:{s:3:"ALL";a:2:{s:12:"makeinstance";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:12:"makeinstance";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:23;s:15:"_functionHeader";s:25:"class tx_servicemgr_mp3 {";}s:12:"H_041753c2ef";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:4;s:15:"_functionHeader";s:37:"function getAudioInformation($path) {";}s:12:"H_7487b9bb6c";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:4;s:15:"_functionHeader";s:55:"function setAudioInformation($path, $fileInformation) {";}}}s:14:"MD5_bf1677f53f";a:5:{s:8:"filename";s:49:"eventpreview/class.tx_servicemgr_eventpreview.php";s:8:"filesize";i:5190;s:6:"header";a:5:{s:4:"text";s:57:"
-
-Plugin 'Event preview' for the 'servicemgr' extension.
-";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}s:5:"other";a:3:{i:0;s:44:"@author	Peter Schuster <typo3@peschuster.de>";i:1;s:14:"@package	TYPO3";i:2;s:25:"@subpackage	tx_servicemgr";}s:11:"other_index";a:3:{s:7:"@author";a:1:{i:0;s:36:"Peter Schuster <typo3@peschuster.de>";}s:8:"@package";a:1:{i:0;s:6:"TYPO3 ";}s:11:"@subpackage";a:1:{i:0;s:14:"tx_servicemgr ";}}}s:3:"DAT";a:3:{i:1;a:8:{s:6:"header";s:55:"class tx_servicemgr_eventpreview extends tslib_pibase {";s:5:"class";i:1;s:11:"parentClass";s:26:"tx_servicemgr_eventpreview";s:4:"cDat";a:5:{s:4:"text";s:57:"
-
-Plugin 'Event preview' for the 'servicemgr' extension.
-";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}s:5:"other";a:3:{i:0;s:44:"@author	Peter Schuster <typo3@peschuster.de>";i:1;s:14:"@package	TYPO3";i:2;s:25:"@subpackage	tx_servicemgr";}s:11:"other_index";a:3:{s:7:"@author";a:1:{i:0;s:36:"Peter Schuster <typo3@peschuster.de>";}s:8:"@package";a:1:{i:0;s:6:"TYPO3 ";}s:11:"@subpackage";a:1:{i:0;s:14:"tx_servicemgr ";}}}s:7:"content";a:2:{i:0;s:330:"	var $prefixId      = 'tx_servicemgr_eventpreview';		// Same as class name
-	var $scriptRelPath = 'eventpreview/class.tx_servicemgr_eventpreview.php';	// Path to this script relative to the extension dir.
-	var $extKey        = 'servicemgr';	// The extension key.
-	var $pi_checkCHash = true;
-	var $template;
-	var $tx_servicemgr;
-
-
-	";i:1;i:-1;}s:12:"content_size";i:330;s:13:"content_lines";i:8;s:6:"atLine";i:33;}i:3;a:4:{s:6:"header";s:31:"function main($content,$conf)	{";s:11:"parentClass";s:26:"tx_servicemgr_eventpreview";s:4:"cDat";a:3:{s:4:"text";s:32:"
-
-The main method of the PlugIn
-";s:5:"param";a:2:{i:0;a:2:{i:0;s:6:"string";i:1;s:28:"$content: The PlugIn content";}i:1;a:2:{i:0;s:5:"array";i:1;s:31:"$conf: The PlugIn configuration";}}s:6:"return";a:2:{i:0;s:3:"The";i:1;s:40:"content that is displayed on the website";}}s:6:"atLine";i:49;}i:5;a:7:{s:6:"header";s:21:"function listView() {";s:11:"parentClass";s:26:"tx_servicemgr_eventpreview";s:4:"cDat";a:3:{s:4:"text";s:30:"
-
-creates event preview table
-";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:5:"event";i:1;s:13:"preview table";}}s:7:"content";a:2:{i:0;s:507:"
-		//Template preparation
-		#Subpart
-        $subpart = $this->cObj->getSubpart($this->template,'###PREVIEWLIST###');
-        #header row
-        $headerrow = $this->cObj->getSubpart($subpart,'###HEADERROW###');
-        #single row
-        $singlerow = $this->cObj->getSubpart($subpart,'###ROW###');
-
-        //substitue table header in template file
-        $markerArray['##
-[...]
-clude_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/servicemgr/eventpreview/class.tx_servicemgr_eventpreview.php']);
-}
-
-?>";i:1;i:1;}s:12:"content_size";i:2160;s:13:"content_lines";i:52;s:6:"atLine";i:84;}}s:10:"usageCount";a:3:{s:12:"H_aadb6532a0";a:2:{s:24:"_searchtime_milliseconds";d:5;s:15:"_functionHeader";s:55:"class tx_servicemgr_eventpreview extends tslib_pibase {";}s:12:"H_e8476b0991";a:2:{s:24:"_searchtime_milliseconds";d:1;s:15:"_functionHeader";s:31:"function main($content,$conf)	{";}s:12:"H_6e6b2fe020";a:6:{s:3:"ALL";a:2:{s:11:"objectUsage";i:3;s:5:"TOTAL";i:3;}s:14:"MD5_bf1677f53f";a:3:{s:8:"fileName";s:49:"eventpreview/class.tx_servicemgr_eventpreview.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_064d3c83d7";a:3:{s:8:"fileName";s:31:"pi2/class.tx_servicemgr_pi2.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:2;s:15:"_functionHeader";s:21:"function listView() {";}}}s:14:"MD5_d230cd1fe9";a:5:{s:8:"filename";s:31:"pi3/class.tx_servicemgr_pi3.php";s:8:"filesize";i:14716;s:6:"header";a:5:{s:4:"text";s:65:"
+";s:5:"param";a:2:{i:0;a:2:{i:0;s:6:"string";i:1;s:5:"$path";}i:1;a:2:{i:0;s:5:"array";i:1;s:16:"$fileInformation";}}s:6:"return";a:2:{i:0;s:14:"boolean/string";i:1;s:17:"true or error msg";}}s:7:"content";s:0:"";s:12:"content_size";i:1557;s:13:"content_lines";i:56;s:6:"atLine";i:76;}}s:10:"usageCount";a:3:{s:12:"H_acc1ad1a6b";a:4:{s:3:"ALL";a:2:{s:12:"makeinstance";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:12:"makeinstance";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:18;s:15:"_functionHeader";s:25:"class tx_servicemgr_mp3 {";}s:12:"H_041753c2ef";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:4;s:15:"_functionHeader";s:37:"function getAudioInformation($path) {";}s:12:"H_7487b9bb6c";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:5;s:15:"_functionHeader";s:55:"function setAudioInformation($path, $fileInformation) {";}}}s:14:"MD5_d230cd1fe9";a:5:{s:8:"filename";s:31:"pi3/class.tx_servicemgr_pi3.php";s:8:"filesize";i:14839;s:6:"header";a:5:{s:4:"text";s:65:"
 
 Plugin 'Sermon administration' for the 'servicemgr' extension.
 ";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}s:5:"other";a:3:{i:0;s:44:"@author	Peter Schuster <typo3@peschuster.de>";i:1;s:14:"@package	TYPO3";i:2;s:25:"@subpackage	tx_servicemgr";}s:11:"other_index";a:3:{s:7:"@author";a:1:{i:0;s:36:"Peter Schuster <typo3@peschuster.de>";}s:8:"@package";a:1:{i:0;s:6:"TYPO3 ";}s:11:"@subpackage";a:1:{i:0;s:14:"tx_servicemgr ";}}}s:3:"DAT";a:6:{i:1;a:8:{s:6:"header";s:47:"class tx_servicemgr_pi3 extends tx_servicemgr {";s:5:"class";i:1;s:11:"parentClass";s:17:"tx_servicemgr_pi3";s:4:"cDat";a:5:{s:4:"text";s:65:"
 
 Plugin 'Sermon administration' for the 'servicemgr' extension.
-";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}s:5:"other";a:3:{i:0;s:44:"@author	Peter Schuster <typo3@peschuster.de>";i:1;s:14:"@package	TYPO3";i:2;s:25:"@subpackage	tx_servicemgr";}s:11:"other_index";a:3:{s:7:"@author";a:1:{i:0;s:36:"Peter Schuster <typo3@peschuster.de>";}s:8:"@package";a:1:{i:0;s:6:"TYPO3 ";}s:11:"@subpackage";a:1:{i:0;s:14:"tx_servicemgr ";}}}s:7:"content";a:2:{i:0;s:303:"	var $prefixId      = 'tx_servicemgr_pi3';		// Same as class name
-	var $scriptRelPath = 'pi3/class.tx_servicemgr_pi3.php';	// Path to this script relative to the extension dir.
-	var $extKey        = 'servicemgr';	// The extension key.
-	var $pi_checkCHash = true;
-	var $template;
-	var $tx_servicemgr;
-
-
-	";i:1;i:-1;}s:12:"content_size";i:303;s:13:"content_lines";i:8;s:6:"atLine";i:34;}i:3;a:7:{s:6:"header";s:31:"function main($content,$conf)	{";s:11:"parentClass";s:17:"tx_servicemgr_pi3";s:4:"cDat";a:3:{s:4:"text";s:32:"
+";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}s:5:"other";a:3:{i:0;s:44:"@author	Peter Schuster <typo3@peschuster.de>";i:1;s:14:"@package	TYPO3";i:2;s:25:"@subpackage	tx_servicemgr";}s:11:"other_index";a:3:{s:7:"@author";a:1:{i:0;s:36:"Peter Schuster <typo3@peschuster.de>";}s:8:"@package";a:1:{i:0;s:6:"TYPO3 ";}s:11:"@subpackage";a:1:{i:0;s:14:"tx_servicemgr ";}}}s:7:"content";s:0:"";s:12:"content_size";i:303;s:13:"content_lines";i:8;s:6:"atLine";i:33;}i:3;a:7:{s:6:"header";s:31:"function main($content,$conf)	{";s:11:"parentClass";s:17:"tx_servicemgr_pi3";s:4:"cDat";a:3:{s:4:"text";s:32:"
 
 The main method of the PlugIn
-";s:5:"param";a:2:{i:0;a:2:{i:0;s:6:"string";i:1;s:28:"$content: The PlugIn content";}i:1;a:2:{i:0;s:5:"array";i:1;s:31:"$conf: The PlugIn configuration";}}s:6:"return";a:2:{i:0;s:3:"The";i:1;s:40:"content that is displayed on the website";}}s:7:"content";a:2:{i:0;s:507:"		$this->conf=$conf;
-		$this->pi_setPiVarDefaults();
-
-		$this->tx_init();
-		$this->tx_loadLL();
-
-
-		//DEBUG-CONFIG
-		$GLOBALS['TYPO3_DB']->debugOutput = true;
-		t3lib_div::debug($this->conf, 'TypoScript');
-		t3lib_div::debug($this->extConf, 'extConf');
-		t3lib_div::debug($this->generalConf, 'generalConf');
-		t3lib_div::debug($this->piVars, 'piVars');
-
-		$this->piVars['even
-[...]
-reak;
-
-			CASE 'list':
-			default:
-				$content = $this->listView();
-		}
-
-		return $this->pi_wrapInBaseClass($content);
-	}
-
-	";i:1;i:1;}s:12:"content_size";i:1107;s:13:"content_lines";i:44;s:6:"atLine";i:50;}i:5;a:7:{s:6:"header";s:21:"function listView() {";s:11:"parentClass";s:17:"tx_servicemgr_pi3";s:4:"cDat";a:3:{s:4:"text";s:19:"
+";s:5:"param";a:2:{i:0;a:2:{i:0;s:6:"string";i:1;s:28:"$content: The PlugIn content";}i:1;a:2:{i:0;s:5:"array";i:1;s:31:"$conf: The PlugIn configuration";}}s:6:"return";a:2:{i:0;s:6:"string";i:1;s:44:"The content that is displayed on the website";}}s:7:"content";s:0:"";s:12:"content_size";i:1115;s:13:"content_lines";i:44;s:6:"atLine";i:49;}i:5;a:7:{s:6:"header";s:21:"function listView() {";s:11:"parentClass";s:17:"tx_servicemgr_pi3";s:4:"cDat";a:3:{s:4:"text";s:19:"
 
 lists all events
-";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"string";i:1;s:15:"table of events";}}s:7:"content";a:2:{i:0;s:507:"		//Template preparation
-		#Subpart
-		$subpart = $this->cObj->getSubpart($this->template,'###SERMONLISTADMIN###');
-		#header row
-		$headerrow = $this->cObj->getSubpart($subpart,'###HEADERROW###');
-		#single row
-		$singlerow = $this->cObj->getSubpart($subpart,'###ROW###');
-
-		//substitue table header in template file
-		$markerArray['###HDATE###'] = $this->pi_getLL('date');
-
-[...]
-ROW###']=$liste;
-		}
-
-		return $this->cObj->substituteMarkerArrayCached($subpart,$markerArray,$subpartArray,array()); ;
-	}
-
-	";i:1;i:1;}s:12:"content_size";i:2969;s:13:"content_lines";i:84;s:6:"atLine";i:100;}i:7;a:7:{s:6:"header";s:31:"function detailView($eventId) {";s:11:"parentClass";s:17:"tx_servicemgr_pi3";s:4:"cDat";a:3:{s:4:"text";s:67:"
+";s:5:"param";a:0:{}s:6:"return";a:2:{i:0;s:6:"string";i:1;s:15:"table of events";}}s:7:"content";s:0:"";s:12:"content_size";i:2653;s:13:"content_lines";i:77;s:6:"atLine";i:99;}i:7;a:7:{s:6:"header";s:31:"function detailView($eventId) {";s:11:"parentClass";s:17:"tx_servicemgr_pi3";s:4:"cDat";a:3:{s:4:"text";s:67:"
 
 detail view of event with information about sermon-audio-file(s)
-";s:5:"param";a:1:{i:0;a:2:{i:0;s:7:"integer";i:1;s:22:"$eventId: uid of event";}}s:6:"return";a:2:{i:0;s:6:"string";i:1;s:11:"detail view";}}s:7:"content";a:2:{i:0;s:507:"		/*$basePath = t3lib_extMgm::extPath($this->extKey).'test.xml';
-		$file = t3lib_div::getFileAbsFileName($basePath);
-		$file = t3lib_div::getURL($file);
-		$content = t3lib_div::xml2array($file);
-		debug($content);
-
-		$array1 = array(2=>array(2), 8=>array(1,3));
-		debug(t3lib_div::array2xml_cs($array1));
-		debug(serialize($array1));*/
-
-		$res = $GLOBALS['TYPO3_DB']->exec_SE
-[...]
-ent['l18n_diffsource'],'serialized');
-			t3lib_div::debug(unserialize($content['l18n_diffsource']),'unserialized');
-		}
-	}
-
-	";i:1;i:1;}s:12:"content_size";i:698;s:13:"content_lines";i:21;s:6:"atLine";i:191;}i:9;a:4:{s:6:"header";s:31:"function showUpload($eventId) {";s:11:"parentClass";s:17:"tx_servicemgr_pi3";s:4:"cDat";a:3:{s:4:"text";s:41:"
+";s:5:"param";a:1:{i:0;a:2:{i:0;s:7:"integer";i:1;s:22:"$eventId: uid of event";}}s:6:"return";a:2:{i:0;s:6:"string";i:1;s:11:"detail view";}}s:7:"content";s:0:"";s:12:"content_size";i:6;s:13:"content_lines";i:3;s:6:"atLine";i:183;}i:9;a:4:{s:6:"header";s:62:"function showUpload($eventId, $previousUploadData = array()) {";s:11:"parentClass";s:17:"tx_servicemgr_pi3";s:4:"cDat";a:3:{s:4:"text";s:41:"
 
 Returns upload form for specific event
-";s:5:"param";a:1:{i:0;a:2:{i:0;s:7:"integer";i:1;s:22:"$eventId: uid of event";}}s:6:"return";a:2:{i:0;s:6:"string";i:1;s:11:"upload form";}}s:6:"atLine";i:219;}i:11;a:7:{s:6:"header";s:29:"function doUpload($eventId) {";s:11:"parentClass";s:17:"tx_servicemgr_pi3";s:4:"cDat";a:3:{s:4:"text";s:25:"
+";s:5:"param";a:2:{i:0;a:2:{i:0;s:7:"integer";i:1;s:22:"$eventId: uid of event";}i:1;a:2:{i:0;s:5:"array";i:1;s:58:"$previousUploadData: data array of previous, failed upload";}}s:6:"return";a:2:{i:0;s:6:"string";i:1;s:11:"upload form";}}s:6:"atLine";i:194;}i:11;a:7:{s:6:"header";s:29:"function doUpload($eventId) {";s:11:"parentClass";s:17:"tx_servicemgr_pi3";s:4:"cDat";a:3:{s:4:"text";s:20:"
 
-[Describe function...]
-";s:5:"param";a:1:{i:0;a:2:{i:0;s:6:"[type]";i:1;s:13:"$eventId: ...";}}s:6:"return";a:2:{i:0;s:6:"[type]";i:1;s:3:"...";}}s:7:"content";a:2:{i:0;s:507:"		$uploadData = $_FILES[$this->prefixId];
-		$uploadPath = $this->extConf['audioFileUploadPath'];
-		$allPreachers = $this->getTeamMembers($this->generalConf['PreacherTeamUID']);
-		$allSeries = $this->getSeries();
-		t3lib_div::debug($uploadData);
-
-		if ($uploadData['error'] == 0) {
-			$uploadData['extension'] = $this->fileExtension($uploadData['name']);
-
-			$allowedAudioType
-[...]
-r_pi3.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/servicemgr/pi3/class.tx_servicemgr_pi3.php']);
-}
-
-?>";i:1;i:1;}s:12:"content_size";i:3810;s:13:"content_lines";i:113;s:6:"atLine";i:323;}}s:10:"usageCount";a:6:{s:12:"H_b38acbf796";a:2:{s:24:"_searchtime_milliseconds";d:22;s:15:"_functionHeader";s:47:"class tx_servicemgr_pi3 extends tx_servicemgr {";}s:12:"H_e8476b0991";a:2:{s:24:"_searchtime_milliseconds";d:0;s:15:"_functionHeader";s:31:"function main($content,$conf)	{";}s:12:"H_6e6b2fe020";a:6:{s:3:"ALL";a:2:{s:11:"objectUsage";i:3;s:5:"TOTAL";i:3;}s:14:"MD5_bf1677f53f";a:3:{s:8:"fileName";s:49:"eventpreview/class.tx_servicemgr_eventpreview.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_064d3c83d7";a:3:{s:8:"fileName";s:31:"pi2/class.tx_servicemgr_pi2.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:3;s:15:"_functionHeader";s:21:"function listView() {";}s:12:"H_c807035828";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:1;s:15:"_functionHeader";s:31:"function detailView($eventId) {";}s:12:"H_53d23fffaa";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:2;s:15:"_functionHeader";s:31:"function showUpload($eventId) {";}s:12:"H_c36e44effb";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:1;s:15:"_functionHeader";s:29:"function doUpload($eventId) {";}}}}}
+progresses upload
+";s:5:"param";a:1:{i:0;a:2:{i:0;s:7:"integer";i:1;s:22:"$eventId: UID of event";}}s:6:"return";a:2:{i:0;s:6:"string";i:1;s:28:"error messages or detailView";}}s:7:"content";s:0:"";s:12:"content_size";i:4609;s:13:"content_lines";i:123;s:6:"atLine";i:298;}}s:10:"usageCount";a:6:{s:12:"H_b38acbf796";a:2:{s:24:"_searchtime_milliseconds";d:20;s:15:"_functionHeader";s:47:"class tx_servicemgr_pi3 extends tx_servicemgr {";}s:12:"H_e8476b0991";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d791a92e49";a:3:{s:8:"fileName";s:32:"class.tx_servicemgr_download.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:2;s:15:"_functionHeader";s:31:"function main($content,$conf)	{";}s:12:"H_6e6b2fe020";a:6:{s:3:"ALL";a:2:{s:11:"objectUsage";i:9;s:5:"TOTAL";i:9;}s:14:"MD5_3e4188e179";a:3:{s:8:"fileName";s:31:"pi1/class.tx_servicemgr_pi1.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_064d3c83d7";a:3:{s:8:"fileName";s:31:"pi2/class.tx_servicemgr_pi2.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:7;s:5:"TOTAL";i:7;}s:24:"_searchtime_milliseconds";d:4;s:15:"_functionHeader";s:21:"function listView() {";}s:12:"H_c807035828";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:2;s:5:"TOTAL";i:2;}s:24:"_searchtime_milliseconds";d:1;s:15:"_functionHeader";s:31:"function detailView($eventId) {";}s:12:"H_3e04c6302f";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:5;s:5:"TOTAL";i:5;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:5;s:5:"TOTAL";i:5;}s:24:"_searchtime_milliseconds";d:4;s:15:"_functionHeader";s:62:"function showUpload($eventId, $previousUploadData = array()) {";}s:12:"H_c36e44effb";a:4:{s:3:"ALL";a:2:{s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:14:"MD5_d230cd1fe9";a:3:{s:8:"fileName";s:31:"pi3/class.tx_servicemgr_pi3.php";s:11:"objectUsage";i:1;s:5:"TOTAL";i:1;}s:24:"_searchtime_milliseconds";d:2;s:15:"_functionHeader";s:29:"function doUpload($eventId) {";}}}}}

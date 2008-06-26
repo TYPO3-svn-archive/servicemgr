@@ -39,13 +39,13 @@ class tx_servicemgr_pi1 extends tx_servicemgr {
 	var $template;
 	var $tx_servicemgr;
 
-	
+
 	/**
 	 * The main method of the PlugIn
 	 *
 	 * @param	string		$content: The PlugIn content
 	 * @param	array		$conf: The PlugIn configuration
-	 * @return	The content that is displayed on the website
+	 * @return	string		The	content that is displayed on the website
 	 */
 	function main($content,$conf)	{
 		$this->conf=$conf;
@@ -69,36 +69,36 @@ class tx_servicemgr_pi1 extends tx_servicemgr {
 			$this->template = 'EXT:servicemgr/res/tables.tmpl';
 		}
 		$this->template = $this->cObj->fileResource($this->template);
-		
+
 		if (empty($this->piVars['eventId'])) {
 			$content = 'VOLL'.$this->listView();
-		} else {	
+		} else {
 			$content= 'LEER';
 		}
 		return $this->pi_wrapInBaseClass($content);
 	}
 
 	/**
-	 * creates event preview table
+	 * returns event preview table
 	 *
-	 * @return event preview table
+	 * @return	string		event preview table
 	 */
 	function listView() {
-		
-		//Template preparation		
+
+		//Template preparation
 		#Subpart
         $subpart = $this->cObj->getSubpart($this->template,'###PREVIEWLIST###');
         #header row
         $headerrow = $this->cObj->getSubpart($subpart,'###HEADERROW###');
         #single row
         $singlerow = $this->cObj->getSubpart($subpart,'###ROW###');
-		
+
         //substitue table header in template file
         $markerArray['###HDATE###'] = $this->pi_getLL('date');
         $markerArray['###HSUBJECT###'] = $this->pi_getLL('subject');
         $markerArray['###HNOTES###'] = $this->pi_getLL('notes');
-        $subpartArray['###HEADERROW###'] = $this->cObj->substituteMarkerArrayCached($headerrow,$markerArray); 
-		
+        $subpartArray['###HEADERROW###'] = $this->cObj->substituteMarkerArrayCached($headerrow,$markerArray);
+
 		//get content from database
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
         	'uid, datetime, subject, notes',   #select
@@ -108,13 +108,13 @@ class tx_servicemgr_pi1 extends tx_servicemgr {
         	$orderBy='',
         	$limit=''
         );
-		
-        
+
+
         //substitue table rows in template
         if ($res) {
         	while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
         		$markerArray['###DATE###'] = date('d.m.Y', $row['datetime']);
-        		
+
         		//create link to sermon archive?
         		if ($this->tx_servicemgr->generalConf['SermonArchivePID']) {
         			$markerArray['###SUBJECT###'] = $this->pi_linkToPage(
@@ -126,17 +126,17 @@ class tx_servicemgr_pi1 extends tx_servicemgr {
         		} else {
         			$markerArray['###SUBJECT###'] = $row['subject'];
         		}
-       		
+
         		$markerArray['###NOTES###'] = $row['notes'];
-                $liste .= $this->cObj->substituteMarkerArrayCached($singlerow,$markerArray); 
+                $liste .= $this->cObj->substituteMarkerArrayCached($singlerow,$markerArray);
             }
             $subpartArray['###ROW###']=$liste;
         }
-		
+
 		return $this->cObj->substituteMarkerArrayCached($subpart,$markerArray,$subpartArray,array()); ;
 	}
 }
-	
+
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/servicemgr/pi1/class.tx_servicemgr_pi1.php'])	{
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/servicemgr/pi1/class.tx_servicemgr_pi1.php']);
 }

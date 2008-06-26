@@ -38,15 +38,13 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 	var $extKey        = 'servicemgr';	// The extension key.
 	var $pi_checkCHash = true;
 	var $template;
-	var $tx_servicemgr;
-
 
 	/**
 	 * The main method of the PlugIn
 	 *
 	 * @param	string		$content: The PlugIn content
 	 * @param	array		$conf: The PlugIn configuration
-	 * @return	The		content that is displayed on the website
+	 * @return	string		The content that is displayed on the website
 	 */
 	function main($content,$conf)	{
 		$this->conf=$conf;
@@ -55,10 +53,9 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 		$this->tx_init();
 		$this->tx_loadLL();
 
-
 		//DEBUG-CONFIG
 		$GLOBALS['TYPO3_DB']->debugOutput = true;
-		t3lib_div::debug($this->conf, 'TypoScript');
+		#t3lib_div::debug($this->conf, 'TypoScript');
 		t3lib_div::debug($this->extConf, 'extConf');
 		t3lib_div::debug($this->generalConf, 'generalConf');
 		t3lib_div::debug($this->piVars, 'piVars');
@@ -70,7 +67,7 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 			$this->template = 'EXT:servicemgr/res/tables.tmpl';
 		}
 		$this->template = $this->cObj->fileResource($this->template);
-		
+
 		switch ($this->piVars['action']) {
 			CASE 'detail':
 				$content = $this->detailView($this->piVars['eventId']);
@@ -82,7 +79,6 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 
 			CASE 'doupload':
 				$content = $this->doUpload($this->piVars['eventId']);
-				$content .= $this->detailView($this->piVars['eventId']);
 				break;
 
 			CASE 'list':
@@ -118,14 +114,14 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 		$resEvent = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
         	'uid, datetime, subject, series',   #select
         	'tx_servicemgr_events', #from
-        	'hidden=0 and deleted=0'  #where
+        	'hidden=0 and deleted=0 and public=1'  #where
 		);
 
 
 		//substitue table rows in template
 		if ($resEvent) {
 			while ($rowEvent=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($resEvent)) {
-				
+
 				if (!empty($rowEvent['series'])) {
 					$resSeries = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
         				'name',   #select
@@ -133,7 +129,9 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
         				'uid='.$rowEvent['series'].' and hidden=0 and deleted=0'
 					);
 					$rowSeries=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($resSeries);
-					$rowEvent['series']=$rowSeries['name'];
+					$rowEvent['series'] = $rowSeries['name'];
+				} else {
+					$rowEvent['series'] = '-';
 				}
 
 				$audioFiles = $this->getAudioFiles($rowEvent['uid']);
@@ -183,36 +181,49 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 	 * @return	string		detail view
 	 */
 	function detailView($eventId) {
-		
+
 	}
 
 	/**
 	 * Returns upload form for specific event
 	 *
 	 * @param	integer		$eventId: uid of event
+	 * @param	array		$previousUploadData: data array of previous, failed upload
 	 * @return	string		upload form
 	 */
-	function showUpload($eventId) {
+	function showUpload($eventId, $previousUploadData = array()) {
 
-		//Set Subpart
+		//init template and set static labels
 		$subpart = $this->cObj->getSubpart($this->template,'###SERMONUPLOADFORM###');
-
-		//Substitute static markers
 		$markerArray['###TITLE###'] = $this->pi_getLL('uploadTitle');
 		$markerArray['###HSUBJECT###'] = $this->pi_getLL('subject');
 		$markerArray['###HDATE###'] = $this->pi_getLL('date');
 		$markerArray['###HTAGS###'] = $this->pi_getLL('tags');
 
-		//get single event from database
+		//get data out of database
 		$singleEvent=$this->getSingleEvent($eventId);
 		if ($singleEvent == false) {
+			return $this->pi_getLL('ERROR.wrongEventKey').
+					$this->listView();
+		}
+
+		$allTags = $this->getTags();
+
+		$duty = $this->getSingleSchedule($eventId);
+		if ($duty === false) {
 			return $this->pi_getLL('ERROR.wrongEventKey');
 		}
 
-		// get tags
-		$allTags = $this->getTags();
-		$actTags = split(',', $singleEvent['tags']);
-
+		$allPreachers = $this->getTeamMembers($this->generalConf['PreacherTeamUID']); // get all teammembers of preacher-team
+		
+		if ($previousUploadData === array()) {
+			$actTags = split(',', $singleEvent['tags']); // get tags for this event
+			$actPreachers = $duty[$this->generalConf['PreacherTeamUID']]; // get preacher(s) for this event
+		} else {
+			$actTags = $previousUploadData['data']['tags'];
+			$actPreachers = $previousUploadData['data']['preachers'];
+		}
+		
 		// generate output
 		$outputTags = '';
 		foreach($allTags as $tag) {
@@ -225,21 +236,9 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 		}
 
 
-		// get schedule data for event
-		$duty = $this->getSingleSchedule($eventId);
-		if ($duty === false) {
-			return $this->pi_getLL('ERROR.wrongEventKey');
-		}
-
-		// get all teammembers of preacher-team
-		$allPreachers = $this->getTeamMembers($this->generalConf['PreacherTeamUID']);
-
-		// if a preacher is in the schedule for this event
-		// and at least one person is in preacher-team
+		// if atleast one person is in preacher-team
 		if(count($allPreachers) !== 0) {
-
-			// get current preacher-uid(s) out of duty array
-			$actPreachers = $duty[$this->generalConf['PreacherTeamUID']];
+			
 			if (!is_array($actPreachers) && empty($actPreachers)) {
 				$actPreachers = array();
 			}
@@ -266,14 +265,11 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 		}
 
 
-
 		//
 		// File
 		//
 		$markerArray['###HFILE###'] = '<label for="'.$this->prefixId.'[upload][file]">'.$this->pi_getLL('file').'</label>';
 		$markerArray['###FILE###'] = '<input name="'.$this->prefixId.'" id="'.$this->prefixId.'[upload][file]" type="file" size="30">';
-
-
 
 		//
 		// combine output
@@ -294,52 +290,59 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 	}
 
 	/**
-	 * [Describe function...]
+	 * progresses upload
 	 *
-	 * @param	[type]		$eventId: ...
-	 * @return	[type]		...
+	 * @param	integer		$eventId: UID of event
+	 * @return	string		error messages or detailView
 	 */
 	function doUpload($eventId) {
-		$uploadData = $_FILES[$this->prefixId];
+		$uploadData['file'] = $_FILES[$this->prefixId];
+		$uploadData['data'] = $this->piVars['upload'];
+		
 		$uploadPath = $this->extConf['audioFileUploadPath'];
+		
+		// get data out of database
 		$allPreachers = $this->getTeamMembers($this->generalConf['PreacherTeamUID']);
 		$allSeries = $this->getSeries();
 
-		if ($uploadData['error'] == 0) {
-			$uploadData['extension'] = $this->fileExtension($uploadData['name']);
+		if ($uploadData['file']['error'] == 0) {
+			$uploadData['file']['extension'] = $this->fileExtension($uploadData['file']['name']);
 
 			$allowedAudioType = str_replace(' ','',$this->extConf['allowedAudioType']);
-			if (!in_array($uploadData['extension'], split(',',$allowedAudioType))) {
-				return $this->pi_getLL('wrongFileExtension');
+			if (!in_array($uploadData['file']['extension'], split(',',$allowedAudioType))) {
+				return $this->throwErrorMsg($this->pi_getLL('wrongFileExtension')).
+						$this->showUpload($eventId, $uploadData);
 			}
 
 			//get single event from database
 			$singleEvent=$this->getSingleEvent($eventId);
 			if ($singleEvent == false) {
-				return $this->pi_getLL('ERROR.wrongEventKey');
+				return $this->throwErrorMsg($this->pi_getLL('ERROR.wrongEventKey')).
+						$this->listView();
 			}
 
 			$countAudioPerEvent = $this->getAudiosPerEvent($eventId);
-			$newFileName = $singleEvent['uid'].'-'.date('Ymd',$singleEvent['datetime']).'-'.$countAudioPerEvent.'.'.$uploadData['extension'];
+			$newFileName = $singleEvent['uid'].'-'.date('Ymd',$singleEvent['datetime']).'-'.$countAudioPerEvent.'.'.$uploadData['file']['extension'];
 
 			if (!is_dir($uploadPath)) {
 				mkdir($uploadPath, null, true);
 			}
 
-			if (!move_uploaded_file($uploadData['tmp_name'], PATH_site.$uploadPath.'/'.$newFileName)) {
-				return $this->pi_getLL('error');
+			if (!move_uploaded_file($uploadData['file']['tmp_name'], PATH_site.$uploadPath.'/'.$newFileName)) {
+				return $this->throwErrorMsg($this->pi_getLL('error')).
+						$this->listView();
 			}
 
 			$tx_mp3class = t3lib_div::makeInstance('tx_servicemgr_mp3'); //initiate mp3-/id3-functions
-			
-			foreach ($this->piVars['upload']['preachers'] as $singlePreacher) {
+
+			foreach ($uploadData['data']['preachers'] as $singlePreacher) {
 				$fileInformation['artist'][] = $allPreachers[$singlePreacher]['name'];
 			}
 			$fileInformation['album'] = $allSeries[$singleEvent['series']]['name'];
 		    $fileInformation['title'] = $singleEvent['subject'];
 			$fileInformation['year'] = date('Y', $singleEvent['datetime']);
 		    $fileInformation['genre'] = $this->extConf['sermonGenre'];
-		    
+
 		    $tx_mp3class->setAudioInformation($uploadPath.'/'.$newFileName, $fileInformation); //write id3-tags to file
 
 		    $fileInformation = $tx_mp3class->getAudioInformation(PATH_site.$uploadPath.'/'.$newFileName); //get playtime, bitrate, etc.
@@ -348,8 +351,7 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 		    	$title .= ($countAudioPerEvent + 1);
 		    }
 		    $actTime = mktime();
-		    
-		    //$tce = t3lib_div::makeInstance('t3lib_TCEmain');
+
 		    $insertData = array(
 		    	'pid' => '2',
 		    	'tstamp' => $actTime,
@@ -359,44 +361,59 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 		    	'file' => $uploadPath.'/'.$newFileName,
 		    	'filedate' => filemtime(PATH_site.$uploadPath.'/'.$newFileName),
 		    	'playtime' => $fileInformation['playtime'],
-		    	'filesize' => $uploadData['size'],
-		    	'mimetype' => $uploadData['type'],
+		    	'filesize' => $uploadData['file']['size'],
+		    	'mimetype' => $uploadData['file']['type'],
 		    	'bitrate' => $fileInformation['bitrate'],
 		    	'album' => $singleEvent['series']
 			);
 			$insertData['l18n_diffsource'] = serialize(array('title'=>'','event'=>'','file'=>''));
 			$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_servicemgr_sermons', $insertData);
-			$dutyUID = $GLOBALS['TYPO3_DB']->sql_insert_id();
+			$sermonUID = $GLOBALS['TYPO3_DB']->sql_insert_id();
 
 			// get schedule data for event
 			$duty = $this->getSingleSchedule($eventId);
-			if ($duty == false) {
-				return $this->pi_getLL('ERROR.wrongEventKey');
+			if ($duty === false) {
+				return $this->throwErrorMsg($this->pi_getLL('ERROR.wrongEventKey')).
+						$this->listView();
 			}
-			$duty[$this->generalConf['PreacherTeamUID']] = $this->piVars['upload']['preachers'];
-
-			$updateArray = array('duty' => serialize($duty));
+			$duty[$this->generalConf['PreacherTeamUID']] = $uploadData['data']['preachers'];
+			
 			$res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
-				'tx_servicemgr_dutyschedule', 
-				'uid='.$dutyUID, 
-				$updateArray
+				'tx_servicemgr_dutyschedule', #table
+				'event='.$eventId, #WHERE
+				array('duty' => serialize($duty)) #data
 			);
+			
+			$res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
+				'tx_servicemgr_events', #table
+				'uid='.$eventId, #WHERE
+				array('tags' => implode(',', $uploadData['data']['tags'])) #data
+			);
+			return $this->listView();
 
 		} else {
-			switch ($uploadData['error']) {
+			switch ($uploadData['file']['error']) {
 				CASE 1:
 				CASE 2:
-					return $this->pi_getLL('ERROR.largeFile');
+					return $this->throwErrorMsg($this->pi_getLL('ERROR.largeFile')).
+							$this->showUpload($eventId, $uploadData);
+					break;
+				CASE 3:
+					return $this->throwErrorMsg($this->pi_getLL('ERROR.brokenFile')).
+							$this->showUpload($eventId, $uploadData);
+					break;
+				CASE 4:
+					return $this->throwErrorMsg($this->pi_getLL('ERROR.noFile')).
+							$this->showUpload($eventId, $uploadData);
 					break;
 
 				DEFAULT:
-					return $this->pi_getLL('error');
+					return $this->throwErrorMsg($this->pi_getLL('error')).
+							$this->listView();
 			}
 		}
 	}
-} //end class
-
-
+}
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/servicemgr/pi3/class.tx_servicemgr_pi3.php'])	{
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/servicemgr/pi3/class.tx_servicemgr_pi3.php']);

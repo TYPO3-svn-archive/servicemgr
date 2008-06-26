@@ -27,6 +27,18 @@ require_once(PATH_t3lib.'class.t3lib_page.php');
 require_once(PATH_t3lib.'class.t3lib_tstemplate.php');
 require_once(PATH_t3lib.'class.t3lib_tsparser_ext.php');
 
+ /**
+  * Top level class for the 'servicemgr' extension.
+  *
+  * Class contains general functions for the servicemgr-extension.
+  * All plugin classes extend this class.
+  *
+  * $Id:
+  *
+  * @author		Peter Schuster <typo3@peschuster.de>
+  * @package		TYPO3
+  * @subpackage 	tx_servicemgr
+  */
 class tx_servicemgr extends tslib_pibase {
 	var $prefixId		= 'tx_servicemgr';		// Same as class name
 	var $scriptRelPath	= 'class.tx_servicemgr.php';	// Path to this script relative to the extension dir.
@@ -34,6 +46,11 @@ class tx_servicemgr extends tslib_pibase {
 	var $extConf;		// extension conf from TYPO3_CONF_VARS
 	var $generalConf;	// TypoScript conf for plugin.tx_servicemgr
 
+	/**
+	 * Functions sets conf values and gets TypoScript conf
+	 *
+	 * @return	boolean		returns true when initiated succesfull
+	 */
 	function tx_init() {
 		$this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['servicemgr']);
 
@@ -51,8 +68,7 @@ class tx_servicemgr extends tslib_pibase {
 	/**
 	 * loads LOCAL_LANG out of locallang_common.xml in extension base dir
 	 *
-	 * @param	array		$oldLL: LOCAL_LANG array
-	 * @return	[type]		...
+	 * @return	void
 	 */
 	function tx_loadLL() {
 
@@ -132,8 +148,9 @@ class tx_servicemgr extends tslib_pibase {
 
 	/**
 	 * Returns all tags from database
+	 * gets uid, name, parrent
 	 *
-	 * @return	array		tags as array with key=uid and uid, name, parrent as properties
+	 * @return	array		tags as array with key=uid
 	 */
 	function getTags() {
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
@@ -142,13 +159,10 @@ class tx_servicemgr extends tslib_pibase {
         	'hidden=0 AND deleted=0'  #where
 		);
 
-		// dump arrays
+
 		$returnValue = array();
-
 		if ($res) {
-		while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-
-				// fill return value with tags
+			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 				$returnValue[$row['uid']] = $row;
 			}
 		}
@@ -162,10 +176,10 @@ class tx_servicemgr extends tslib_pibase {
 	}
 
 	/**
-	 * [Describe function...]
+	 * gets information about an single event from database
 	 *
-	 * @param	[type]		$eventId: ...
-	 * @return	[type]		...
+	 * @param	integer		$eventId: UID of event
+	 * @return	array		uid, datetime, subject, public, series, tags, requiredteams, documents, notes
 	 */
 	function getSingleEvent($eventId) {
 		$resEvent = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
@@ -184,9 +198,10 @@ class tx_servicemgr extends tslib_pibase {
 	}
 
 	/**
-	 * [Describe function...]
+	 * Returns all available series from database
+	 * gets uid and name of all series
 	 *
-	 * @return	[type]		...
+	 * @return	array		array key = uid
 	 */
 	function getSeries() {
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
@@ -215,10 +230,10 @@ class tx_servicemgr extends tslib_pibase {
 	}
 
 	/**
-	 * [Describe function...]
+	 * Returns single schedule out of database
 	 *
-	 * @param	[type]		$eventId: ...
-	 * @return	[type]		...
+	 * @param	integer		$eventId: UID of event
+	 * @return	array		unserialized duty column
 	 */
 	function getSingleSchedule($eventId) {
 		$resSchedule = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
@@ -226,7 +241,7 @@ class tx_servicemgr extends tslib_pibase {
 			'tx_servicemgr_dutyschedule', #from
 			'event='.$eventId.' and hidden=0 and deleted=0' #where
 		);
-		
+
 		if ($resSchedule) {
 			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($resSchedule);
 			if (unserialize($row['duty']) == false) {
@@ -235,11 +250,17 @@ class tx_servicemgr extends tslib_pibase {
 				return unserialize($row['duty']);
 			}
 		} else {
-			t3lib_div::debug('ERROR');
 			return false;
 		}
 	}
 
+	/**
+	 * get all sermon entries in database for specific event
+	 * return array is 2 dimensional
+	 *
+	 * @param	integer		$eventId: UID of event
+	 * @return	array		2-dimensional! (e.g. content[0]['title'])
+	 */
 	function getAudioFiles($eventId) {
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
         	'uid, event, title, file, filedate, playtime, filesize, bitrate, album',   #select
@@ -257,16 +278,22 @@ class tx_servicemgr extends tslib_pibase {
 			return false;
 		}
 	}
-	
+
+	/**
+	 * Returns number of audio files for a specific event
+	 *
+	 * @param	integer		$eventId: UID of event
+	 * @return	integer		number of audiofiles
+	 */
 	function getAudiosPerEvent($eventId) {
 		return count($this->getAudioFiles($eventId));
 	}
-	
+
 	/**
-	 * [Describe function...]
+	 * extracts extension from filename
 	 *
-	 * @param	[type]		$filename: ...
-	 * @return	[type]		...
+	 * @param	string		$filename: name of file
+	 * @return	string		extension of file (without leading dot)
 	 */
 	function fileExtension($filename){
 		$parts = split('\.', $filename);
@@ -274,7 +301,16 @@ class tx_servicemgr extends tslib_pibase {
 		return $parts[0];
 	}
 
-} //end class
+	/**
+	 * Returns formarted error message
+	 *
+	 * @param	string		$msg: error message
+	 * @return	string		formarted error message
+	 */
+	function throwErrorMsg($msg) {
+		return '<div class="tx_servicemgr_errormsg">'.$msg.'</div>';
+	}
+}
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/servicemgr/class.tx_servicemgr.php'])	{
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/servicemgr/class.tx_servicemgr.php']);

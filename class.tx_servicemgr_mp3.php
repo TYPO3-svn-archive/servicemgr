@@ -70,9 +70,9 @@ class tx_servicemgr_mp3 {
 	/**
 	 * Writes tags to MP3-file
 	 *
-	 * @param	string			$path
-	 * @param	array			$fileInformation
-	 * @return	boolean/string	true or error msg
+	 * @param	string		$path
+	 * @param	array		$fileInformation
+	 * @return	boolean/string		true or error msg
 	 */
 	function setAudioInformation($path, $fileInformation) {
 		if (t3lib_extMgm::isLoaded('t3getid3')) {
