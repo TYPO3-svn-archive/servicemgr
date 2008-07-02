@@ -23,7 +23,7 @@
  ***************************************************************/
 
 require_once(t3lib_extMgm::extPath('servicemgr').'class.tx_servicemgr.php');
-require_once(t3lib_extMgm::extPath('servicemgr').'class.tx_servicemgr_mp3.php');
+
 
 /**
  * Plugin 'Sermon administration' for the 'servicemgr' extension.
@@ -181,7 +181,15 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 	 * @return	string		detail view
 	 */
 	function detailView($eventId) {
-
+		if (t3lib_extMgm::isLoaded('audioplayer')) {
+			require_once(t3lib_extMgm::extPath('audioplayer').'class.tx_audioplayer.php');
+		} else {
+			die('Extension "audioplayer" not loaded!');
+		}
+		$audioplayer = t3lib_div::makeInstance('tx_audioplayer');
+		$audioplayer->init();
+		$audioplayer->setOptions(array('initialvolume'=>'100'));
+		return $audioplayer->getFlashPlayer('fileadmin/predigten/1-20080613-1.mp3');
 	}
 
 	/**
