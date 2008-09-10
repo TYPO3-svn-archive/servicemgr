@@ -54,11 +54,11 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 		$this->tx_loadLL();
 
 		//DEBUG-CONFIG
-		$GLOBALS['TYPO3_DB']->debugOutput = false;
+		$GLOBALS['TYPO3_DB']->debugOutput = true;
 		#t3lib_div::debug($this->conf, 'TypoScript');
-		t3lib_div::debug($this->extConf, 'extConf');
-		t3lib_div::debug($this->generalConf, 'generalConf');
-		t3lib_div::debug($this->piVars, 'piVars');
+		#t3lib_div::debug($this->extConf, 'extConf');
+		#t3lib_div::debug($this->generalConf, 'generalConf');
+		#t3lib_div::debug($this->piVars, 'piVars');
 
 		$this->piVars['eventId'] = intVal($this->piVars['eventId']);
 
