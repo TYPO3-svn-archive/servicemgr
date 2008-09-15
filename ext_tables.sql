@@ -224,7 +224,6 @@ CREATE TABLE tx_servicemgr_sermons (
 # Table structure for table "fe_users"
 #
 CREATE TABLE fe_users (
-  tx_servicemgr_image blob NOT NULL,
   tx_servicemgr_description text NOT NULL,
 );
 
@@ -238,6 +237,5 @@ CREATE TABLE fe_groups (
   tx_servicemgr_leaders blob NOT NULL,
   tx_servicemgr_isteam tinyint(3) NOT NULL default '0',
   tx_servicemgr_image blob NOT NULL,
-  tx_servicemgr_description text NOT NULL,
   tx_servicemgr_asteaminschedule tinyint(3) NOT NULL default '0',
 );

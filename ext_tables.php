@@ -185,21 +185,12 @@ $tempColumns = Array (
 			"maxitems" => 1,
 		)
 	),
-	"tx_servicemgr_description" => Array (		
-		"exclude" => 1,		
-		"label" => "LLL:EXT:servicemgr/locallang_db.xml:fe_users.tx_servicemgr_description",		
-		"config" => Array (
-			"type" => "text",
-			"cols" => "30",	
-			"rows" => "5",
-		)
-	),
 );
 
 
 t3lib_div::loadTCA("fe_users");
 t3lib_extMgm::addTCAcolumns("fe_users",$tempColumns,1);
-t3lib_extMgm::addToAllTCAtypes("fe_users","tx_servicemgr_image;;;;1-1-1, tx_servicemgr_description");
+t3lib_extMgm::addToAllTCAtypes("fe_users","tx_servicemgr_image;;;;1-1-1");
 
 $tempColumns = Array (
 	"tx_servicemgr_leaders" => Array (		
@@ -261,21 +252,12 @@ $tempColumns = Array (
 			"maxitems" => 1,
 		)
 	),
-	"tx_servicemgr_description" => Array (		
-		"exclude" => 1,		
-		"label" => "LLL:EXT:servicemgr/locallang_db.xml:fe_groups.tx_servicemgr_description",		
-		"config" => Array (
-			"type" => "text",
-			"cols" => "30",	
-			"rows" => "7",
-		)
-	),
 );
 
 
 t3lib_div::loadTCA("fe_groups");
 t3lib_extMgm::addTCAcolumns("fe_groups",$tempColumns,1);
-t3lib_extMgm::addToAllTCAtypes("fe_groups","tx_servicemgr_leaders;;;;1-1-1, tx_servicemgr_category, tx_servicemgr_isteam, tx_servicemgr_dutyschedule, tx_servicemgr_asteaminschedule, tx_servicemgr_image, tx_servicemgr_description");
+t3lib_extMgm::addToAllTCAtypes("fe_groups","tx_servicemgr_leaders;;;;1-1-1, tx_servicemgr_category, tx_servicemgr_isteam, tx_servicemgr_dutyschedule, tx_servicemgr_asteaminschedule, tx_servicemgr_image");
 
 
 t3lib_div::loadTCA('tt_content');
