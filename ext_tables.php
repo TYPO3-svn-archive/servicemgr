@@ -171,18 +171,13 @@ $TCA["tx_servicemgr_sermons"] = array (
 );
 
 $tempColumns = Array (
-	"tx_servicemgr_image" => Array (		
+	"tx_servicemgr_description" => Array (		
 		"exclude" => 1,		
-		"label" => "LLL:EXT:servicemgr/locallang_db.xml:fe_users.tx_servicemgr_image",		
+		"label" => "LLL:EXT:servicemgr/locallang_db.xml:fe_users.tx_servicemgr_description",		
 		"config" => Array (
-			"type" => "group",
-			"internal_type" => "file",
-			"allowed" => $GLOBALS["TYPO3_CONF_VARS"]["GFX"]["imagefile_ext"],	
-			"max_size" => 500,	
-			"uploadfolder" => "uploads/tx_servicemgr",
-			"size" => 1,	
-			"minitems" => 0,
-			"maxitems" => 1,
+			"type" => "text",
+			"cols" => "30",	
+			"rows" => "5",
 		)
 	),
 );
@@ -190,7 +185,7 @@ $tempColumns = Array (
 
 t3lib_div::loadTCA("fe_users");
 t3lib_extMgm::addTCAcolumns("fe_users",$tempColumns,1);
-t3lib_extMgm::addToAllTCAtypes("fe_users","tx_servicemgr_image;;;;1-1-1");
+t3lib_extMgm::addToAllTCAtypes("fe_users",";;;;1-1-1, tx_servicemgr_description");
 
 $tempColumns = Array (
 	"tx_servicemgr_leaders" => Array (		
@@ -251,7 +246,7 @@ $tempColumns = Array (
 			"minitems" => 0,
 			"maxitems" => 1,
 		)
-	),
+	)
 );
 
 
