@@ -15,6 +15,7 @@
 			<label index="tx_servicemgr_events.requiredteams">Required teams</label>
 			<label index="tx_servicemgr_events.documents">Documents</label>
 			<label index="tx_servicemgr_events.notes">Notes</label>
+			<label index="tx_servicemgr_events.notes_internal">Internal Notes</label>
 			<label index="tx_servicemgr_series">Series</label>
 			<label index="tx_servicemgr_series.name">Name</label>
 			<label index="tx_servicemgr_tags">Tags</label>
@@ -53,7 +54,6 @@
 			<label index="tt_content.list_type_pi1">Event preview</label>
 			<label index="tt_content.list_type_pi2">Sermon archive</label>
 			<label index="tt_content.list_type_pi3">Sermon administration</label>
-			<label index="tt_content.list_type_pi4">Teams</label>
 			<label index="tt_content.list_type_pi5">Duty schedule</label>
 		</languageKey>
 		<languageKey index="de" type="array">
@@ -66,6 +66,7 @@
 			<label index="tx_servicemgr_events.requiredteams">beteiligte Teams</label>
 			<label index="tx_servicemgr_events.documents">Dokumente</label>
 			<label index="tx_servicemgr_events.notes">Bemerkungen</label>
+			<label index="tx_servicemgr_events.notes_internal">Interne Bemerkungen</label>
 			<label index="tx_servicemgr_series">Serien</label>
 			<label index="tx_servicemgr_series.name">Name</label>
 			<label index="tx_servicemgr_tags">Tags</label>
@@ -104,7 +105,6 @@
 			<label index="tt_content.list_type_pi1">Programmvorschau</label>
 			<label index="tt_content.list_type_pi2">Predigtarchiv</label>
 			<label index="tt_content.list_type_pi3">Predigt-Verwaltung</label>
-			<label index="tt_content.list_type_pi4">Teams</label>
 			<label index="tt_content.list_type_pi5">Dienstplan</label>
 		</languageKey>
 	</data>

@@ -16,7 +16,7 @@
 	<td>###SUBJECT###</td>
 	<td><!-- ###FILES### -->
 		<div class="sermonfiles">
-		###FILETITLE### – <i>###SIZE###, ###LENGTH###</i> ###DOWNLOAD### ###PLAY###
+		###FILETITLE### &#0150; <i>###SIZE###, ###LENGTH###</i> ###DOWNLOAD### ###PLAY###
 		</div><!-- ###FILES### -->
 	</td>
 </tr><!-- ###ROW### -->
@@ -32,7 +32,7 @@
 </table>
 <!-- ###SERMONLISTADMIN### -->
 
-<!--- ###SERMONUPLOADFORM### -->
+<!-- ###SERMONUPLOADFORM### -->
 <div id="uploadform">###TITLE###
   <div id="postData">
   	<div id="subject">###HSUBJECT###: ###SUBJECT###</div><div id="date">###HDATE###: ###DATE###</div>
@@ -47,4 +47,31 @@
     <div id="submit">###SUBMIT###</div>
   </div>
 </div>
-<!--- ###SERMONUPLOADFORM### -->
+<!-- ###SERMONUPLOADFORM### -->
+
+<!-- ###EVENTSINGLEVIEW### -->
+<div class="eventsingleview">
+	<h2>###TITLE###</h2>
+	<div id="esv-information">
+		<div id="esv-date"><span class="label">###L_DATE###:</span>&nbsp;<span	class="value">###DATE###, ###TIME### h</span></div>
+		<div id="esv-series"><span class="label">###L_SERIES###:</span>&nbsp;<span class="value">###SERIES###</span></div>
+		<div id="esv-tags"><span class="label">###L_TAGS###:</span>&nbsp;<span class="value">###TAGS###</span></div>
+	</div>
+	<div id="esv-audiocontainer">
+	<div id="esv-audio1" class="esv-audioitem"></div>
+	<div id="esv-audio2" class="esv-audioitem-multi">
+		<h3>Event Title 1</h3>
+        <div class="esv-download"><input type="button" value="Download" /></div>
+        <div class="esv-play">
+        	###PLAYER###
+        </div>
+	  <div class="esv-audio-preacher">Predigt: Hans Mustermann</div>
+		<div class="esv-audio-id3">
+			<h4>Meta-Informationen</h4>
+			Dauer:&nbsp;<span class="value">8.51 Min</span><br />
+			<span class="label">Bitrate:</span>&nbsp;<span class="value">16000 Bit</span><br />
+			<span class="label">Dateigr&ouml;&szlig;e:</span>&nbsp;<span class="value">5,23 MB</span></div>
+		</div>
+	</div>
+</div>
+<!-- ###EVENTSINGLEVIEW### -->

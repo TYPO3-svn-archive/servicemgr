@@ -62,6 +62,8 @@ class tx_servicemgr extends tslib_pibase {
 		$this->generalConf->runThroughTemplates($rootLine);
 		$this->generalConf->generateConfig();
 		$this->generalConf = $this->generalConf->setup['plugin.']['tx_servicemgr.'];
+		
+		$GLOBALS['TSFE']->additionalHeaderData['tx_servicemgr_css'] = '	<link rel="stylesheet" type="text/css" href="typo3conf/ext/servicemgr/res/tables.css" />';
 		return true;
 	}
 
@@ -203,11 +205,15 @@ class tx_servicemgr extends tslib_pibase {
 	 *
 	 * @return	array		array key = uid
 	 */
-	function getSeries() {
+	function getSeries($uid = '') {
+		$where = 'hidden=0 AND deleted=0';
+		if (!empty($uid)) {
+			$where .= ' AND uid='.intval($uid);
+		}
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
         	'uid, name',   #select
         	'tx_servicemgr_series', #from
-        	'hidden=0 AND deleted=0'  #where
+        	$where  #where
 		);
 
 		// dump arrays
@@ -290,6 +296,51 @@ class tx_servicemgr extends tslib_pibase {
 	}
 
 	/**
+	 * returns a detail view for an single event
+	 *
+	 * @param	integer	$eventId: UID of Event
+	 * @param	array	$config: Configuration Array
+	 */
+	function detailViewEvent($eventId, $config, $template) {
+		$row = $this->getSingleEvent(intval($eventId));
+		
+		$series = $this->getSeries($row['series']);
+						
+		$tempContent = array(
+			'subject' => $row['subject'],
+			'date' => date('d.m.Y', $row['datetime']),
+			'time' => date('H:i', $row['datetime']),
+			'series' => $series[$row['series']]['name'],
+		);
+		$tempLabel = array(
+			'date' => $this->pi_getLL('date'),
+			'series' => $this->pi_getLL('series'),
+			'tags' => $this->pi_getLL('tags'),
+		);
+		
+		$markerContent = array(); 
+		$markerLabel = array();
+		foreach($config['fields'] as $field) {
+			$markerContent[$field] = $tempContent[$field];
+			$markerLabel[$field] = $tempLabel[$field];
+		}
+		
+		$markers = array(
+			'###TITLE###' => $markerContent['subject'],
+			'###DATE###' => $markerContent['date'],
+			'###L_DATE###' => $markerLabel['date'],
+			'###TIME###' => $markerContent['time'],
+			'###L_TIME###' => $markerLabel['time'],
+			'###SERIES###' => $markerContent['series'],
+			'###L_SERIES###' => $markerLabel['series'],
+			'###TAGS###' => $markerContent['tags'],
+			'###L_TAGS###' => $markerLabel['tags'],
+		);
+		
+		return $this->cObj->substituteMarkerArray($template, $markers);
+	}
+	
+	/**
 	 * extracts extension from filename
 	 *
 	 * @param	string		$filename: name of file
@@ -309,6 +360,28 @@ class tx_servicemgr extends tslib_pibase {
 	 */
 	function throwErrorMsg($msg) {
 		return '<div class="tx_servicemgr_errormsg">'.$msg.'</div>';
+	}
+
+	/**
+	 * Replaces $this->cObj->substituteArrayMarkerCached() because substitued
+	 * function polutes cache_hash table a lot.
+	 *
+	 * @author	Dmitry Dulepov (dmitry@typo3.org)
+	 * 
+	 * @param	string		$template	Template
+	 * @param	array		$markers	Markers
+	 * @param	array		$subparts	Subparts
+	 * @return	string		HTML
+
+	 */
+	function substituteMarkersAndSubparts($template, array $markers, array $subparts) {
+		$content = $this->cObj->substituteMarkerArray($template, $markers);
+		if (count($subparts) > 0) {
+			foreach ($subparts as $name => $subpart) {
+				$content = $this->cObj->substituteSubpart($content, $name, $subpart);
+			}
+		}
+		return $content;
 	}
 }
 

@@ -4,7 +4,7 @@ if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 $TCA["tx_servicemgr_events"] = array (
 	"ctrl" => $TCA["tx_servicemgr_events"]["ctrl"],
 	"interface" => array (
-		"showRecordFieldList" => "sys_language_uid,l18n_parent,l18n_diffsource,hidden,datetime,subject,public,series,tags,requiredteams,documents,audiofiles,notes"
+		"showRecordFieldList" => "sys_language_uid,l18n_parent,l18n_diffsource,hidden,datetime,subject,public,series,tags,requiredteams,documents,audiofiles,notes,notes_internal"
 	),
 	"feInterface" => $TCA["tx_servicemgr_events"]["feInterface"],
 	"columns" => array (
@@ -194,9 +194,18 @@ $TCA["tx_servicemgr_events"] = array (
 				"rows" => "5",
 			)
 		),
+		"notes_internal" => Array (		
+			"exclude" => 1,		
+			"label" => "LLL:EXT:servicemgr/locallang_db.xml:tx_servicemgr_events.notes_internal",		
+			"config" => Array (
+				"type" => "text",
+				"cols" => "30",	
+				"rows" => "5",
+			)
+		),
 	),
 	"types" => array (
-		"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, datetime, subject, public, series, tags, requiredteams, documents, notes")
+		"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, datetime, subject, public, series, tags, requiredteams, documents, notes, notes_internal")
 	),
 	"palettes" => array (
 		"1" => array("showitem" => "")

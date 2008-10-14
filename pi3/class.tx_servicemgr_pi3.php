@@ -108,7 +108,7 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 		$markerArray['###HSUBJECT###'] = $this->pi_getLL('subject');
 		$markerArray['###HSERIES###'] = $this->pi_getLL('series');
 		$markerArray['###HAUDIOFILES###'] = $this->pi_getLL('audiofiles');
-		$subpartArray['###HEADERROW###'] = $this->cObj->substituteMarkerArrayCached($headerrow,$markerArray);
+		$subpartArray['###HEADERROW###'] = $this->cObj->substituteMarkerArray($headerrow,$markerArray);
 
 		//get content from database
 		$resEvent = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
@@ -166,12 +166,12 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 				} else {
 					$markerArray['###UPLOAD###'] = '';
 				}
-				$liste .= $this->cObj->substituteMarkerArrayCached($singlerow,$markerArray);
+				$liste .= $this->cObj->substituteMarkerArray($singlerow,$markerArray);
 			}
 			$subpartArray['###ROW###']=$liste;
 		}
 
-		return $this->cObj->substituteMarkerArrayCached($subpart,$markerArray,$subpartArray,array()); ;
+		return $this->substituteMarkersAndSubparts($subpart,$markerArray,$subpartArray); ;
 	}
 
 	/**
@@ -236,10 +236,12 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 		$outputTags = '';
 		foreach($allTags as $tag) {
 			$outputTags .= '<input type="checkbox" value="'.$tag['uid'].'" name="'.$this->prefixId.'[upload][tags][]" id="tag_'.$tag['uid'].'"';
-			if (in_array($tag['uid'], $actTags)) {
-				$outputTags .= ' checked="checked"';
+			if (is_array($actTags)) {
+				if (in_array($tag['uid'], $actTags)) {
+					$outputTags .= ' checked="checked"';
+				}
 			}
-			$outputTags .= '><label for="tag_'.$tag['uid'].'">'.$tag['name'].'</label><br/>
+			$outputTags .= '/><label for="tag_'.$tag['uid'].'">'.$tag['name'].'</label><br/>
 			';
 		}
 
@@ -277,7 +279,7 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 		// File
 		//
 		$markerArray['###HFILE###'] = '<label for="'.$this->prefixId.'[upload][file]">'.$this->pi_getLL('file').'</label>';
-		$markerArray['###FILE###'] = '<input name="'.$this->prefixId.'" id="'.$this->prefixId.'[upload][file]" type="file" size="30">';
+		$markerArray['###FILE###'] = '<input name="'.$this->prefixId.'" id="'.$this->prefixId.'[upload][file]" type="file" size="30" />';
 
 		//
 		// combine output
@@ -291,7 +293,7 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 		$content = '<form name="'.$this->prefixId.'[upload]" action="'.$this->pi_getPageLink($GLOBALS['TSFE']->id).'" method="post" enctype="multipart/form-data">';
 		$content .= '<input type="hidden" name="'.$this->prefixId.'[action]" value="doupload" />';
 		$content .= '<input type="hidden" name="'.$this->prefixId.'[eventId]" value="'.$eventId.'" />';
-		$content .= $this->cObj->substituteMarkerArrayCached($subpart,$markerArray,$subpartArray,array());
+		$content .= $this->cObj->substituteMarkerArray($subpart,$markerArray);
 		$content .= '</form>';
 
 		return $content;

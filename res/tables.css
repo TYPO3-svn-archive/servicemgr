@@ -26,3 +26,7 @@
 .eventsingleview .esv-download { clear: right; float: right; }
 .eventsingleview .esv-audio-preacher { clear: left; }
 .eventsingleview .esv-play { clear: right; float: right; margin-top: 4px; }
+
+.tx-servicemgr-se-head span { display: block; float: left; }
+.tx-servicemgr-se-head br { clear: right; }
+.tx-servicemgr-label { display:block; float: left; width: 100px; }

@@ -31,10 +31,11 @@ CREATE TABLE tx_servicemgr_events (
   subject varchar(255) NOT NULL default '',
   public tinyint(3) NOT NULL default '0',
   series int(11) NOT NULL default '0',
-  tags blob NOT NULL,
-  requiredteams blob NOT NULL,
+  tags tinytext NOT NULL,
+  requiredteams tinytext NOT NULL,
   documents blob NOT NULL,
   notes text NOT NULL,
+  notes_internal text NOT NULL,
   PRIMARY KEY (uid),
   KEY parent (pid),
   KEY t3ver_oid (t3ver_oid,t3ver_wsid)

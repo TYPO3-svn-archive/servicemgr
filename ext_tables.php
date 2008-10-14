@@ -21,7 +21,7 @@ $TCA["tx_servicemgr_events"] = array (
 		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_servicemgr_events.gif',
 	),
 	"feInterface" => array (
-		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, datetime, subject, public, series, tags, requiredteams, documents, notes",
+		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, datetime, subject, public, series, tags, requiredteams, documents, notes, notes_internal",
 	)
 );
 
@@ -283,16 +283,6 @@ t3lib_extMgm::addPlugin(array('LLL:EXT:servicemgr/locallang_db.xml:tt_content.li
 
 
 t3lib_extMgm::addStaticFile($_EXTKEY,"pi3/static/","Sermon administration");
-
-
-t3lib_div::loadTCA('tt_content');
-$TCA['tt_content']['types']['list']['subtypes_excludelist'][$_EXTKEY.'_pi4']='layout,select_key';
-
-
-t3lib_extMgm::addPlugin(array('LLL:EXT:servicemgr/locallang_db.xml:tt_content.list_type_pi4', $_EXTKEY.'_pi4'),'list_type');
-
-
-t3lib_extMgm::addStaticFile($_EXTKEY,"pi4/static/","Teams");
 
 
 t3lib_div::loadTCA('tt_content');

@@ -57,10 +57,10 @@ class tx_servicemgr_pi1 extends tx_servicemgr {
 
 		//DEBUG-CONFIG
 		$GLOBALS['TYPO3_DB']->debugOutput = true;
-		t3lib_div::debug($this->conf, 'TypoScript');
-		t3lib_div::debug($this->extConf, 'extConf');
-		t3lib_div::debug($this->generalConf, 'generalConf');
-		t3lib_div::debug($this->piVars, 'piVars');
+		//t3lib_div::debug($this->conf, 'TypoScript');
+		//t3lib_div::debug($this->extConf, 'extConf');
+		//t3lib_div::debug($this->generalConf, 'generalConf');
+		//t3lib_div::debug($this->piVars, 'piVars');
 
 		$this->piVars['eventId'] = intVal($this->piVars['eventId']);
 
@@ -71,9 +71,9 @@ class tx_servicemgr_pi1 extends tx_servicemgr {
 		$this->template = $this->cObj->fileResource($this->template);
 
 		if (empty($this->piVars['eventId'])) {
-			$content = 'VOLL'.$this->listView();
+			$content = $this->listView();
 		} else {
-			$content= 'LEER';
+			$content= 'eventID set -> detailView requested';
 		}
 		return $this->pi_wrapInBaseClass($content);
 	}
@@ -97,7 +97,7 @@ class tx_servicemgr_pi1 extends tx_servicemgr {
         $markerArray['###HDATE###'] = $this->pi_getLL('date');
         $markerArray['###HSUBJECT###'] = $this->pi_getLL('subject');
         $markerArray['###HNOTES###'] = $this->pi_getLL('notes');
-        $subpartArray['###HEADERROW###'] = $this->cObj->substituteMarkerArrayCached($headerrow,$markerArray);
+        $subpartArray['###HEADERROW###'] = $this->cObj->substituteMarkerArray($headerrow,$markerArray);
 
 		//get content from database
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
@@ -116,10 +116,10 @@ class tx_servicemgr_pi1 extends tx_servicemgr {
         		$markerArray['###DATE###'] = date('d.m.Y', $row['datetime']);
 
         		//create link to sermon archive?
-        		if ($this->tx_servicemgr->generalConf['SermonArchivePID']) {
+        		if ($this->generalConf['SermonArchivePID']) {
         			$markerArray['###SUBJECT###'] = $this->pi_linkToPage(
         				$row['subject'],
-        				$this->tx_servicemgr->generalConf['SermonArchivePID'],
+        				$this->generalConf['SermonArchivePID'],
         				$target='',
         				$urlParameters=array('tx_servicemgr_pi2[eventId]'=>$row['uid'])
         			);
@@ -128,12 +128,12 @@ class tx_servicemgr_pi1 extends tx_servicemgr {
         		}
 
         		$markerArray['###NOTES###'] = $row['notes'];
-                $liste .= $this->cObj->substituteMarkerArrayCached($singlerow,$markerArray);
+                $liste .= $this->cObj->substituteMarkerArray($singlerow,$markerArray);
             }
             $subpartArray['###ROW###']=$liste;
         }
 
-		return $this->cObj->substituteMarkerArrayCached($subpart,$markerArray,$subpartArray,array()); ;
+		return $this->substituteMarkersAndSubparts($subpart,$markerArray,$subpartArray);
 	}
 }
 

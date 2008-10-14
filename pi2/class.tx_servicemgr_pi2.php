@@ -55,10 +55,10 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 
 		//DEBUG-CONFIG
 		$GLOBALS['TYPO3_DB']->debugOutput = true;
-		t3lib_div::debug($this->conf, 'TypoScript');
-		t3lib_div::debug($this->extConf, 'extConf');
-		t3lib_div::debug($this->generalConf, 'generalConf');
-		t3lib_div::debug($this->piVars, 'piVars');
+//		t3lib_div::debug($this->conf, 'TypoScript');
+//		t3lib_div::debug($this->extConf, 'extConf');
+//		t3lib_div::debug($this->generalConf, 'generalConf');
+//		t3lib_div::debug($this->piVars, 'piVars');
 
 		$this->piVars['eventId'] = intVal($this->piVars['eventId']);
 
@@ -71,20 +71,11 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 		if (!$this->piVars['eventId']) {
 			$content = $this->listView();
 		} else {
-			$content='
-				<strong>This is a few paragraphs:</strong><br />
-				<p>This is line 1</p>
-				<p>This is line 2</p>
-
-				<h3>This is a form:</h3>
-				<form action="'.$this->pi_getPageLink($GLOBALS['TSFE']->id).'" method="POST">
-					<input type="hidden" name="no_cache" value="1">
-					<input type="text" name="'.$this->prefixId.'[input_field]" value="'.htmlspecialchars($this->piVars['input_field']).'">
-					<input type="submit" name="'.$this->prefixId.'[submit_button]" value="'.htmlspecialchars($this->pi_getLL('submit_button_label')).'">
-				</form>
-				<br />
-				<p>You can click here to '.$this->pi_linkToPage('get to this page again',$GLOBALS['TSFE']->id).'</p>
-			';
+			$content=$this->detailViewEvent(
+				$this->piVars['eventId'],
+				array('fields'=>array('subject','date','time', 'series')),
+				$this->cObj->getSubpart($this->cObj->fileResource('EXT:servicemgr/res/esv.html'), '###SINGLEEVENTEL###')
+			);
 		}
 
 		return $this->pi_wrapInBaseClass($content);
@@ -111,7 +102,7 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
         $markerArray['###HDATE###'] = $this->pi_getLL('date');
         $markerArray['###HSUBJECT###'] = $this->pi_getLL('subject');
         $markerArray['###HFILE###'] = $this->pi_getLL('file');
-        $subpartArray['###HEADERROW###'] = $this->cObj->substituteMarkerArrayCached($headerrow,$markerArray);
+        $subpartArray['###HEADERROW###'] = $this->cObj->substituteMarkerArray($headerrow,$markerArray);
 
 
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
@@ -143,15 +134,15 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
         				)
         			);
         			$markerArray['###PLAY###'] = 'Play';
-        			$liste2 .= $this->cObj->substituteMarkerArrayCached($filearray,$markerArray);
+        			$liste2 .= $this->cObj->substituteMarkerArray($filearray,$markerArray);
 				}
 				$subpartArray['###FILES###']=$liste2;
-                $liste .= $this->cObj->substituteMarkerArrayCached($singlerow,$markerArray,$subpartArray);
+                $liste .= $this->substituteMarkersAndSubparts($singlerow,$markerArray,$subpartArray);
             }
             $subpartArray['###ROW###']=$liste;
         }
 
-        return $this->cObj->substituteMarkerArrayCached($subpart,$markerArray,$subpartArray,array()); ;
+        return $this->substituteMarkersAndSubparts($subpart,$markerArray,$subpartArray);
 	}
 
 	/**
