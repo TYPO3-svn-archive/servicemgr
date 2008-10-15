@@ -2,7 +2,4 @@ plugin.tx_servicemgr {
   TemplateFile = EXT:servicemgr/res/tables.tmpl
   SermonArchivePID = 82
   PreacherTeamUID = 2
-  _CSS_DEFAULT_STYLE (
-    @import url("../typo3conf/ext/servicemgr/res/tables.css");
-  )
 }

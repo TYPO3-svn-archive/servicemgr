@@ -1,26 +1,26 @@
 <?php
 /***************************************************************
-*  Copyright notice
-*
-*  (c) 2008 Peter Schuster <typo3@peschuster.de>
-*  All rights reserved
-*
-*  This script is part of the TYPO3 project. The TYPO3 project is
-*  free software; you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation; either version 2 of the License, or
-*  (at your option) any later version.
-*
-*  The GNU General Public License can be found at
-*  http://www.gnu.org/copyleft/gpl.html.
-*
-*  This script is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  This copyright notice MUST APPEAR in all copies of the script!
-***************************************************************/
+ *  Copyright notice
+ *
+ *  (c) 2008 Peter Schuster <typo3@peschuster.de>
+ *  All rights reserved
+ *
+ *  This script is part of the TYPO3 project. The TYPO3 project is
+ *  free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  The GNU General Public License can be found at
+ *  http://www.gnu.org/copyleft/gpl.html.
+ *
+ *  This script is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  This copyright notice MUST APPEAR in all copies of the script!
+ ***************************************************************/
 
 require_once(t3lib_extMgm::extPath('servicemgr').'class.tx_servicemgr.php');
 
@@ -55,10 +55,10 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 
 		//DEBUG-CONFIG
 		$GLOBALS['TYPO3_DB']->debugOutput = true;
-//		t3lib_div::debug($this->conf, 'TypoScript');
-//		t3lib_div::debug($this->extConf, 'extConf');
-//		t3lib_div::debug($this->generalConf, 'generalConf');
-//		t3lib_div::debug($this->piVars, 'piVars');
+		//		t3lib_div::debug($this->conf, 'TypoScript');
+		//		t3lib_div::debug($this->extConf, 'extConf');
+		//		t3lib_div::debug($this->generalConf, 'generalConf');
+		//		t3lib_div::debug($this->piVars, 'piVars');
 
 		$this->piVars['eventId'] = intVal($this->piVars['eventId']);
 
@@ -72,9 +72,12 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 			$content = $this->listView();
 		} else {
 			$content=$this->detailViewEvent(
-				$this->piVars['eventId'],
-				array('fields'=>array('subject','date','time', 'series')),
-				$this->cObj->getSubpart($this->cObj->fileResource('EXT:servicemgr/res/esv.html'), '###SINGLEEVENTEL###')
+			$this->piVars['eventId'],
+			array(
+					'subparts' => array('subject','datetime','series','notes','sermon','backlink'),
+					'backlink' => array('str' => $this->pi_getLL('back'), 'id' => $GLOBALS['TSFE']->id),
+			),
+			$this->cObj->getSubpart($this->cObj->fileResource('EXT:servicemgr/res/esv.html'), '###SINGLEEVENTEL###')
 			);
 		}
 
@@ -89,60 +92,62 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 	function listView() {
 
 		//Template preparation
-		#Subpart
-        $subpart = $this->cObj->getSubpart($this->template,'###SERMONLIST###');
-        #header row
-        $headerrow = $this->cObj->getSubpart($subpart,'###HEADERROW###');
-        #single row
-        $singlerow = $this->cObj->getSubpart($subpart,'###ROW###');
-        #file array
-        $filearray = $this->cObj->getSubpart($subpart,'###FILES###');
+		$subpart = $this->cObj->getSubpart($this->template,'###SERMONLIST###');
+		$headerrow = $this->cObj->getSubpart($subpart,'###HEADERROW###');
+		$singlerow = $this->cObj->getSubpart($subpart,'###ROW###');
+		$filearray = $this->cObj->getSubpart($subpart,'###FILES###');
 
-        //substitue table header in template file
-        $markerArray['###HDATE###'] = $this->pi_getLL('date');
-        $markerArray['###HSUBJECT###'] = $this->pi_getLL('subject');
-        $markerArray['###HFILE###'] = $this->pi_getLL('file');
-        $subpartArray['###HEADERROW###'] = $this->cObj->substituteMarkerArray($headerrow,$markerArray);
+		//substitue table header in template file
+		$markerArray['###HDATE###'] = $this->pi_getLL('date');
+		$markerArray['###HSUBJECT###'] = $this->pi_getLL('subject');
+		$markerArray['###HFILE###'] = $this->pi_getLL('file');
+		$subpartArray['###HEADERROW###'] = $this->cObj->substituteMarkerArray($headerrow,$markerArray);
 
 
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
         	'uid, datetime, subject',   #select
         	'tx_servicemgr_events', #from
         	'hidden=0 and deleted=0'  #where
-        );
+		);
 
 		//substitue table rows in template
-        if ($res) {
-        	while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-        		$markerArray['###DATE###'] = date('d.m.Y', $row['datetime']);
-				$markerArray['###SUBJECT###'] = $row['subject'];
+		if ($res) {
+			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+				$markerArray['###DATE###'] = date('d.m.Y', $row['datetime']);
+				$markerArray['###SUBJECT###'] = $this->pi_linkToPage(
+				$row['subject'],
+				$GLOBALS['TSFE']->id, '',
+				array('tx_servicemgr_pi2[eventId]'=>$row['uid'])
+				);
 
 				$sermons = $this->getAudioFiles($row['uid']);
 
-				$liste2='';
-				foreach ($sermons as $sermon) {
-					$markerArray['###FILETITLE###'] = $sermon['title'];
-        			$markerArray['###SIZE###'] = $this->formatBytes($sermon['filesize']);
-        			$markerArray['###LENGTH###'] = $this->formatTime($sermon['playtime']);
-        			$markerArray['###DOWNLOAD###'] = $this->pi_linkToPage(
+				if (count($sermons) > 0) {
+					$audioFileOutput = '';
+					foreach ($sermons as $sermon) {
+						$markerArray['###FILETITLE###'] = (count($sermons)>1) ? $sermon['title'].' &#0150; ' : '';
+						$markerArray['###SIZE###'] = $this->formatBytes($sermon['filesize']);
+						$markerArray['###LENGTH###'] = $this->formatTime($sermon['playtime']);
+						$markerArray['###DOWNLOAD###'] = $this->pi_linkToPage(
         				'DL',
-        				$GLOBALS['TSFE']->id,
-        				$target='',
-        				$urlParameters = array(
+						$GLOBALS['TSFE']->id,
+						$target='',
+						$urlParameters = array(
         					'eID' => 'tx_servicemgr_download',
         					'sermonid'=>$sermon['uid']
-        				)
-        			);
-        			$markerArray['###PLAY###'] = 'Play';
-        			$liste2 .= $this->cObj->substituteMarkerArray($filearray,$markerArray);
+						)
+						);
+						$markerArray['###PLAY###'] = 'Play';
+						$audioFileOutput .= $this->cObj->substituteMarkerArray($filearray,$markerArray);
+					}
+					$subpartArray['###FILES###']=$audioFileOutput;
+					$singleEventOutput .= $this->substituteMarkersAndSubparts($singlerow,$markerArray,$subpartArray);
 				}
-				$subpartArray['###FILES###']=$liste2;
-                $liste .= $this->substituteMarkersAndSubparts($singlerow,$markerArray,$subpartArray);
-            }
-            $subpartArray['###ROW###']=$liste;
-        }
+			}
+			$subpartArray['###ROW###']=$singleEventOutput;
+		}
 
-        return $this->substituteMarkersAndSubparts($subpart,$markerArray,$subpartArray);
+		return $this->substituteMarkersAndSubparts($subpart,$markerArray,$subpartArray);
 	}
 
 	/**
@@ -182,22 +187,22 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 		$content = '';
 		$output = array();
 		if ($seconds > 60) {
-			 $output[0] = $seconds - (60 * intval($seconds / 60));
-			 $seconds = intval($seconds / 60);
-			 if ($seconds > 60) {
-			 	$output[1] = $seconds - (60 * intval($seconds / 60));
-			 	$seconds = intval($seconds / 60);
-			 	if ($seconds > 60) {
-			 		$output[2] = $seconds - (60 * intval($seconds / 60));
-			 		$seconds = intval($seconds / 60);
-			 	} else {
-			 		$output[2] = $seconds;
-			 	}
-			 } else {
-			 	$output[1] = $seconds;
-			 }
+			$output[0] = $seconds - (60 * intval($seconds / 60));
+			$seconds = intval($seconds / 60);
+			if ($seconds > 60) {
+				$output[1] = $seconds - (60 * intval($seconds / 60));
+				$seconds = intval($seconds / 60);
+				if ($seconds > 60) {
+					$output[2] = $seconds - (60 * intval($seconds / 60));
+					$seconds = intval($seconds / 60);
+				} else {
+					$output[2] = $seconds;
+				}
+			} else {
+				$output[1] = $seconds;
+			}
 		} else {
-		 	$output[0] = $seconds;
+			$output[0] = $seconds;
 		}
 		switch (count($output)) {
 			CASE 1:

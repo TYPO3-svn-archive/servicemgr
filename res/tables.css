@@ -29,4 +29,11 @@
 
 .tx-servicemgr-se-head span { display: block; float: left; }
 .tx-servicemgr-se-head br { clear: right; }
-.tx-servicemgr-label { display:block; float: left; width: 100px; }
+.tx-servicemgr-label { display:block; float: left; width: 50px; padding-right: 3px; text-align:right; }
+.tx-servicemgr-se-sermon { margin: 20px 0 0 15px; }
+.tx-servicemgr-se-sermonplayer { float: none; margin: 5px 0 0 10px; }
+.tx-servicemgr-se-notes { margin: 7px 0 0 15px; }
+
+.tx-servicemgr-pi1 td, .tx-servicemgr-pi1 th,
+.tx-servicemgr-pi2 td, .tx-servicemgr-pi2 th { padding: 2px; vertical-align: top; }
+.tx-servicemgr-se-backlink { padding-top: 20px; }

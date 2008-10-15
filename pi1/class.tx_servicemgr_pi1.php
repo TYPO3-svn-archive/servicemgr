@@ -73,7 +73,14 @@ class tx_servicemgr_pi1 extends tx_servicemgr {
 		if (empty($this->piVars['eventId'])) {
 			$content = $this->listView();
 		} else {
-			$content= 'eventID set -> detailView requested';
+			$content= $this->detailViewEvent(
+				$this->piVars['eventId'],
+				array(
+					'subparts' => array('subject','datetime','series','notes','sermon','backlink'),
+					'backlink' => array('str' => $this->pi_getLL('back'), 'id' => $GLOBALS['TSFE']->id),
+				),
+				$this->cObj->getSubpart($this->cObj->fileResource('EXT:servicemgr/res/esv.html'), '###SINGLEEVENTEL###')
+			);
 		}
 		return $this->pi_wrapInBaseClass($content);
 	}
@@ -119,9 +126,9 @@ class tx_servicemgr_pi1 extends tx_servicemgr {
         		if ($this->generalConf['SermonArchivePID']) {
         			$markerArray['###SUBJECT###'] = $this->pi_linkToPage(
         				$row['subject'],
-        				$this->generalConf['SermonArchivePID'],
+        				$GLOBALS['TSFE']->id,
         				$target='',
-        				$urlParameters=array('tx_servicemgr_pi2[eventId]'=>$row['uid'])
+        				$urlParameters=array('tx_servicemgr_pi1[eventId]'=>$row['uid'])
         			);
         		} else {
         			$markerArray['###SUBJECT###'] = $row['subject'];

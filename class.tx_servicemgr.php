@@ -304,40 +304,132 @@ class tx_servicemgr extends tslib_pibase {
 	function detailViewEvent($eventId, $config, $template) {
 		$row = $this->getSingleEvent(intval($eventId));
 		
-		$series = $this->getSeries($row['series']);
-						
-		$tempContent = array(
-			'subject' => $row['subject'],
-			'date' => date('d.m.Y', $row['datetime']),
-			'time' => date('H:i', $row['datetime']),
-			'series' => $series[$row['series']]['name'],
-		);
-		$tempLabel = array(
-			'date' => $this->pi_getLL('date'),
-			'series' => $this->pi_getLL('series'),
-			'tags' => $this->pi_getLL('tags'),
+		$subparts = array(
+			'subject' => $this->cObj->getSubpart($template, '###SP_SUBJECT###'),
+			'datetime' => $this->cObj->getSubpart($template, '###SP_DATETIME###'),
+			'series' => $this->cObj->getSubpart($template, '###SP_SERIES###'),
+			'tags' => $this->cObj->getSubpart($template, '###SP_TAGS###'),
+			'notes' => $this->cObj->getSubpart($template, '###SP_NOTES###'),
+			'sermon' => $this->cObj->getSubpart($template, '###SP_SERMON###'),
+			'backlink' => $this->cObj->getSubpart($template, '###SP_BACKLINK###'),
 		);
 		
-		$markerContent = array(); 
-		$markerLabel = array();
-		foreach($config['fields'] as $field) {
-			$markerContent[$field] = $tempContent[$field];
-			$markerLabel[$field] = $tempLabel[$field];
+		$subpartContent = array();
+
+		if (in_array('subject',$config['subparts']) && !empty($row['subject'])) {
+			$subpartContent['###SP_SUBJECT###'] = $this->cObj->substituteMarker($subparts['subject'], '###SUBJECT###', $row['subject']);
+		} else { 
+			$subpartContent['###SP_SUBJECT###'] = '';
 		}
 		
-		$markers = array(
-			'###TITLE###' => $markerContent['subject'],
-			'###DATE###' => $markerContent['date'],
-			'###L_DATE###' => $markerLabel['date'],
-			'###TIME###' => $markerContent['time'],
-			'###L_TIME###' => $markerLabel['time'],
-			'###SERIES###' => $markerContent['series'],
-			'###L_SERIES###' => $markerLabel['series'],
-			'###TAGS###' => $markerContent['tags'],
-			'###L_TAGS###' => $markerLabel['tags'],
-		);
+		if (in_array('datetime',$config['subparts']) && !empty($row['datetime'])) {
+			$subpartContent['###SP_DATETIME###'] = $this->cObj->substituteMarkerArray(
+				$subparts['datetime'], 
+				array(
+					'###DATE###' => date('d.m.Y', $row['datetime']),
+					'###TIME###' => date('H:i', $row['datetime']),
+				)
+			);
+		} else { 
+			$subpartContent['###SP_DATETIME###'] = '';
+		}
 		
-		return $this->cObj->substituteMarkerArray($template, $markers);
+		if (in_array('series',$config['subparts']) && !empty($row['series'])) {
+			$series = $this->getSeries($row['series']);
+			$subpartContent['###SP_SERIES###'] = $this->cObj->substituteMarkerArray(
+				$subparts['series'], 
+				array(
+					'###L_SERIES###' => $this->pi_getLL('series'),
+					'###SERIES###' => $series[$row['series']]['name'],
+				)
+			);
+		} else { 
+			$subpartContent['###SP_SERIES###'] = '';
+		}
+		
+		if (in_array('tags',$config['subparts']) && !empty($row['tags'])) {
+			$subpartContent['###SP_TAGS###'] = $this->cObj->substituteMarkerArray(
+				$subparts['tags'], 
+				array(
+					'###L_TAGS###' => $this->pi_getLL('tags'),
+					'###TAGS###' => $tags,
+				)
+			);
+		} else { 
+			$subpartContent['###SP_TAGS###'] = '';
+		}
+		
+		if (in_array('notes', $config['subparts']) && !empty($row['notes'])) {
+			$subpartContent['###SP_NOTES###'] = $this->cObj->substituteMarker($subparts['notes'], '###NOTES###', $row['notes']);
+		} else { 
+			$subpartContent['###SP_NOTES###'] = '';
+		}
+
+		if (in_array('sermon',$config['subparts'])) {
+			
+			if (t3lib_extMgm::isLoaded('audioplayer')) {
+				require_once(t3lib_extMgm::extPath('audioplayer').'class.tx_audioplayer.php');
+				$audioplayer = t3lib_div::makeInstance('tx_audioplayer');
+				$audioplayer->init();
+				$audioplayer->setOptions(array('initialvolume'=>'100','animation'=>'no'));
+			} else {
+				$player = '';
+			}
+			
+			$audioFiles = $this->getAudioFiles($eventId);
+			$allPreachers = $this->getTeamMembers($this->generalConf['PreacherTeamUID']);
+			$duty = $this->getSingleSchedule($eventId);
+			$preacher = $duty[$this->generalConf['PreacherTeamUID']];
+			if (is_array($preacher)) {
+				$outPreacher = '';
+				foreach($allPreachers as $singlePreacher) {
+					if (in_array($singlePreacher['uid'], $preacher)) {
+						$outPreacher .= $this->pi_linkToPage(
+							$singlePreacher['name'],
+							$this->generalConf['preacherdetailPID'],'',
+							array('tx_feuser_pi2[showUid]'=>$singlePreacher['uid'])
+						);
+					}
+				}
+			}
+			
+			$subpartContent['###SP_SERMON###'] = '';
+			foreach ($audioFiles as $audioFile) {
+				$subpartContent['###SP_SERMON###'] .= $this->cObj->substituteMarkerArray(
+					$subparts['sermon'], 
+					array(
+						'###PREACHER###' => $outPreacher,
+						'###SUBJECT###' => $audioFile['title'],
+						'###PLAYER###' => $audioplayer ? $audioplayer->getFlashPlayer($audioFile['file'], $audioFile['uid']) : '',
+					)
+				);
+			}
+			
+		} else { 
+			$subpartContent['###SP_SERMON###'] = '';
+		}
+		
+		if (in_array('notes', $config['subparts']) && !empty($row['notes'])) {
+			$subpartContent['###SP_NOTES###'] = $this->cObj->substituteMarker($subparts['notes'], '###NOTES###', $row['notes']);
+		} else { 
+			$subpartContent['###SP_NOTES###'] = '';
+		}
+		
+		if (in_array('backlink',$config['subparts']) && !empty($config['backlink'])) {
+			$subpartContent['###SP_BACKLINK###'] = $this->cObj->substituteMarker(
+				$subparts['backlink'], 
+				'###BACKLINK###', 
+				$this->pi_linkToPage($config['backlink']['str'],$config['backlink']['id'])
+			);
+		} else { 
+			$subpartContent['###SP_BACKLINK###'] = '';
+		}
+				
+		$content = $this->substituteMarkersAndSubparts($template,array(),$subpartContent);
+		
+		return $content;	
+		
+		
 	}
 	
 	/**
