@@ -37,3 +37,9 @@
 .tx-servicemgr-pi1 td, .tx-servicemgr-pi1 th,
 .tx-servicemgr-pi2 td, .tx-servicemgr-pi2 th { padding: 2px; vertical-align: top; }
 .tx-servicemgr-se-backlink { padding-top: 20px; }
+
+.tx-servicemgr-sa-subjectsermon span { display:block; }
+.tx-servicemgr-sa-sermon { margin-left: 10px; margin-bottom: 7px; }
+.tx-servicemgr-sa-sermon-info { float:left; padding-right: 5px; }
+.tx-servicemgr-sa-sermon-buttons { float: right; }
+.tx-servicemgr-sa-sermon br { clear:right; }

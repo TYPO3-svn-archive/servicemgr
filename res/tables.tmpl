@@ -11,21 +11,21 @@
 <table>
 <!-- ###HEADERROW -->
 <thead>
-<tr><th>###HDATE###</th><th>###HSUBJECT###</th><th>###HFILE###</th></tr>
+<tr><th>###HDATE###</th><th>###HSUBJECT###</th></tr>
 </thead><tbody><!-- ###HEADERROW -->
 <!-- ###ROW### -->
 <tr><td>###DATE###</td>
-	<td>###SUBJECT###</td>
-	<td><!-- ###FILES### -->
-		<div class="sermonfiles">
-		###FILETITLE###<i>###SIZE###, ###LENGTH###</i> ###DOWNLOAD### ###PLAY###
-		</div><!-- ###FILES### -->
+	<td class="tx-servicemgr-sa-subjectsermon"><span>###SUBJECT###</span>
+	<!-- ###FILES### -->
+		<div class="tx-servicemgr-sa-sermon ">
+			<span class="tx-servicemgr-sa-sermon-info">###FILETITLE###<i>###SIZE###, ###LENGTH###</i></span><span class="tx-servicemgr-sa-sermon-buttons">###DOWNLOAD### ###PLAY###</span><br/>
+			<!-- ###SERMONPLAYER### -->
+			<div id="tx-servicemgr-sa-sermon-player###PLAYERID###" style="display:none;" class="tx-servicemgr-sa-sermon-player">###PLAYER###</div>
+			<!-- ###SERMONPLAYER### -->
+		</div>
+	<!-- ###FILES### -->
 	</td>
 </tr><!-- ###ROW### -->
-<!-- ###PLAYERROW### -->
-<tr><td colspan="3"></td>
-</tr>
-<!-- ###PLAYERROW### -->
 </tbody>
 </table>
 <!-- ###SERMONLIST### -->

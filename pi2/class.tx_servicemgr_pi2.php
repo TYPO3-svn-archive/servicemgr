@@ -52,7 +52,6 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 		$this->tx_init();
 		$this->tx_loadLL();
 
-
 		//DEBUG-CONFIG
 		$GLOBALS['TYPO3_DB']->debugOutput = true;
 		//		t3lib_div::debug($this->conf, 'TypoScript');
@@ -112,12 +111,24 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 
 		//substitue table rows in template
 		if ($res) {
+			
+			if (t3lib_extMgm::isLoaded('audioplayer')) {
+				require_once(t3lib_extMgm::extPath('audioplayer').'class.tx_audioplayer.php');
+				$audioplayer = t3lib_div::makeInstance('tx_audioplayer');
+				$audioplayer->init();
+				$audioplayer->setOptions(array('initialvolume'=>'100','animation'=>'no'));
+				$audioplayer->setHeaders($audioplayer->renderVars());
+				$GLOBALS['TSFE']->additionalHeaderData['tx_servicemgr_pi2_sermonjs'] = '	<script type="text/javascript" src="typo3conf/ext/servicemgr/res/sermonplayer.js"></script>';
+			}
+		
+			
+			$eventRowsOutput = '';
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 				$markerArray['###DATE###'] = date('d.m.Y', $row['datetime']);
 				$markerArray['###SUBJECT###'] = $this->pi_linkToPage(
-				$row['subject'],
-				$GLOBALS['TSFE']->id, '',
-				array('tx_servicemgr_pi2[eventId]'=>$row['uid'])
+					$row['subject'],
+					$GLOBALS['TSFE']->id, '',
+					array('tx_servicemgr_pi2[eventId]'=>$row['uid'])
 				);
 
 				$sermons = $this->getAudioFiles($row['uid']);
@@ -129,24 +140,33 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 						$markerArray['###SIZE###'] = $this->formatBytes($sermon['filesize']);
 						$markerArray['###LENGTH###'] = $this->formatTime($sermon['playtime']);
 						$markerArray['###DOWNLOAD###'] = $this->pi_linkToPage(
-        				'DL',
-						$GLOBALS['TSFE']->id,
-						$target='',
-						$urlParameters = array(
-        					'eID' => 'tx_servicemgr_download',
-        					'sermonid'=>$sermon['uid']
-						)
+        					'DL',
+							$GLOBALS['TSFE']->id, $target='',
+							$urlParameters = array(
+        						'eID' => 'tx_servicemgr_download',
+        						'sermonid'=>$sermon['uid']
+							)
 						);
-						$markerArray['###PLAY###'] = 'Play';
+						$playLink['href'] = $this->cObj->getTypoLink_URL(
+							$GLOBALS['TSFE']->id,
+							array(
+								'tx_servicemgr_pi2[eventId]' => $row['uid'],
+								'tx_servicemgr_pi2[play]' => $sermon['uid'],
+							)
+						);
+						$playLink['onclick'] = $audioplayer ? 'sermonshowplayer('.$sermon['uid'].'); return false;' : '';
+						
+						$markerArray['###PLAY###'] = '<a href="'.$playLink['href'].'" onclick="'.$playLink['onclick'].'">'.Play.'</a>';
+						$markerArray['###PLAYERID###'] = $sermon['uid'];
+						$markerArray['###PLAYER###'] = $audioplayer->getFlashPlayer($sermon['file'], $sermon['uid']);
 						$audioFileOutput .= $this->cObj->substituteMarkerArray($filearray,$markerArray);
 					}
 					$subpartArray['###FILES###']=$audioFileOutput;
-					$singleEventOutput .= $this->substituteMarkersAndSubparts($singlerow,$markerArray,$subpartArray);
+					$eventRowsOutput .= $this->substituteMarkersAndSubparts($singlerow,$markerArray,$subpartArray);
 				}
 			}
-			$subpartArray['###ROW###']=$singleEventOutput;
+			$subpartArray['###ROW###']=$eventRowsOutput;
 		}
-
 		return $this->substituteMarkersAndSubparts($subpart,$markerArray,$subpartArray);
 	}
 
