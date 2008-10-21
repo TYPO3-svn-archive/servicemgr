@@ -40,7 +40,7 @@ t3lib_extMgm::addTypoScript($_EXTKEY,'editorcfg','
 ',43);
 
 
-t3lib_extMgm::addPItoST43($_EXTKEY,'pi5/class.tx_servicemgr_pi5.php','_pi5','list_type',1);
+t3lib_extMgm::addPItoST43($_EXTKEY,'pi5/class.tx_servicemgr_pi5.php','_pi5','list_type',0);
 
 $TYPO3_CONF_VARS['FE']['eID_include']['tx_servicemgr_download'] = 'EXT:servicemgr/class.tx_servicemgr_download.php';
 $TYPO3_CONF_VARS['FE']['eID_include']['tx_servicemgr_ajax'] = 'EXT:servicemgr/class.tx_servicemgr_ajax.php';

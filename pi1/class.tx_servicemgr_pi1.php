@@ -37,7 +37,6 @@ class tx_servicemgr_pi1 extends tx_servicemgr {
 	var $extKey        = 'servicemgr';	// The extension key.
 	var $pi_checkCHash = true;
 	var $template;
-	var $tx_servicemgr;
 
 
 	/**

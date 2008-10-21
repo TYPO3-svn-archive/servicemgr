@@ -65,7 +65,7 @@ class tx_servicemgr extends tslib_pibase {
 		
 		$this->pi_initPIflexForm();
 
-		$GLOBALS['TSFE']->additionalHeaderData['tx_servicemgr_css'] = '	<link rel="stylesheet" type="text/css" href="typo3conf/ext/servicemgr/res/tables.css" />';
+		$GLOBALS['TSFE']->additionalHeaderData['tx_servicemgr_css'] = '	<link rel="stylesheet" type="text/css" href="'.t3lib_extMgm::siteRelPath(servicemgr).'res/tables.css" />';
 		return true;
 	}
 
