@@ -480,6 +480,14 @@ class tx_servicemgr extends tslib_pibase {
 		return '<div class="tx_servicemgr_errormsg">'.$msg.'</div>';
 	}
 
+	/**
+	 * Returns typolink with cHash
+	 *
+	 * @param	string		$str			link text
+	 * @param	integer		$id				uid of page
+	 * @param	array		$urlParameter	array of url parameters
+	 * @return	string		typolink
+	 */
 	function tx_linkToPage($str, $id, $urlParameter) {
 		$additionalParams = '';
 		foreach ($urlParameter as $key => $value) {
@@ -516,6 +524,7 @@ class tx_servicemgr extends tslib_pibase {
 			}
 		}
 		return $content;
+		fore
 	}
 }
 
