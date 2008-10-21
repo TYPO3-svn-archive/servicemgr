@@ -226,7 +226,10 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 						);
 						$playLink['onclick'] = $audioplayer ? 'sermonshowplayer('.$sermon['uid'].'); return false;' : '';
 						
-						$markerArray['###PLAY###'] = '<a href="'.$playLink['href'].'" onclick="'.$playLink['onclick'].'">'.Play.'</a>';
+						$markerArray['###PLAY###'] = 
+							'<a href="'.$playLink['href'].'" onclick="'.$playLink['onclick'].'">'.
+							'<img src="'.t3lib_extMgm::extRelPath('servicemgr').'res/control_play_blue.png" alt="play" title="Play" />'
+							.'</a>';
 						$markerArray['###PLAYERID###'] = $sermon['uid'];
 						$markerArray['###PLAYER###'] = $audioplayer->getFlashPlayer($sermon['file'], $sermon['uid']);
 						$audioFileOutput .= $this->cObj->substituteMarkerArray($filearray,$markerArray);
