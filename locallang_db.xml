@@ -55,6 +55,15 @@
 			<label index="tt_content.list_type_pi2">Sermon archive</label>
 			<label index="tt_content.list_type_pi3">Sermon administration</label>
 			<label index="tt_content.list_type_pi5">Duty schedule</label>
+			<label index="tt_content.pi_flexform.sheet_general">General</label>
+			<label index="tt_content.pi_flexform.previewdays">number days for event preview</label>
+			<label index="tt_content.pi_flexform.shownelements">number of events shown</label>
+			<label index="tt_content.pi_flexform.upcoming">only upcoming events</label>
+			<label index="tt_content.pi_flexform.previewcolumns">shown columns</label>
+			<label index="tt_content.pi_flexform.detailviewPID">Site for event single view</label>
+			<label index="tt_content.pi_flexform.viewmode">View Mode</label>
+			<label index="tt_content.pi_flexform.latest">Latest</label>
+			<label index="tt_content.pi_flexform.archive">Archive</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="tx_servicemgr_events">Veranstaltungen</label>
@@ -106,6 +115,15 @@
 			<label index="tt_content.list_type_pi2">Predigtarchiv</label>
 			<label index="tt_content.list_type_pi3">Predigt-Verwaltung</label>
 			<label index="tt_content.list_type_pi5">Dienstplan</label>
+			<label index="tt_content.pi_flexform.sheet_general">Allgemein</label>
+			<label index="tt_content.pi_flexform.previewdays">Anzahl Tage für Vorschau</label>
+			<label index="tt_content.pi_flexform.shownelements">Anzahl angezeigter Veranstaltungen</label>
+			<label index="tt_content.pi_flexform.upcoming">nur kommende Veranstaltungen</label>
+			<label index="tt_content.pi_flexform.previewcolumns">angezeigte Spalten</label>
+			<label index="tt_content.pi_flexform.detailviewPID">Seite für Veranstaltungsdetails</label>
+			<label index="tt_content.pi_flexform.viewmode">Anzeigemodus</label>
+			<label index="tt_content.pi_flexform.latest">Letzte</label>
+			<label index="tt_content.pi_flexform.archive">Archiv</label>
 		</languageKey>
 	</data>
 </T3locallang>

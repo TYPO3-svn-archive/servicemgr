@@ -52,17 +52,17 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 		$this->tx_init();
 		$this->tx_loadLL();
 
+		$this->fetchConfigValue('viewmode');
+		$this->fetchConfigValue('detailviewPID');
+		
 		//DEBUG-CONFIG
 		$GLOBALS['TYPO3_DB']->debugOutput = true;
-		//		t3lib_div::debug($this->conf, 'TypoScript');
-		//		t3lib_div::debug($this->extConf, 'extConf');
-		//		t3lib_div::debug($this->generalConf, 'generalConf');
-		//		t3lib_div::debug($this->piVars, 'piVars');
 
+		
 		$this->piVars['eventId'] = intVal($this->piVars['eventId']);
 
 		$this->template = $this->generalConf['TemplateFile'];
-		if (!$this->template) {
+		if (empty($this->template)) {
 			$this->template = 'EXT:servicemgr/res/tables.tmpl';
 		}
 		$this->template = $this->cObj->fileResource($this->template);
@@ -84,12 +84,82 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 	}
 
 	/**
-	 * [Describe function...]
+	 * Returns list of sermons /  latest sermon
 	 *
-	 * @return	[type]		...
+	 * @return	string		content to be shown on website
 	 */
 	function listView() {
-
+		switch ($this->conf['viewmode']) {
+			CASE 'latest':
+				$content = $this->getLatest();
+				break;
+			CASE 'archive':
+			default:
+				$content = $this->getList();
+		}
+		return $content;
+	}
+	
+	function getLatest() {
+		$content = '';
+		$subpart = $this->cObj->getSubpart($this->template,'###SERMONLIST_LATEST###');
+		
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+        	'uid, event, title, file, filedate, playtime, filesize, bitrate, album',   #select
+        	'tx_servicemgr_sermons', #from
+        	'hidden=0 and deleted=0',  #where
+			'','uid DESC','0,1'
+		);
+		if ($res) {
+			$sermon = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+			$event = $this->getSingleEvent($sermon['event']);
+			$duty = $this->getSingleSchedule($sermon['event']);
+			
+			$allPreachers = $this->getTeamMembers($this->generalConf['PreacherTeamUID']);
+			$preacher = $duty[$this->generalConf['PreacherTeamUID']];
+			if (is_array($preacher)) {
+				$outPreacher = '';
+				foreach($allPreachers as $singlePreacher) {
+					if (in_array($singlePreacher['uid'], $preacher)) {
+						$outPreacher .= $this->pi_linkToPage(
+							$singlePreacher['name'],
+							$this->generalConf['preacherdetailPID'],'',
+							array('tx_feuser_pi2[showUid]' => $singlePreacher['uid'])
+						);
+					}
+				}
+			}
+			
+			if (t3lib_extMgm::isLoaded('audioplayer')) {
+				require_once(t3lib_extMgm::extPath('audioplayer').'class.tx_audioplayer.php');
+				$audioplayer = t3lib_div::makeInstance('tx_audioplayer');
+				$audioplayer->init();
+				$audioplayer->setOptions(array('initialvolume'=>80,'animation'=>'no', 'width'=>250));
+			}
+			
+			$downloadLink = $this->pi_linkToPage(
+        		'DL',
+				$GLOBALS['TSFE']->id, '',
+				array(
+        			'eID' => 'tx_servicemgr_download',
+        			'sermonid'=>$sermon['uid']
+				)
+			);
+				
+			$markers = array(
+				'###PREACHER###' => $outPreacher,
+				'###SUBJECT###' => $sermon['title'],
+				'###DATE###' => date('d.m.Y', $event['datetime']),
+				'###TIME###' => date('H:i', $event['datetime']),
+				'###DOWNLOAD###' => $downloadLink,
+				'###PLAYER###' => $audioplayer ? $audioplayer->getFlashPlayer($sermon['file'], $sermon['uid']) : '',
+			);
+			$content = $this->cObj->substituteMarkerArray($subpart, $markers);
+		}	
+		return $content;
+	}
+	
+	function getList() {
 		//Template preparation
 		$subpart = $this->cObj->getSubpart($this->template,'###SERMONLIST###');
 		$headerrow = $this->cObj->getSubpart($subpart,'###HEADERROW###');

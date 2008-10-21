@@ -63,10 +63,36 @@ class tx_servicemgr extends tslib_pibase {
 		$this->generalConf->generateConfig();
 		$this->generalConf = $this->generalConf->setup['plugin.']['tx_servicemgr.'];
 		
+		$this->pi_initPIflexForm();
+
 		$GLOBALS['TSFE']->additionalHeaderData['tx_servicemgr_css'] = '	<link rel="stylesheet" type="text/css" href="typo3conf/ext/servicemgr/res/tables.css" />';
 		return true;
 	}
 
+	/**
+	 * Fetches configuration value from flexform. If value exists, value in
+	 * <code>$this->conf</code> is replaced with this value.
+	 *
+	 * @author Dmitry Dulepov <dmitry@typo3.org>
+	 * @param	string		$param	Parameter name. If <code>.</code> is found, the first part is section name, second is key (applies only to $this->conf)
+	 * @return	void
+
+	 */
+	function fetchConfigValue($param) {
+		if (strchr($param, '.')) {
+			list($section, $param) = explode('.', $param, 2);
+		}
+		$value = trim($this->pi_getFFvalue($this->cObj->data['pi_flexform'], $param, ($section ? 's' . ucfirst($section) : 'sDEF')));
+		if (!is_null($value) && $value != '') {
+			if ($section) {
+				$this->conf[$section . '.'][$param] = $value;
+			}
+			else {
+				$this->conf[$param] = $value;
+			}
+		}
+	}
+	
 	/**
 	 * loads LOCAL_LANG out of locallang_common.xml in extension base dir
 	 *

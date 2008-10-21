@@ -12,7 +12,7 @@ $TCA["tx_servicemgr_events"] = array (
 		'languageField'            => 'sys_language_uid',	
 		'transOrigPointerField'    => 'l18n_parent',	
 		'transOrigDiffSourceField' => 'l18n_diffsource',	
-		'default_sortby' => "ORDER BY datetime",	
+		'default_sortby' => "ORDER BY datetime DESC",	
 		'delete' => 'deleted',	
 		'enablecolumns' => array (		
 			'disabled' => 'hidden',
@@ -255,42 +255,38 @@ t3lib_extMgm::addTCAcolumns("fe_groups",$tempColumns,1);
 t3lib_extMgm::addToAllTCAtypes("fe_groups","tx_servicemgr_leaders;;;;1-1-1, tx_servicemgr_category, tx_servicemgr_isteam, tx_servicemgr_dutyschedule, tx_servicemgr_asteaminschedule, tx_servicemgr_image");
 
 
+
 t3lib_div::loadTCA('tt_content');
 $TCA['tt_content']['types']['list']['subtypes_excludelist'][$_EXTKEY.'_pi1']='layout,select_key';
 
-
 t3lib_extMgm::addPlugin(array('LLL:EXT:servicemgr/locallang_db.xml:tt_content.list_type_pi1', $_EXTKEY.'_pi1'),'list_type');
-
-
 t3lib_extMgm::addStaticFile($_EXTKEY,"pi1/static/","Event preview");
+
+$TCA['tt_content']['types']['list']['subtypes_addlist'][$_EXTKEY.'_pi1']='pi_flexform';
+t3lib_extMgm::addPiFlexFormValue($_EXTKEY.'_pi1', 'FILE:EXT:servicemgr/flexform_ds_pi1.xml');
+
 
 
 t3lib_div::loadTCA('tt_content');
 $TCA['tt_content']['types']['list']['subtypes_excludelist'][$_EXTKEY.'_pi2']='layout,select_key';
 
-
 t3lib_extMgm::addPlugin(array('LLL:EXT:servicemgr/locallang_db.xml:tt_content.list_type_pi2', $_EXTKEY.'_pi2'),'list_type');
-
-
 t3lib_extMgm::addStaticFile($_EXTKEY,"pi2/static/","Sermon archive");
+
+$TCA['tt_content']['types']['list']['subtypes_addlist'][$_EXTKEY.'_pi2']='pi_flexform';
+t3lib_extMgm::addPiFlexFormValue($_EXTKEY.'_pi2', 'FILE:EXT:servicemgr/flexform_ds_pi2.xml');
 
 
 t3lib_div::loadTCA('tt_content');
 $TCA['tt_content']['types']['list']['subtypes_excludelist'][$_EXTKEY.'_pi3']='layout,select_key';
 
-
 t3lib_extMgm::addPlugin(array('LLL:EXT:servicemgr/locallang_db.xml:tt_content.list_type_pi3', $_EXTKEY.'_pi3'),'list_type');
-
-
 t3lib_extMgm::addStaticFile($_EXTKEY,"pi3/static/","Sermon administration");
 
 
 t3lib_div::loadTCA('tt_content');
 $TCA['tt_content']['types']['list']['subtypes_excludelist'][$_EXTKEY.'_pi5']='layout,select_key';
 
-
 t3lib_extMgm::addPlugin(array('LLL:EXT:servicemgr/locallang_db.xml:tt_content.list_type_pi5', $_EXTKEY.'_pi5'),'list_type');
-
-
 t3lib_extMgm::addStaticFile($_EXTKEY,"pi5/static/","Duty schedule");
 ?>

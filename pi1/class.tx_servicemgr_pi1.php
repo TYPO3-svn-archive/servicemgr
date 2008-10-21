@@ -53,7 +53,12 @@ class tx_servicemgr_pi1 extends tx_servicemgr {
 
 		$this->tx_init();
 		$this->tx_loadLL();
-
+		
+		$this->fetchConfigValue('previewdays');
+		$this->fetchConfigValue('shownelements');
+		$this->fetchConfigValue('upcoming');
+		$this->fetchConfigValue('previewcolumns');
+		$this->fetchConfigValue('detailviewPID');
 
 		//DEBUG-CONFIG
 		$GLOBALS['TYPO3_DB']->debugOutput = true;
@@ -73,11 +78,16 @@ class tx_servicemgr_pi1 extends tx_servicemgr {
 		if (empty($this->piVars['eventId'])) {
 			$content = $this->listView();
 		} else {
+			$this->piVars['backlink'] = intVal($this->piVars['backlink']);
+			if (!t3lib_div::testInt($this->piVars['backlink']) || $this->piVars['backlink'] == 0) {
+				 $this->piVars['backlink'] = $GLOBALS['TSFE']->id;
+			}
+			
 			$content= $this->detailViewEvent(
 				$this->piVars['eventId'],
 				array(
 					'subparts' => array('subject','datetime','series','notes','sermon','backlink'),
-					'backlink' => array('str' => $this->pi_getLL('back'), 'id' => $GLOBALS['TSFE']->id),
+					'backlink' => array('str' => $this->pi_getLL('back'), 'id' => $this->piVars['backlink']),
 				),
 				$this->cObj->getSubpart($this->cObj->fileResource('EXT:servicemgr/res/esv.html'), '###SINGLEEVENTEL###')
 			);
@@ -93,54 +103,78 @@ class tx_servicemgr_pi1 extends tx_servicemgr {
 	function listView() {
 
 		//Template preparation
-		#Subpart
         $subpart = $this->cObj->getSubpart($this->template,'###PREVIEWLIST###');
-        #header row
         $headerrow = $this->cObj->getSubpart($subpart,'###HEADERROW###');
-        #single row
         $singlerow = $this->cObj->getSubpart($subpart,'###ROW###');
 
-        //substitue table header in template file
-        $markerArray['###HDATE###'] = $this->pi_getLL('date');
-        $markerArray['###HSUBJECT###'] = $this->pi_getLL('subject');
-        $markerArray['###HNOTES###'] = $this->pi_getLL('notes');
-        $subpartArray['###HEADERROW###'] = $this->cObj->substituteMarkerArray($headerrow,$markerArray);
-
+        if (empty($this->conf['previewcolumns'])) {
+        	$cols = array('date','subject','notes');
+        } else {
+        	$cols = split(',',$this->conf['previewcolumns']);
+        }
+        
+        $colHeaders = '';
+        $colHeader = $this->cObj->getSubpart($headerrow,'###LABEL###');
+        foreach ($cols as $col) {
+        	$colHeaders .= $this->cObj->substituteMarker($colHeader,'###H_LABEL###',$this->pi_getLL($col));
+        }
+        $subpartArray['###HEADERROW###'] = $this->cObj->substituteSubpart($headerrow,'###LABEL###',$colHeaders);
+        
+        if($this->conf['shownelements'] != 0) {
+        	$limit = '0,'.intval($this->conf['shownelements']);
+        }
+        if($this->conf['upcoming'] == 1) {
+        	$d = mktime(0,0,1);
+        	$andWhere = ' AND datetime>'.$d;
+        }
+        if (!$this->conf['detailviewPID']) {
+        	$this->conf['detailviewPID'] = $GLOBALS['TSFE']->id;
+        }
+                
 		//get content from database
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
         	'uid, datetime, subject, notes',   #select
         	'tx_servicemgr_events', #from
-        	'hidden=0 and deleted=0',  #where
+        	'hidden=0 AND deleted=0'.$andWhere,  #where
         	$groupBy='',
-        	$orderBy='',
-        	$limit=''
+        	'datetime',
+        	$limit
         );
 
 
         //substitue table rows in template
         if ($res) {
+        	$colValue = $this->cObj->getSubpart($singlerow,'###VALUE###');
         	while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-        		$markerArray['###DATE###'] = date('d.m.Y', $row['datetime']);
+        		$markerArray['date'] = date('d.m.Y', $row['datetime']);
 
         		//create link to sermon archive?
         		if ($this->generalConf['SermonArchivePID']) {
-        			$markerArray['###SUBJECT###'] = $this->pi_linkToPage(
+        			$markerArray['subject'] = $this->pi_linkToPage(
         				$row['subject'],
-        				$GLOBALS['TSFE']->id,
-        				$target='',
-        				$urlParameters=array('tx_servicemgr_pi1[eventId]'=>$row['uid'])
+        				$this->conf['detailviewPID'],'',
+        				array(
+        					'tx_servicemgr_pi1[eventId]' => $row['uid'],
+        					'tx_servicemgr_pi1[backlink]' => $GLOBALS['TSFE']->id,
+        				)
         			);
         		} else {
-        			$markerArray['###SUBJECT###'] = $row['subject'];
+        			$markerArray['subject'] = $row['subject'];
         		}
 
-        		$markerArray['###NOTES###'] = $row['notes'];
-                $liste .= $this->cObj->substituteMarkerArray($singlerow,$markerArray);
+        		$markerArray['notes'] = $row['notes'];
+        		
+        		$rowContent = '';
+        		foreach ($cols as $col) {
+        			$rowContent .= $this->cObj->substituteMarker($colValue,'###H_VALUE###',$markerArray[$col]);
+        		}
+        		
+                $liste .= $this->cObj->substituteSubpart($singlerow,'###VALUE###',$rowContent);
             }
             $subpartArray['###ROW###']=$liste;
         }
 
-		return $this->substituteMarkersAndSubparts($subpart,$markerArray,$subpartArray);
+		return $this->substituteMarkersAndSubparts($subpart,array(),$subpartArray);
 	}
 }
 
