@@ -138,7 +138,7 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 			}
 			
 			$downloadLink = $this->pi_linkToPage(
-        		'DL',
+        		'<img src="'.t3lib_extMgm::extRelPath('servicemgr').'res/disk.png" alt="download" title="download" />',
 				$GLOBALS['TSFE']->id, '',
 				array(
         			'eID' => 'tx_servicemgr_download',
@@ -210,9 +210,9 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 						$markerArray['###SIZE###'] = $this->formatBytes($sermon['filesize']);
 						$markerArray['###LENGTH###'] = $this->formatTime($sermon['playtime']);
 						$markerArray['###DOWNLOAD###'] = $this->pi_linkToPage(
-        					'DL',
-							$GLOBALS['TSFE']->id, $target='',
-							$urlParameters = array(
+        					'<img src="'.t3lib_extMgm::extRelPath('servicemgr').'res/disk.png" alt="download" title="download" />',
+							$GLOBALS['TSFE']->id, '',
+							array(
         						'eID' => 'tx_servicemgr_download',
         						'sermonid'=>$sermon['uid']
 							)
