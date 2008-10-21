@@ -480,6 +480,22 @@ class tx_servicemgr extends tslib_pibase {
 		return '<div class="tx_servicemgr_errormsg">'.$msg.'</div>';
 	}
 
+	function tx_linkToPage($str, $id, $urlParameter) {
+		$additionalParams = '';
+		foreach ($urlParameter as $key => $value) {
+			$additionalParams .= '&'.$key.'='.$value;
+		}
+		$content = $this->cObj->typoLink(
+        	$str,
+        	array (
+        		'parameter' => $id,
+        		'useCacheHash'=>1,
+        		'additionalParams'=>$additionalParams,
+        	)
+        );
+        return $content;
+	}
+	
 	/**
 	 * Replaces $this->cObj->substituteArrayMarkerCached() because substitued
 	 * function polutes cache_hash table a lot.

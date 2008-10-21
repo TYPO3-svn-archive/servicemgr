@@ -36,6 +36,7 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 	var $scriptRelPath = 'pi2/class.tx_servicemgr_pi2.php';	// Path to this script relative to the extension dir.
 	var $extKey        = 'servicemgr';	// The extension key.
 	var $pi_checkCHash = true;
+	
 	var $template;
 
 	/**
@@ -48,7 +49,7 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 	function main($content,$conf)	{
 		$this->conf=$conf;
 		$this->pi_setPiVarDefaults();
-
+				
 		$this->tx_init();
 		$this->tx_loadLL();
 
@@ -121,9 +122,9 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 				$outPreacher = '';
 				foreach($allPreachers as $singlePreacher) {
 					if (in_array($singlePreacher['uid'], $preacher)) {
-						$outPreacher .= $this->pi_linkToPage(
+						$outPreacher .= $this->tx_linkToPage(
 							$singlePreacher['name'],
-							$this->generalConf['preacherdetailPID'],'',
+							$this->generalConf['preacherdetailPID'],
 							array('tx_feuser_pi2[showUid]' => $singlePreacher['uid'])
 						);
 					}
@@ -195,9 +196,9 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 			$eventRowsOutput = '';
 			while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 				$markerArray['###DATE###'] = date('d.m.Y', $row['datetime']);
-				$markerArray['###SUBJECT###'] = $this->pi_linkToPage(
+				$markerArray['###SUBJECT###'] = $this->tx_linkToPage(
 					$row['subject'],
-					$GLOBALS['TSFE']->id, '',
+					$GLOBALS['TSFE']->id,
 					array('tx_servicemgr_pi2[eventId]'=>$row['uid'])
 				);
 

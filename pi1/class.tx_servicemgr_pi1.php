@@ -150,9 +150,9 @@ class tx_servicemgr_pi1 extends tx_servicemgr {
 
         		//create link to sermon archive?
         		if ($this->generalConf['SermonArchivePID']) {
-        			$markerArray['subject'] = $this->pi_linkToPage(
+        			$markerArray['subject'] = $this->tx_linkToPage(
         				$row['subject'],
-        				$this->conf['detailviewPID'],'',
+        				$this->conf['detailviewPID'],
         				array(
         					'tx_servicemgr_pi1[eventId]' => $row['uid'],
         					'tx_servicemgr_pi1[backlink]' => $GLOBALS['TSFE']->id,

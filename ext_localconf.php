@@ -2,14 +2,8 @@
 if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 t3lib_extMgm::addUserTSConfig('
 	options.saveDocNew.tx_servicemgr_events=1
-');
-t3lib_extMgm::addUserTSConfig('
 	options.saveDocNew.tx_servicemgr_series=1
-');
-t3lib_extMgm::addUserTSConfig('
 	options.saveDocNew.tx_servicemgr_tags=1
-');
-t3lib_extMgm::addUserTSConfig('
 	options.saveDocNew.tx_servicemgr_teamtype=1
 ');
 
@@ -19,7 +13,7 @@ t3lib_extMgm::addTypoScript($_EXTKEY,'editorcfg','
 ',43);
 
 
-t3lib_extMgm::addPItoST43($_EXTKEY,'pi1/class.tx_servicemgr_pi1.php','_pi1','list_type',0);
+t3lib_extMgm::addPItoST43($_EXTKEY,'pi1/class.tx_servicemgr_pi1.php','_pi1','list_type',1);
 
 
   ## Extending TypoScript from static template uid=43 to set up userdefined tag:
@@ -28,7 +22,7 @@ t3lib_extMgm::addTypoScript($_EXTKEY,'editorcfg','
 ',43);
 
 
-t3lib_extMgm::addPItoST43($_EXTKEY,'pi2/class.tx_servicemgr_pi2.php','_pi2','list_type',0);
+t3lib_extMgm::addPItoST43($_EXTKEY,'pi2/class.tx_servicemgr_pi2.php','_pi2','list_type',1);
 
 
   ## Extending TypoScript from static template uid=43 to set up userdefined tag:
@@ -37,7 +31,7 @@ t3lib_extMgm::addTypoScript($_EXTKEY,'editorcfg','
 ',43);
 
 
-t3lib_extMgm::addPItoST43($_EXTKEY,'pi3/class.tx_servicemgr_pi3.php','_pi3','list_type',0);
+t3lib_extMgm::addPItoST43($_EXTKEY,'pi3/class.tx_servicemgr_pi3.php','_pi3','list_type',1);
 
 
   ## Extending TypoScript from static template uid=43 to set up userdefined tag:
