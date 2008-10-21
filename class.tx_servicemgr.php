@@ -524,7 +524,6 @@ class tx_servicemgr extends tslib_pibase {
 			}
 		}
 		return $content;
-		fore
 	}
 }
 
