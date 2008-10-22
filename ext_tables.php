@@ -7,8 +7,6 @@ $TCA["tx_servicemgr_events"] = array (
 		'tstamp'    => 'tstamp',
 		'crdate'    => 'crdate',
 		'cruser_id' => 'cruser_id',
-		'versioningWS' => TRUE, 
-		'origUid' => 't3_origuid',
 		'languageField'            => 'sys_language_uid',	
 		'transOrigPointerField'    => 'l18n_parent',	
 		'transOrigDiffSourceField' => 'l18n_diffsource',	
@@ -21,7 +19,7 @@ $TCA["tx_servicemgr_events"] = array (
 		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_servicemgr_events.gif',
 	),
 	"feInterface" => array (
-		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, datetime, subject, public, series, tags, requiredteams, documents, notes, notes_internal",
+		"fe_admin_fieldList" => "sys_language_uid, l18n_parent, l18n_diffsource, hidden, datetime, subject, public, series, tags, requiredteams, dutyscheduleopen, documents, notes, notes_internal",
 	)
 );
 
@@ -32,8 +30,6 @@ $TCA["tx_servicemgr_series"] = array (
 		'tstamp'    => 'tstamp',
 		'crdate'    => 'crdate',
 		'cruser_id' => 'cruser_id',
-		'versioningWS' => TRUE, 
-		'origUid' => 't3_origuid',
 		'languageField'            => 'sys_language_uid',	
 		'transOrigPointerField'    => 'l18n_parent',	
 		'transOrigDiffSourceField' => 'l18n_diffsource',	
@@ -57,8 +53,6 @@ $TCA["tx_servicemgr_tags"] = array (
 		'tstamp'    => 'tstamp',
 		'crdate'    => 'crdate',
 		'cruser_id' => 'cruser_id',
-		'versioningWS' => TRUE, 
-		'origUid' => 't3_origuid',
 		'languageField'            => 'sys_language_uid',	
 		'transOrigPointerField'    => 'l18n_parent',	
 		'transOrigDiffSourceField' => 'l18n_diffsource',	
@@ -82,8 +76,6 @@ $TCA["tx_servicemgr_teamtype"] = array (
 		'tstamp'    => 'tstamp',
 		'crdate'    => 'crdate',
 		'cruser_id' => 'cruser_id',
-		'versioningWS' => TRUE, 
-		'origUid' => 't3_origuid',
 		'languageField'            => 'sys_language_uid',	
 		'transOrigPointerField'    => 'l18n_parent',	
 		'transOrigDiffSourceField' => 'l18n_diffsource',	
@@ -107,8 +99,6 @@ $TCA["tx_servicemgr_dutyschedule"] = array (
 		'tstamp'    => 'tstamp',
 		'crdate'    => 'crdate',
 		'cruser_id' => 'cruser_id',
-		'versioningWS' => TRUE, 
-		'origUid' => 't3_origuid',
 		'languageField'            => 'sys_language_uid',	
 		'transOrigPointerField'    => 'l18n_parent',	
 		'transOrigDiffSourceField' => 'l18n_diffsource',	
@@ -152,8 +142,6 @@ $TCA["tx_servicemgr_sermons"] = array (
 		'tstamp'    => 'tstamp',
 		'crdate'    => 'crdate',
 		'cruser_id' => 'cruser_id',
-		'versioningWS' => TRUE, 
-		'origUid' => 't3_origuid',
 		'languageField'            => 'sys_language_uid',	
 		'transOrigPointerField'    => 'l18n_parent',	
 		'transOrigDiffSourceField' => 'l18n_diffsource',	
@@ -226,6 +214,15 @@ $tempColumns = Array (
 			"type" => "check",
 		)
 	),
+	"tx_servicemgr_dsname" => Array (		
+		"exclude" => 1,		
+		"label" => "LLL:EXT:servicemgr/locallang_db.xml:fe_groups.tx_servicemgr_dsname",		
+		"config" => Array (
+			"type" => "input",	
+			"size" => "30",	
+			"eval" => "trim",
+		)
+	),
 	"tx_servicemgr_asteaminschedule" => Array (		
 		"exclude" => 1,		
 		"label" => "LLL:EXT:servicemgr/locallang_db.xml:fe_groups.tx_servicemgr_asteaminschedule",		
@@ -252,7 +249,7 @@ $tempColumns = Array (
 
 t3lib_div::loadTCA("fe_groups");
 t3lib_extMgm::addTCAcolumns("fe_groups",$tempColumns,1);
-t3lib_extMgm::addToAllTCAtypes("fe_groups","tx_servicemgr_leaders;;;;1-1-1, tx_servicemgr_category, tx_servicemgr_isteam, tx_servicemgr_dutyschedule, tx_servicemgr_asteaminschedule, tx_servicemgr_image");
+t3lib_extMgm::addToAllTCAtypes("fe_groups","tx_servicemgr_leaders;;;;1-1-1, tx_servicemgr_category, tx_servicemgr_isteam, tx_servicemgr_dutyschedule, tx_servicemgr_dsname, tx_servicemgr_asteaminschedule, tx_servicemgr_image");
 
 
 
@@ -289,4 +286,7 @@ $TCA['tt_content']['types']['list']['subtypes_excludelist'][$_EXTKEY.'_pi5']='la
 
 t3lib_extMgm::addPlugin(array('LLL:EXT:servicemgr/locallang_db.xml:tt_content.list_type_pi5', $_EXTKEY.'_pi5'),'list_type');
 t3lib_extMgm::addStaticFile($_EXTKEY,"pi5/static/","Duty schedule");
+
+$TCA['tt_content']['types']['list']['subtypes_addlist'][$_EXTKEY.'_pi5']='pi_flexform';
+t3lib_extMgm::addPiFlexFormValue($_EXTKEY.'_pi5', 'FILE:EXT:servicemgr/flexform_ds_pi5.xml');
 ?>

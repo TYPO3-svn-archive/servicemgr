@@ -13,15 +13,6 @@ CREATE TABLE tx_servicemgr_events (
   tstamp int(11) NOT NULL default '0',
   crdate int(11) NOT NULL default '0',
   cruser_id int(11) NOT NULL default '0',
-  t3ver_oid int(11) NOT NULL default '0',
-  t3ver_id int(11) NOT NULL default '0',
-  t3ver_wsid int(11) NOT NULL default '0',
-  t3ver_label varchar(30) NOT NULL default '',
-  t3ver_state tinyint(4) NOT NULL default '0',
-  t3ver_stage tinyint(4) NOT NULL default '0',
-  t3ver_count int(11) NOT NULL default '0',
-  t3ver_tstamp int(11) NOT NULL default '0',
-  t3_origuid int(11) NOT NULL default '0',
   sys_language_uid int(11) NOT NULL default '0',
   l18n_parent int(11) NOT NULL default '0',
   l18n_diffsource mediumblob NOT NULL,
@@ -33,12 +24,12 @@ CREATE TABLE tx_servicemgr_events (
   series int(11) NOT NULL default '0',
   tags tinytext NOT NULL,
   requiredteams tinytext NOT NULL,
+  dutyscheduleopen tinyint(4) NOT NULL default '1',
   documents blob NOT NULL,
   notes text NOT NULL,
   notes_internal text NOT NULL,
   PRIMARY KEY (uid),
   KEY parent (pid),
-  KEY t3ver_oid (t3ver_oid,t3ver_wsid)
 );
 
 
@@ -51,15 +42,6 @@ CREATE TABLE tx_servicemgr_series (
   tstamp int(11) NOT NULL default '0',
   crdate int(11) NOT NULL default '0',
   cruser_id int(11) NOT NULL default '0',
-  t3ver_oid int(11) NOT NULL default '0',
-  t3ver_id int(11) NOT NULL default '0',
-  t3ver_wsid int(11) NOT NULL default '0',
-  t3ver_label varchar(30) NOT NULL default '',
-  t3ver_state tinyint(4) NOT NULL default '0',
-  t3ver_stage tinyint(4) NOT NULL default '0',
-  t3ver_count int(11) NOT NULL default '0',
-  t3ver_tstamp int(11) NOT NULL default '0',
-  t3_origuid int(11) NOT NULL default '0',
   sys_language_uid int(11) NOT NULL default '0',
   l18n_parent int(11) NOT NULL default '0',
   l18n_diffsource mediumblob NOT NULL,
@@ -68,7 +50,6 @@ CREATE TABLE tx_servicemgr_series (
   name varchar(255) NOT NULL default '',
   PRIMARY KEY (uid),
   KEY parent (pid),
-  KEY t3ver_oid (t3ver_oid,t3ver_wsid)
 );
 
 
@@ -81,15 +62,6 @@ CREATE TABLE tx_servicemgr_tags (
   tstamp int(11) NOT NULL default '0',
   crdate int(11) NOT NULL default '0',
   cruser_id int(11) NOT NULL default '0',
-  t3ver_oid int(11) NOT NULL default '0',
-  t3ver_id int(11) NOT NULL default '0',
-  t3ver_wsid int(11) NOT NULL default '0',
-  t3ver_label varchar(30) NOT NULL default '',
-  t3ver_state tinyint(4) NOT NULL default '0',
-  t3ver_stage tinyint(4) NOT NULL default '0',
-  t3ver_count int(11) NOT NULL default '0',
-  t3ver_tstamp int(11) NOT NULL default '0',
-  t3_origuid int(11) NOT NULL default '0',
   sys_language_uid int(11) NOT NULL default '0',
   l18n_parent int(11) NOT NULL default '0',
   l18n_diffsource mediumblob NOT NULL,
@@ -99,7 +71,6 @@ CREATE TABLE tx_servicemgr_tags (
   parrent int(11) NOT NULL default '0',
   PRIMARY KEY (uid),
   KEY parent (pid),
-  KEY t3ver_oid (t3ver_oid,t3ver_wsid)
 );
 
 
@@ -112,15 +83,6 @@ CREATE TABLE tx_servicemgr_teamtype (
   tstamp int(11) NOT NULL default '0',
   crdate int(11) NOT NULL default '0',
   cruser_id int(11) NOT NULL default '0',
-  t3ver_oid int(11) NOT NULL default '0',
-  t3ver_id int(11) NOT NULL default '0',
-  t3ver_wsid int(11) NOT NULL default '0',
-  t3ver_label varchar(30) NOT NULL default '',
-  t3ver_state tinyint(4) NOT NULL default '0',
-  t3ver_stage tinyint(4) NOT NULL default '0',
-  t3ver_count int(11) NOT NULL default '0',
-  t3ver_tstamp int(11) NOT NULL default '0',
-  t3_origuid int(11) NOT NULL default '0',
   sys_language_uid int(11) NOT NULL default '0',
   l18n_parent int(11) NOT NULL default '0',
   l18n_diffsource mediumblob NOT NULL,
@@ -129,7 +91,6 @@ CREATE TABLE tx_servicemgr_teamtype (
   name varchar(255) NOT NULL default '',
   PRIMARY KEY (uid),
   KEY parent (pid),
-  KEY t3ver_oid (t3ver_oid,t3ver_wsid)
 );
 
 
@@ -142,15 +103,6 @@ CREATE TABLE tx_servicemgr_dutyschedule (
   tstamp int(11) NOT NULL default '0',
   crdate int(11) NOT NULL default '0',
   cruser_id int(11) NOT NULL default '0',
-  t3ver_oid int(11) NOT NULL default '0',
-  t3ver_id int(11) NOT NULL default '0',
-  t3ver_wsid int(11) NOT NULL default '0',
-  t3ver_label varchar(30) NOT NULL default '',
-  t3ver_state tinyint(4) NOT NULL default '0',
-  t3ver_stage tinyint(4) NOT NULL default '0',
-  t3ver_count int(11) NOT NULL default '0',
-  t3ver_tstamp int(11) NOT NULL default '0',
-  t3_origuid int(11) NOT NULL default '0',
   sys_language_uid int(11) NOT NULL default '0',
   l18n_parent int(11) NOT NULL default '0',
   l18n_diffsource mediumblob NOT NULL,
@@ -160,7 +112,6 @@ CREATE TABLE tx_servicemgr_dutyschedule (
   duty blob NOT NULL,
   PRIMARY KEY (uid),
   KEY parent (pid),
-  KEY t3ver_oid (t3ver_oid,t3ver_wsid)
 );
 
 
@@ -192,15 +143,6 @@ CREATE TABLE tx_servicemgr_sermons (
   tstamp int(11) NOT NULL default '0',
   crdate int(11) NOT NULL default '0',
   cruser_id int(11) NOT NULL default '0',
-  t3ver_oid int(11) NOT NULL default '0',
-  t3ver_id int(11) NOT NULL default '0',
-  t3ver_wsid int(11) NOT NULL default '0',
-  t3ver_label varchar(30) NOT NULL default '',
-  t3ver_state tinyint(4) NOT NULL default '0',
-  t3ver_stage tinyint(4) NOT NULL default '0',
-  t3ver_count int(11) NOT NULL default '0',
-  t3ver_tstamp int(11) NOT NULL default '0',
-  t3_origuid int(11) NOT NULL default '0',
   sys_language_uid int(11) NOT NULL default '0',
   l18n_parent int(11) NOT NULL default '0',
   l18n_diffsource mediumblob NOT NULL,
@@ -217,7 +159,6 @@ CREATE TABLE tx_servicemgr_sermons (
   mimetype varchar(255) NOT NULL default '',
   PRIMARY KEY (uid),
   KEY parent (pid),
-  KEY t3ver_oid (t3ver_oid,t3ver_wsid)
 );
 
 
@@ -239,4 +180,5 @@ CREATE TABLE fe_groups (
   tx_servicemgr_isteam tinyint(3) NOT NULL default '0',
   tx_servicemgr_image blob NOT NULL,
   tx_servicemgr_asteaminschedule tinyint(3) NOT NULL default '0',
+  tx_servicemgr_dsname  varchar(30) NOT NULL default '',
 );

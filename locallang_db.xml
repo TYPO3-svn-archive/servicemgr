@@ -13,6 +13,7 @@
 			<label index="tx_servicemgr_events.series">Series</label>
 			<label index="tx_servicemgr_events.tags">Tags</label>
 			<label index="tx_servicemgr_events.requiredteams">Required teams</label>
+			<label index="tx_servicemgr_events.dutyscheduleopen">Dutyschdule open/editable?</label>
 			<label index="tx_servicemgr_events.documents">Documents</label>
 			<label index="tx_servicemgr_events.notes">Notes</label>
 			<label index="tx_servicemgr_events.notes_internal">Internal Notes</label>
@@ -51,6 +52,7 @@
 			<label index="fe_groups.tx_servicemgr_image">Image</label>
 			<label index="fe_groups.tx_servicemgr_description">Description</label>
 			<label index="fe_groups.tx_servicemgr_asteaminschedule">As one team in duty schedule?</label>
+			<label index="fe_groups.tx_servicemgr_dsname">Shortname for Dutyschedule</label>
 			<label index="tt_content.list_type_pi1">Event preview</label>
 			<label index="tt_content.list_type_pi2">Sermon archive</label>
 			<label index="tt_content.list_type_pi3">Sermon administration</label>
@@ -64,6 +66,8 @@
 			<label index="tt_content.pi_flexform.viewmode">View Mode</label>
 			<label index="tt_content.pi_flexform.latest">Latest</label>
 			<label index="tt_content.pi_flexform.archive">Archive</label>
+			<label index="tt_content.pi_flexform.personal">Personal</label>
+			<label index="tt_content.pi_flexform.list">List</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="tx_servicemgr_events">Veranstaltungen</label>
@@ -73,6 +77,7 @@
 			<label index="tx_servicemgr_events.series">Serie</label>
 			<label index="tx_servicemgr_events.tags">Tags</label>
 			<label index="tx_servicemgr_events.requiredteams">beteiligte Teams</label>
+			<label index="tx_servicemgr_events.dutyscheduleopen">Dienstplan offen/editierbar?</label>
 			<label index="tx_servicemgr_events.documents">Dokumente</label>
 			<label index="tx_servicemgr_events.notes">Bemerkungen</label>
 			<label index="tx_servicemgr_events.notes_internal">Interne Bemerkungen</label>
@@ -111,6 +116,7 @@
 			<label index="fe_groups.tx_servicemgr_image">Bild</label>
 			<label index="fe_groups.tx_servicemgr_description">Beschreibung</label>
 			<label index="fe_groups.tx_servicemgr_asteaminschedule">Als ein Team im Dienstplan?</label>
+			<label index="fe_groups.tx_servicemgr_dsname">Abkürzung für Dienstplan</label>
 			<label index="tt_content.list_type_pi1">Programmvorschau</label>
 			<label index="tt_content.list_type_pi2">Predigtarchiv</label>
 			<label index="tt_content.list_type_pi3">Predigt-Verwaltung</label>
@@ -124,6 +130,8 @@
 			<label index="tt_content.pi_flexform.viewmode">Anzeigemodus</label>
 			<label index="tt_content.pi_flexform.latest">Letzte</label>
 			<label index="tt_content.pi_flexform.archive">Archiv</label>
+			<label index="tt_content.pi_flexform.personal">Persönlich</label>
+			<label index="tt_content.pi_flexform.list">Liste</label>
 		</languageKey>
 	</data>
 </T3locallang>

@@ -51,17 +51,19 @@ class tx_servicemgr_pi5 extends tx_servicemgr {
 
 		$this->tx_init();
 		$this->tx_loadLL();
+		$this->userID = $GLOBALS['TSFE']->fe_user->user[uid];
+		$this->ts = mktime(0,0,0);
+		$this->fetchConfigValue('viewmode');
 		
 		$GLOBALS['TYPO3_DB']->debugOutput = true;
 		
-		$this->template = $this->generalConf['TemplateFile'];
-		if (!$this->template) {
-			$this->template = 'EXT:servicemgr/res/tables.tmpl';
+		if ($this->piVars['submit']) {
+			$this->doSubmit($this->piVars['submittype']);
 		}
-		$this->template = $this->cObj->fileResource($this->template);
-
+		
 		switch ($this->conf['viewmode']) {
 			CASE 'personal':
+				$content = $this->personalView($this->userID);
 				break;
 			CASE 'leader':
 				break;
@@ -73,66 +75,271 @@ class tx_servicemgr_pi5 extends tx_servicemgr {
 		return $this->pi_wrapInBaseClass($content);
 	}
 	
-	function listView() {
-		$template = $this->cObj->getSubpart($this->template,'###DUTYSCHEDULE###');
-		$subparts = array('###HEADERROW###'=>'','###DATAROW###'=>'','###SPACERCELL###'=>'');
-		foreach ($subparts as $subpart => $value) $subparts[$subpart] = $this->cObj->getSubpart($template, $subpart);
+	function personalView($userID) {
 		
-		$teams = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,title',
-					'fe_groups', 'deleted=0 AND tx_servicemgr_dutyschedule=1');
+		$user = $this->getUserData(intval($userID));
+		
+		if (!empty($user['usergroup'])) {
+			$teamsAndWhere = ' AND uid in ('.$user['usergroup'].')';
+		}
+		
+		$teams = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,title,tx_servicemgr_dsname',
+					'fe_groups', 'deleted=0 AND tx_servicemgr_dutyschedule=1'.$teamsAndWhere);
 		
 		$events = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,subject,datetime,requiredteams,notes,notes_internal',
-					'tx_servicemgr_events', 'deleted=0 AND hidden=0', '', 'datetime ASC');
+					'tx_servicemgr_events', 'deleted=0 AND hidden=0 AND dutyscheduleopen=1 AND datetime>'.$this->ts, '', 'datetime ASC');
 		
-		$cells['header'] = $this->cObj->getSubpart($subparts['###HEADERROW###'],'###HEADERCELL###');
-		$cells['data'] = $this->cObj->getSubpart($subparts['###DATAROW###'],'###DATACELL###');
-		$cells['spacer'] = $this->cObj->getSubpart($template,'###SPACERCELL###');
+		$eventInfo = array('datetime','subject','notes','notes_internal');
 		
-		$temp['header'][] = $this->cObj->substituteMarker($cells['header'],'###H_LABEL###',$this->pi_getLL('date'));
-		$temp['header'][] = $this->cObj->substituteMarker($cells['header'],'###H_LABEL###',$this->pi_getLL('subject'));
-		$temp['header'][] = $this->cObj->substituteMarker($cells['header'],'###H_LABEL###',$this->pi_getLL('notes'));
-		$temp['header'][] = $cells['spacer'];
-		
-		foreach ($teams as $key => $team) {
-			$temp['header'][] = $this->cObj->substituteMarker($cells['header'],'###H_LABEL###',$team['title']);
-			$teams[$key]['members'] = $this->getTeamMembers($team['uid']);
-		}
+		$data = array();
+		$data[] = array_merge(
+			$this->getEventHeaders(),
+			array(array('&nbsp;','dutyschedule-spacer')),
+			$this->getTeamHeaders($teams)
+		);
 		
 		foreach ($events as $event) {
 			$duty = $this->getSingleSchedule($event['uid']);
 						
-			$temp['data'] = array();
-			$temp['data'][] = $this->cObj->substituteMarker($cells['data'],'###H_VALUE###',date('d.m.Y', $event['datetime']));
-			$temp['data'][] = $this->cObj->substituteMarker($cells['data'],'###H_VALUE###',$event['subject']);
-			$temp['data'][] = $this->cObj->substituteMarker($cells['data'],'###H_VALUE###',$event['notes'].'<br />'.$event['notes_internal']);
-			$temp['data'][] = $cells['spacer'];
+			$cellData = $this->getEventInformation($event,$eventInfo);
+			$cellData[] = array('&nbsp;','dutyschedule-spacer');
 
+			//Set data for each cell/team
 			foreach ($teams as $team) {
 				$temp['duty'] = array();
 				if (!is_array($duty[$team['uid']])) {
-					$temp['duty'][] = '';
+					$temp['duty'][] = '<input type="checkbox" value="'.$user['uid'].'" name="tx_servicemgr_pi5[dutydata]['.$event['uid'].']['.$team['uid'].']" />';
 				} else {
+					
+					if (in_array($user['uid'],$duty[$team['uid']])) {
+						$temp['duty'][] = '<input type="checkbox" value="'.$user['uid'].'" name="tx_servicemgr_pi5[dutydata]['.$event['uid'].']['.$team['uid'].']" checked="checked" />';
+					} else {
+						$temp['duty'][] = '<input type="checkbox" value="'.$user['uid'].'" name="tx_servicemgr_pi5[dutydata]['.$event['uid'].']['.$team['uid'].']" />';
+					}
+					
 					foreach ($duty[$team['uid']] as $key => $value) {
-						$temp['duty'][] = $team['members'][$value]['name'];
+						if ($value != $user['uid']) {
+							$temp['duty'][] = $team['members'][$value]['first_name'];
+						}
 					}
 				}
-				$temp['data'][] = $this->cObj->substituteMarker($cells['data'],'###H_VALUE###',implode(', ',$temp['duty']));
+				
+				$cellData[] = array(
+					implode(', ',$temp['duty']),
+					$this->getCssClass($event['requiredteams'],$team),
+				);
+				
 			}
 			
-			$temp['rows'][] = $this->cObj->substituteSubpart($subparts['###DATAROW###'],'###DATACELL###', implode('',$temp['data']));
+			$data[] = $cellData;
 		}
 		
-		$temp['header'] = $this->cObj->substituteSubpart($subparts['###HEADERROW###'],'###HEADERCELL###', implode('', $temp['header']));
-		$temp['data'] = $this->cObj->substituteSubpart($subparts['###DATAROW###'],'###DATACELL###', implode('', $temp['rows']));
+		$actionLink = $this->cObj->typoLink_URL(array(
+			'parameter' => $GLOBALS['TSFE']->id,
+			'addQueryString' => 1,
+			'addQueryString.' => array(
+				'exclude' => 'cHash,no_cache',
+			),
+			'additionalParams' => '&no_cache=1',
+			'useCacheHash' => false,
+		));
 		
-		$content = $template;
-		$content = $this->cObj->substituteSubpart($content, '###HEADERROW###', $temp['header']);
-		$content = $this->cObj->substituteSubpart($content, '###DATAROW###', $temp['data']);
-		$content = $this->cObj->substituteSubpart($content, '###SPACERCELL###', '');
+		$content = '<form method="post" action="'.$actionLink.'">'; 
+		$content .= $this->setData2Template($data);
+		$content .= '<input type="hidden" name="'.$this->prefixId.'[submittype]" value="personal" />';
+		$content .= '<div style="float:right;"><input type="submit" name="'.$this->prefixId.'[submit]" value="'.$this->pi_getLL('submitform').'" /></div><div class="clear"></div>';
+		$content .= '</form>';
+		
+		return $content;
+	}
+	
+	function getUserData($feuser_uid) {
+		//get content from database
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+        	'uid, username, first_name, last_name, date_of_birth, school, grade, showname, family, image, usergroup',   #select
+        	'fe_users', #from
+        	'deleted=0 and uid='.$feuser_uid  #where
+		);
+
+		if ($res) {
+			$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+			return $row;
+		} else {
+			return false;
+		}
+	}
+	
+	function listView() {
+				
+		$teams = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,title,tx_servicemgr_dsname',
+					'fe_groups', 'deleted=0 AND tx_servicemgr_dutyschedule=1');
+		
+		
+		$events = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,subject,datetime,requiredteams,notes,notes_internal',
+					'tx_servicemgr_events', 'deleted=0 AND hidden=0', '', 'datetime ASC');
+		
+		$eventInfo = array('datetime','subject','notes','notes_internal');
+		
+		
+		$data = array();
+		$data[] = array_merge(
+			$this->getEventHeaders(),
+			array(array('&nbsp;','dutyschedule-spacer')),
+			$this->getTeamHeaders($teams)
+		);
+				
+		foreach ($events as $event) {
+			$duty = $this->getSingleSchedule($event['uid']);
+						
+			$cellData = $this->getEventInformation($event,$eventInfo);
+			$cellData[] = array('&nbsp;','dutyschedule-spacer');
+
+			//Set data for each cell/team
+			foreach ($teams as $team) {
+				
+				$temp['duty'] = array();
+				
+				if (!is_array($duty[$team['uid']])) {
+					$temp['duty'][] = '&nbsp;';
+				} else {
+					
+					foreach ($duty[$team['uid']] as $key => $value) {
+						$temp['duty'][] = $team['members'][$value]['first_name'];
+					}
+				
+				}					
+				
+				$cellData[] = array(
+					implode(', ',$temp['duty']),
+					$this->getCssClass($event['requiredteams'],$team),
+				);	
+			}
+			$data[] = $cellData;
+		}
+				
+		$content = $this->setData2Template($data);
+		return $content;
+	}
+	
+	function getCssClass($requiredTeams,$team) {
+		$cssClass = 'dsc-normal';
+		
+		if (!is_array($requiredTeams)) {
+			$requiredTeams = split(',',$requiredTeams);
+		}
+		
+		if (!in_array($team['uid'],$requiredTeams)) {
+			$cssClass = 'dsc-notneeded';
+		}
+		
+		return $cssClass;
+	}
+	
+	function setData2Template($data) {
+		$template = $this->cObj->getSubpart($this->template,'###DUTYSCHEDULE###');
+		$subparts = $this->getSubparts($template, array('###HEADERROW###','###DATAROW###','###HEADERCELL###','###DATACELL###'));
+				
+		$tempData['header'] = $data[0];
+		
+		//SET HEADER-DATA
+		foreach ($tempData['header'] as $headData) {
+			$marker = array(
+				'###H_LABEL###' => $headData[0],
+				'###LABEL_CLASS###' => $headData[1],
+			);
+			$temp[] = $this->cObj->substituteMarkerArray($subparts['###HEADERCELL###'],$marker);
+		}
+		$temp['header'][] = implode('',$temp);
+
+		unset($data[0]);
+		
+		//SET ROWS
+		foreach ($data as $rowData) {
+			
+			//SET CELLS
+			$temp['data'] = array();			
+			foreach ($rowData as $cellData) {
+				$markers = array(
+					'###H_VALUE###' => $cellData[0],
+					'###VALUE_CLASS###' => $cellData[1],
+				);
+				$temp['data'][] = $this->cObj->substituteMarkerArray($subparts['###DATACELL###'],$markers);	
+			}
+			$temp['rows'][] = $this->cObj->substituteSubpart($subparts['###DATAROW###'],'###DATACELL###', implode('',$temp['data']));
+		}
+						
+		$subpartContent['###HEADERROW###'] = $this->cObj->substituteSubpart($subparts['###HEADERROW###'],'###HEADERCELL###', implode('', $temp['header']));
+		$subpartContent['###DATAROW###'] = $this->cObj->substituteSubpart($subparts['###DATAROW###'],'###DATACELL###', implode('', $temp['rows']));
+							
+		$content = $this->substituteMarkersAndSubparts($template,array(),$subpartContent);
+		return $content;
+	}
+	
+	function getEventHeaders() {
+		$temp[] = array($this->pi_getLL('date'),'');
+		$temp[] = array($this->pi_getLL('subject'),'');
+		$temp[] = array($this->pi_getLL('notes'),'');
+		return $temp;
+	}
+	
+	function getTeamHeaders(&$teams) {
+		$temp = array();
+		if (is_array($teams)) {
+			foreach ($teams as $key => $team) {
+				$name = empty($team['tx_servicemgr_dsname']) ? $team['title'] : $team['tx_servicemgr_dsname'];
+				$temp[] = array(str_replace(' ','&nbsp;',$name),'');
+				$teams[$key]['members'] = $this->getTeamMembers($team['uid']);
+			}
+		}
+		return $temp;
+	}
+	
+	function getEventInformation($event,$infos) {
+		$event['datetime'] = date('d.m.Y', $event['datetime']);
+		
+		if (in_array('notes',$infos) && in_array('notes_internal',$infos)) { 
+			if (!empty($event['notes'])) $event['notes'] .= '<br />'; 
+			$event['notes'] .= $event['notes_internal'];
+			unset($infos[array_search('notes_internal',$infos)]);
+		}
+		
+		$temp = array();
+		
+		if (is_array($event) && is_array($infos)) {
+			foreach ($infos as $info) {
+				$temp[] = array(empty($event[$info]) ? '&nbsp;' : $event[$info],'dsc-eventinfo');	
+			}
+		}
+		
+		return $temp;
+	}
+	
+	function doSubmit($submitType) {
+		switch ($submitType) {
+			CASE 'personal':
+				
+				break;
+			CASE 'team':
+				break;
+			default:
+		}
+	}
+	
+	/**
+	 * 	Returns a subpart from the input content stream.
+	 *
+	 * @param	string		$template: The content stream, typically HTML template content.
+	 * @param	array		$markerArray: The marker array, typically on the form array("###[the marker string]###")
+	 * @return	array		The subparts found, if found.
+	 */
+	function getSubparts($template, $markerArray) {
+		$content = array();
+		foreach ($markerArray as $marker) {
+			$content[$marker] = $this->cObj->getSubpart($template, $marker);
+		}
 		return $content;
 	}
 }
-
 
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/servicemgr/pi5/class.tx_servicemgr_pi5.php'])	{

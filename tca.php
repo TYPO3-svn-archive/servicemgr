@@ -4,18 +4,10 @@ if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 $TCA["tx_servicemgr_events"] = array (
 	"ctrl" => $TCA["tx_servicemgr_events"]["ctrl"],
 	"interface" => array (
-		"showRecordFieldList" => "sys_language_uid,l18n_parent,l18n_diffsource,hidden,datetime,subject,public,series,tags,requiredteams,documents,audiofiles,notes,notes_internal"
+		"showRecordFieldList" => "sys_language_uid,l18n_parent,l18n_diffsource,hidden,datetime,subject,public,series,tags,requiredteams,dutyscheduleopen,documents,audiofiles,notes,notes_internal"
 	),
 	"feInterface" => $TCA["tx_servicemgr_events"]["feInterface"],
 	"columns" => array (
-		't3ver_label' => array (		
-			'label'  => 'LLL:EXT:lang/locallang_general.xml:LGL.versionLabel',
-			'config' => array (
-				'type' => 'input',
-				'size' => '30',
-				'max'  => '30',
-			)
-		),
 		'sys_language_uid' => array (		
 			'exclude' => 1,
 			'label'  => 'LLL:EXT:lang/locallang_general.xml:LGL.language',
@@ -170,6 +162,14 @@ $TCA["tx_servicemgr_events"] = array (
 				"maxitems" => 20,
 			)
 		),
+		"dutyscheduleopen" => Array (		
+			"exclude" => 1,		
+			"label" => "LLL:EXT:servicemgr/locallang_db.xml:tx_servicemgr_events.dutyscheduleopen",		
+			"config" => Array (
+				"type" => "check",
+				"default" => 1,
+			)
+		),
 		"documents" => Array (		
 			"exclude" => 1,		
 			"label" => "LLL:EXT:servicemgr/locallang_db.xml:tx_servicemgr_events.documents",		
@@ -205,7 +205,7 @@ $TCA["tx_servicemgr_events"] = array (
 		),
 	),
 	"types" => array (
-		"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, datetime, subject, public, series, tags, requiredteams, documents, notes, notes_internal")
+		"0" => array("showitem" => "sys_language_uid;;;;1-1-1, l18n_parent, l18n_diffsource, hidden;;1, datetime, subject, public, series, tags, requiredteams, dutyscheduleopen, documents, notes, notes_internal")
 	),
 	"palettes" => array (
 		"1" => array("showitem" => "")
@@ -221,14 +221,6 @@ $TCA["tx_servicemgr_series"] = array (
 	),
 	"feInterface" => $TCA["tx_servicemgr_series"]["feInterface"],
 	"columns" => array (
-		't3ver_label' => array (		
-			'label'  => 'LLL:EXT:lang/locallang_general.xml:LGL.versionLabel',
-			'config' => array (
-				'type' => 'input',
-				'size' => '30',
-				'max'  => '30',
-			)
-		),
 		'sys_language_uid' => array (		
 			'exclude' => 1,
 			'label'  => 'LLL:EXT:lang/locallang_general.xml:LGL.language',
@@ -295,14 +287,6 @@ $TCA["tx_servicemgr_tags"] = array (
 	),
 	"feInterface" => $TCA["tx_servicemgr_tags"]["feInterface"],
 	"columns" => array (
-		't3ver_label' => array (		
-			'label'  => 'LLL:EXT:lang/locallang_general.xml:LGL.versionLabel',
-			'config' => array (
-				'type' => 'input',
-				'size' => '30',
-				'max'  => '30',
-			)
-		),
 		'sys_language_uid' => array (		
 			'exclude' => 1,
 			'label'  => 'LLL:EXT:lang/locallang_general.xml:LGL.language',
@@ -384,14 +368,6 @@ $TCA["tx_servicemgr_teamtype"] = array (
 	),
 	"feInterface" => $TCA["tx_servicemgr_teamtype"]["feInterface"],
 	"columns" => array (
-		't3ver_label' => array (		
-			'label'  => 'LLL:EXT:lang/locallang_general.xml:LGL.versionLabel',
-			'config' => array (
-				'type' => 'input',
-				'size' => '30',
-				'max'  => '30',
-			)
-		),
 		'sys_language_uid' => array (		
 			'exclude' => 1,
 			'label'  => 'LLL:EXT:lang/locallang_general.xml:LGL.language',
@@ -458,14 +434,6 @@ $TCA["tx_servicemgr_dutyschedule"] = array (
 	),
 	"feInterface" => $TCA["tx_servicemgr_dutyschedule"]["feInterface"],
 	"columns" => array (
-		't3ver_label' => array (		
-			'label'  => 'LLL:EXT:lang/locallang_general.xml:LGL.versionLabel',
-			'config' => array (
-				'type' => 'input',
-				'size' => '30',
-				'max'  => '30',
-			)
-		),
 		'sys_language_uid' => array (		
 			'exclude' => 1,
 			'label'  => 'LLL:EXT:lang/locallang_general.xml:LGL.language',
@@ -594,14 +562,6 @@ $TCA["tx_servicemgr_sermons"] = array (
 	),
 	"feInterface" => $TCA["tx_servicemgr_sermons"]["feInterface"],
 	"columns" => array (
-		't3ver_label' => array (		
-			'label'  => 'LLL:EXT:lang/locallang_general.xml:LGL.versionLabel',
-			'config' => array (
-				'type' => 'input',
-				'size' => '30',
-				'max'  => '30',
-			)
-		),
 		'sys_language_uid' => array (		
 			'exclude' => 1,
 			'label'  => 'LLL:EXT:lang/locallang_general.xml:LGL.language',

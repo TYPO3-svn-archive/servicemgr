@@ -35,3 +35,5 @@
 .fulldutyschedule td, .fulldutyschedule th { border-top: thin solid #BBBBBB; border-left: thin solid #BBBBBB; }
 .fulldutyschedule { border-bottom: thin solid #BBBBBB; border-right: thin solid #BBBBBB; }
 .dutyschedule-spacer { background-color: #FCFCFC !important; width: 2px; }
+.dsc-normal { background-color: #FFFFFF; }
+.dsc-notneeded { background-color: #FFCC00; }

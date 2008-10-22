@@ -63,6 +63,12 @@ class tx_servicemgr extends tslib_pibase {
 		$this->generalConf->generateConfig();
 		$this->generalConf = $this->generalConf->setup['plugin.']['tx_servicemgr.'];
 		
+		$this->template = $this->generalConf['TemplateFile'];
+		if (!$this->template) {
+			$this->template = 'EXT:servicemgr/res/tables.tmpl';
+		}
+		$this->template = $this->cObj->fileResource($this->template);
+		
 		$this->pi_initPIflexForm();
 
 		$GLOBALS['TSFE']->additionalHeaderData['tx_servicemgr_css'] = '	<link rel="stylesheet" type="text/css" href="'.t3lib_extMgm::siteRelPath(servicemgr).'res/tables.css" />';
@@ -143,7 +149,7 @@ class tx_servicemgr extends tslib_pibase {
 	function getTeamMembers($teamUID, $fillName=true) {
 		//get alle fe_users from database
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-        	'uid, username, name, usergroup',   #select
+        	'uid, username, name, first_name, last_name, usergroup',   #select
         	'fe_users', #from
         	'usergroup<>\'\' AND deleted=0'  #where
 		);
