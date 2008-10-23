@@ -37,3 +37,24 @@
 .dutyschedule-spacer { background-color: #FCFCFC !important; width: 2px; }
 .dsc-normal { background-color: #FFFFFF; }
 .dsc-notneeded { background-color: #FFCC00; }
+
+.tx-servicemgr-pi4 { padding-top: 10px; }
+.smgr-ae-header { padding-bottom: 20px; }
+.smgr-ae-body dl { margin: 0; padding: 0; width: 500px; }
+.smgr-ae-body dt,
+.smgr-ae-body dd { margin: 0; padding: 0 0 15px 0; float: left; }
+.smgr-ae-body dt { text-align: right; clear: both; width: 110px; padding-right: 5px; }
+.smgr-ae-body dd { text-align: left; width: 210px; }
+.smgr-ae-body .col-1dd { clear: none; width: auto; }
+.smgr-ae-body .col-2dt { clear: none; width: auto; padding-left: 15px; }
+.smgr-ae-body .smgr-ae-cbarray { text-align: left; height: 100px; overflow: auto; width: 200px; border: thin dashed #666666; padding:5px; }
+.smgr-ae-body .smgr-ae-singlecb { width: auto; min-width: 110px; }
+.smgr-ae-body textarea { width: 210px; }
+.smgr-ae-body .smgr-ae-addwrap { text-align: right; }
+.smgr-ae-body .smgr-ae-addwrap img { float: right; clear:both; padding-top: 5px; }
+.smgr-ae-body dd .addIcon { padding-left: 2px; }
+.smgr-ae-body br { clear: right; }
+.smgr-ae-body dl .clear { clear: both; }
+
+textarea { background-color:#FEFEFE; border-color:#838EA0 #545861 #545861 #838EA0; border-style:solid; border-width:1px; }
+select, textarea, input { color: #212424; font-family: Verdana,Arial,Helvetica,sans-serif; font-size: 10px; }

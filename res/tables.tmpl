@@ -50,7 +50,7 @@
 <div id="uploadform">###TITLE###
   <div id="postData">
   	<div id="subject">###HSUBJECT###: ###SUBJECT###</div><div id="date">###HDATE###: ###DATE###</div>
-    <div id="preacher" class="user-icon">###PREACHER###</div>
+    <div id="preacher">###PREACHER###</div>
     <div id="tags">
     	<div id="taglabel">###HTAGS###</div>
         <div id="tagcontainer">
@@ -76,3 +76,84 @@ Erkl&auml;rung:
 	<tr><td class="dsc-notneeded">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>&nbsp;Team bei dieser Veranstaltung nicht zwingend ben&ouml;tigt.</td></tr>
 </table>
 <!-- ###DUTYSCHEDULE### -->
+
+
+<!-- ###ADDNEWEVENT### -->
+<div class="smgr-ae">
+	<div class="smgr-ae-header">
+		###FORM_ERRORS###
+	</div>
+	<div class="smgr-ae-body">
+		<form action="###ACTION_LINK###" method="post" enctype="multipart/form-data">
+		<dl>
+			<dt class="col-1dt"><label for="tx_servicemgr_pi4[date]_hr">###L_DATE###</label>:</dt>
+			<dd class="col-1dd"><input name="tx_servicemgr_pi4[date]" type="text" id="tx_servicemgr_pi4[date]_hr" value="###V_DATE###" size="12" maxlength="10" />
+			###DATE_CAL###
+			</dd>
+			<dt class="col-2dt"><label for="frm-time">###L_TIME###</label>:</dt>
+			<dd class="col-2dd"><input name="tx_servicemgr_pi4[time]" type="text" id="frm-time" value="###V_TIME###" size="7" maxlength="5" />
+			###TIME_CAL###
+			</dd>
+			
+		</dl>
+		<div class="clear"></div>
+		<dl>
+			<dt><label for="frm-subject">###L_SUBJECT###</label>:</dt>
+			<dd><input type="text" name="tx_servicemgr_pi4[subject]" value="###V_SUBJECT###" id="frm-subject" /></dd>
+			
+			<dt><label for="frm-series">###L_SERIES###</label>:</dt>
+			<dd>###SERIES_SELECTOR###
+				###SERIES_ADDLINK###
+			</dd>
+			
+			<dt class="smgr-ae-singlecb"><label for="frm-public">###L_PUBLIC###</label>:</dt>
+			<dd><input type="checkbox" name="tx_servicemgr_pi4[public]" value="1" id="frm-public" ###V_PUBLIC###/></dd>
+			
+			<dt>###L_TAGS###:</dt>
+			<dd>
+				<div class="smgr-ae-addwrap">
+					<div class="smgr-ae-cbarray">
+						###TAGS_CBS###
+					</div>
+					###TAGS_ADDLINK###
+					<div class="clear"></div>
+				</div>
+			</dd>
+			
+			<dt>###L_REQUIREDTEAMS###:</dt>
+			<dd>
+				<div class="smgr-ae-cbarray">
+					###REQUIREDTEAMS_CBS###
+				</div>
+			</dd>
+			
+			<dt class="smgr-ae-singlecb"><label for="frm-dutyscheduleopen">###L_DUTYSCHEDULEOPEN###</label>:</dt>
+			<dd><input type="checkbox" name="tx_servicemgr_pi4[dutyscheduleopen]" value="1" id="frm-dutyscheduleopen" ###V_DUTYSCHEDULEOPEN###/></dd>
+			
+			<dt>###L_DOCUMENTS###:</dt>
+			<dd>
+				<div class="smgr-ae-addwrap">
+					<div>
+						<input type="file" name="tx_servicemgr_pi4[documents][doc1]" id="frm-documents-doc1" /><br />
+					</div>
+					###DOCUMENTS_ADDLINK###
+					<div class="clear"></div>
+				</div>
+			</dd>
+							
+			<dt><label for="frm-notes">###L_NOTES###</label>:</dt>
+			<dd><textarea name="tx_servicemgr_pi4[notes]" cols="30" rows="4" id="frm-notes">###V_NOTES###</textarea></dd>
+			
+			<dt><label for="frm-notesinternal">###L_NOTESINTERNAL###</label>:</dt>
+			<dd><textarea name="tx_servicemgr_pi4[notes_internal]" cols="30" rows="4" id="frm-notesinternal">###V_NOTESINTERNAL###</textarea></dd>
+			
+			<dt></dt>
+			<dd><input type="submit" name="tx_servicemgr_pi4[submit]" value="###L_SUBMIT###" id="frm-submit" /></dd>
+		</dl>
+		</form>
+		<div class="clear"></div>
+	</div>
+	<div class="smgr-ae-footer">
+	</div>			
+</div>
+<!-- ###ADDNEWEVENT### -->
