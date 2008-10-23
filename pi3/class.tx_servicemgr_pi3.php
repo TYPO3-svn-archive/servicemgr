@@ -21,6 +21,15 @@
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+/**
+ * class.tx_servicemgr_pi3.php
+ * 
+ * includes FrontEnd-Plugin 3 ('Sermon administration') class for servicemgr extension
+ * 
+ * $Id$
+ * 
+ * @author Peter Schuster <typo3@peschuster.de> 
+ */
 
 require_once(t3lib_extMgm::extPath('servicemgr').'class.tx_servicemgr.php');
 require_once(t3lib_extMgm::extPath('servicemgr').'class.tx_servicemgr_mp3.php');
@@ -28,9 +37,9 @@ require_once(t3lib_extMgm::extPath('servicemgr').'class.tx_servicemgr_mp3.php');
 /**
  * Plugin 'Sermon administration' for the 'servicemgr' extension.
  *
- * @author	Peter Schuster <typo3@peschuster.de>
- * @package	TYPO3
- * @subpackage	tx_servicemgr
+ * @author Peter Schuster <typo3@peschuster.de>
+ * @package TYPO3
+ * @subpackage tx_servicemgr
  */
 class tx_servicemgr_pi3 extends tx_servicemgr {
 	var $prefixId      = 'tx_servicemgr_pi3';		// Same as class name

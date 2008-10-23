@@ -21,9 +21,17 @@
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
+/**
+ * class.tx_servicemgr_pi5.php
+ * 
+ * includes FrontEnd-Plugin 5 ('Duty schedule') class for servicemgr extension
+ * 
+ * $Id$
+ * 
+ * @author Peter Schuster <typo3@peschuster.de> 
+ */
 
 require_once(t3lib_extMgm::extPath('servicemgr').'class.tx_servicemgr.php');
-
 
 /**
  * Plugin 'Duty schedule' for the 'servicemgr' extension.
@@ -33,9 +41,9 @@ require_once(t3lib_extMgm::extPath('servicemgr').'class.tx_servicemgr.php');
  * @subpackage	tx_servicemgr
  */
 class tx_servicemgr_pi5 extends tx_servicemgr {
-	var $prefixId      = 'tx_servicemgr_pi5';		// Same as class name
+	var $prefixId      = 'tx_servicemgr_pi5';				// Same as class name
 	var $scriptRelPath = 'pi5/class.tx_servicemgr_pi5.php';	// Path to this script relative to the extension dir.
-	var $extKey        = 'servicemgr';	// The extension key.
+	var $extKey        = 'servicemgr';						// The extension key.
 	var $pi_checkCHash = true;
 
 	/**

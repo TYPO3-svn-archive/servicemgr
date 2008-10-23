@@ -21,6 +21,15 @@
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+/**
+ * class.tx_servicemgr.php
+ * 
+ * includes general top level class for servicemgr extension
+ * 
+ * $Id$
+ * 
+ * @author Peter Schuster <typo3@peschuster.de> 
+ */
 
 require_once(PATH_tslib.'class.tslib_pibase.php');
 require_once(PATH_t3lib.'class.t3lib_page.php');
@@ -33,11 +42,9 @@ require_once(PATH_t3lib.'class.t3lib_tsparser_ext.php');
   * Class contains general functions for the servicemgr-extension.
   * All plugin classes extend this class.
   *
-  * $Id:
-  *
-  * @author		Peter Schuster <typo3@peschuster.de>
-  * @package		TYPO3
-  * @subpackage 	tx_servicemgr
+  * @author Peter Schuster <typo3@peschuster.de>
+  * @package TYPO3
+  * @subpackage tx_servicemgr
   */
 class tx_servicemgr extends tslib_pibase {
 	var $prefixId		= 'tx_servicemgr';		// Same as class name

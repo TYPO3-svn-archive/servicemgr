@@ -21,6 +21,15 @@
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
+/**
+ * class.tx_servicemgr_pi1.php
+ * 
+ * includes FrontEnd-Plugin 1 ('Event preview') class for servicemgr extension
+ * 
+ * $Id$
+ * 
+ * @author Peter Schuster <typo3@peschuster.de> 
+ */
 
 require_once(t3lib_extMgm::extPath('servicemgr').'class.tx_servicemgr.php');
 

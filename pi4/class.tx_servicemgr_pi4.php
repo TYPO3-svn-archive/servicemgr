@@ -21,12 +21,21 @@
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+/**
+ * class.tx_servicemgr_pi4.php
+ * 
+ * includes FrontEnd-Plugin 4 ('Event administration') class for servicemgr extension
+ * 
+ * $Id$
+ * 
+ * @author Peter Schuster <typo3@peschuster.de> 
+ */
 
 require_once(t3lib_extMgm::extPath('servicemgr').'class.tx_servicemgr.php');
 if (t3lib_extMgm::isLoaded('date2cal')) require_once(t3lib_extMgm::extPath('date2cal').'src/class.jscalendar.php');
 
 /**
- * Plugin 'Duty schedule' for the 'servicemgr' extension.
+ * Plugin 'Event administration' for the 'servicemgr' extension.
  *
  * @author	Peter Schuster <typo3@peschuster.de>
  * @package	TYPO3
