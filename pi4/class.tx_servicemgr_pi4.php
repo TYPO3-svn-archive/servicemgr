@@ -45,6 +45,8 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 	var $prefixId      = 'tx_servicemgr_pi4';		// Same as class name
 	var $scriptRelPath = 'pi4/class.tx_servicemgr_pi4.php';	// Path to this script relative to the extension dir.
 	var $extKey        = 'servicemgr';	// The extension key.
+	var $ts;			//TimeStamp
+	var $JSCalendar;	//JSCalendar (date2cal)
 
 	/**
 	 * The main method of the PlugIn
@@ -54,22 +56,8 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 	 * @return	string		The	content that is displayed on the website
 	 */
 	function main($content,$conf)	{
-		$this->conf=$conf;
-		$this->pi_setPiVarDefaults();
-
-		$this->tx_init();
-		$this->tx_loadLL();
-		$this->conf['requiredFields'] = t3lib_div::trimExplode(',',$this->conf['requiredFields']);
-		$this->userID = $GLOBALS['TSFE']->fe_user->user[uid];
-		$this->ts = mktime();
-		$this->fetchConfigValue('viewmode');
-
-		if (t3lib_extMgm::isLoaded('date2cal')) {
-			$this->JSCalendar = JSCalendar::getInstance();
-			if (($jsCode = $this->JSCalendar->getMainJS()) != '') {
-				$GLOBALS['TSFE']->additionalHeaderData['servicemgr_date2cal'] = $jsCode;
-			}
-		}
+		
+		$this->init($conf);
 
 		$GLOBALS['TYPO3_DB']->debugOutput = true;
 
@@ -81,6 +69,36 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 
 		return $this->pi_wrapInBaseClass($content);
 	}
+	
+	/**
+	 * Does some initialization
+	 *
+	 * @param	array		$conf: conf array
+	 * @return	void
+	 */
+	function init($conf) {
+		$this->conf=$conf;
+		$this->pi_setPiVarDefaults();
+
+		$this->tx_init();
+		$this->tx_loadLL();
+		
+		
+		$this->conf['requiredFields'] = t3lib_div::trimExplode(',',$this->conf['requiredFields']);
+		
+		$this->userID = $GLOBALS['TSFE']->fe_user->user[uid];
+		
+		$this->ts = mktime();
+		
+		$this->fetchConfigValue('viewmode');
+
+		if (t3lib_extMgm::isLoaded('date2cal')) {
+			$this->JSCalendar = JSCalendar::getInstance();
+			if (($jsCode = $this->JSCalendar->getMainJS()) != '') {
+				$GLOBALS['TSFE']->additionalHeaderData['servicemgr_date2cal'] = $jsCode;
+			}
+		}
+	}
 
 	/**
 	 * Returns Form for adding a new event
@@ -91,25 +109,10 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 	function showForm($defaultValues = array()) {
 		$template = $this->cObj->getSubpart($this->template, '###ADDNEWEVENT###');
 
-		if ($defaultValues === array()) {
-			$defaultValues = $this->conf['defaultValues.'];
-		}
-		foreach ($defaultValues as $k => $v) {
-					$defaultValues[$k] = is_array($v) ? implode(',',$v) : $v;	
-		}
+		$this->initDefaultValues($defaultValues);
 		
-		if (is_array($this->formValidationErrors)) {
-			$formError = $this->pi_getLL('error_missingfields').' ';
-			foreach ($this->formValidationErrors as $k => $v) {
-				$formErrors[] = $this->pi_getLL('L_'.strtoupper($k));
-			}
-			$formError .= implode(', ',$formErrors);
-			$formError = $this->throwErrorMsg($formError);
-		}
 		
 		$marker = array(
-			'###FORM_ERRORS###' => $formError,
-
 			'###L_DATE###' => $this->pi_getLL('L_DATE'),
 			'###L_TIME###' => $this->pi_getLL('L_TIME'),
 			'###L_DATETIME###' => $this->pi_getLL('L_DATETIME'),
@@ -123,7 +126,10 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 			'###L_NOTES###' => $this->pi_getLL('L_NOTES'),
 			'###L_NOTESINTERNAL###' => $this->pi_getLL('L_NOTESINTERNAL'),
 			'###L_SUBMIT###' => $this->pi_getLL('L_SUBMIT'),
-
+		);
+		
+		$marker = array_merge(
+			$marker, array(
 			'###V_DATE###' => $defaultValues['date'],
 			'###V_TIME###' => $defaultValues['time'],
 			'###V_DATETIME###' => $defaultValues['datetime'],
@@ -132,41 +138,77 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 			'###V_DUTYSCHEDULEOPEN###' => $defaultValues['dutyscheduleopen'] ? 'checked="checked" ' : '',
 			'###V_NOTES###' => $defaultValues['notes'],
 			'###V_NOTESINTERNAL###' => $defaultValues['notesinternal'],
-		);
+		));
 
+		
+		if (is_array($this->formValidationErrors)) {
+			$formError = $this->pi_getLL('error_missingfields').' ';
+			foreach ($this->formValidationErrors as $k => $v) {
+				$formErrors[] = $this->pi_getLL('L_'.strtoupper($k));
+			}
+			$formError .= implode(', ',$formErrors);
+			$formError = $this->throwErrorMsg($formError);
+		}
+		$marker['###FORM_ERRORS###'] = $formError;
+		
+		
 		$marker['###DATE_CAL###'] = $this->getDate2Cal('tx_servicemgr_pi4[date]');
 		$marker['###TIME_CAL###'] = '';
 
 		
+		//SERIES
 		$series = $this->getSeries();
-		$seriesContent = '<select name="tx_servicemgr_pi4[series]" id="frm-series">'."\n";
-		foreach ($series as $serie) {
-			$seriesContent .= '	<option value="'.$serie['uid'].'"'
-								.($serie['uid'] == $defaultValues['series'] ? ' selected="selected"' : '')
-								.'>'.$serie['name'].'</option>'."\n";
+		if (!is_array($series)) {
+			$seriesContent = $this->pi_getLL('error_noseries');
+		} else {
+			$seriesContent = '<select name="tx_servicemgr_pi4[series]" id="frm-series">'."\n";
+			foreach ($series as $serie) {
+				$seriesContent .= '	<option value="'.$serie['uid'].'"';
+				if ($serie['uid'] == $defaultValues['series'])
+					$seriesContent .= ' selected="selected"';
+				
+				$seriesContent .= '>'.$serie['name'].'</option>'."\n";
+			}
+			$seriesContent .= '</select>'."\n";
+			$seriesAddLink = '<img title="'.$this->pi_getLL('title_addlink_series').'" alt="'.$this->pi_getLL('alt_addlink_series').'" src="'.$this->conf['addlink_img'].'" class="addIcon" />';
 		}
-		$seriesContent .= '</select>'."\n";
 		$marker['###SERIES_SELECTOR###'] = $seriesContent;
-		$marker['###SERIES_ADDLINK###'] = '<img title="'.$this->pi_getLL('title_addlink_series').'" alt="'.$this->pi_getLL('alt_addlink_series').'" src="'.$this->conf['addlink_img'].'" class="addIcon" />';
+		$marker['###SERIES_ADDLINK###'] = $seriesAddLink;
 
 		
+		//TAGS
 		$tags = $this->getTags();
-		$tagsContent = '';
-		foreach ($tags as $tag) {
-			$tagsContent .= '<input type="checkbox" name="tx_servicemgr_pi4[tags][]" value="'
-							.$tag['uid'].'" id="frm-tags-'.$tag['uid'].'"'
-							.(in_array($tag['uid'], split(',',$defaultValues['tags'])) ? ' checked="checked"' : '')
-							.' /> <label for="frm-tags-'.$tag['uid'].'">'.$tag['name'].'</label><br />';
+		if (!is_array($series)) {
+			$tagsContent = $this->pi_getLL('error_notags');
+		} else {
+			$defaultValues['tags'] = split(',',$defaultValues['tags']);
+			foreach ($tags as $tag) {
+				$tagsContent .= '<input type="checkbox" name="tx_servicemgr_pi4[tags][]" value="'.$tag['uid'].'" id="frm-tags-'.$tag['uid'].'"';
+				if (in_array($tag['uid'], $defaultValues['tags'])) {
+					$tagsContent .= ' checked="checked"';
+				}
+				$tagsContent .= ' /> <label for="frm-tags-'.$tag['uid'].'">'.$tag['name'].'</label><br />';
+			}
 		}
+		$tagsAddLink = '<img title="'.$this->pi_getLL('title_addlink_tags').'" alt="'.$this->pi_getLL('alt_addlink_tags').'" src="'.$this->conf['addlink_img'].'" />';
 		$marker['###TAGS_CBS###'] = $tagsContent;
-		$marker['###TAGS_ADDLINK###'] = '<img title="'.$this->pi_getLL('title_addlink_tags').'" alt="'.$this->pi_getLL('alt_addlink_tags').'" src="'.$this->conf['addlink_img'].'" />';
+		$marker['###TAGS_ADDLINK###'] = $tagsAddLink;
 
 		
+		//TEAMS
 		$teams = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,title',
 					'fe_groups', 'deleted=0 AND tx_servicemgr_isteam=1');
-		$teamsContent = '';
-		foreach ($teams as $team) {
-			$teamsContent .= '<input type="checkbox" name="tx_servicemgr_pi4[requiredteams][]" value="'.$team['uid'].'" id="frm-requiredteams-'.$team['uid'].'"'.(in_array($team['uid'], split(',',$defaultValues['requiredteams'])) ? ' checked="checked"' : '').' /> <label for="frm-requiredteams-'.$team['uid'].'">'.$team['title'].'</label><br />';
+		if (!is_array($teams)) {
+			$teamsContent = $this->pi_getLL('error_noteams');
+		} else {
+			$defaultValues['requiredteams'] = split(',',$defaultValues['requiredteams']);
+			foreach ($teams as $team) {
+				$teamsContent .= '<input type="checkbox" name="tx_servicemgr_pi4[requiredteams][]" value="'.$team['uid'].'" id="frm-requiredteams-'.$team['uid'].'"';
+				if (in_array($team['uid'], $defaultValues['requiredteams'])) {
+					$teamsContent .= ' checked="checked"';
+				}
+				$teamsContent .= ' /> <label for="frm-requiredteams-'.$team['uid'].'">'.$team['title'].'</label><br />';
+			}
 		}
 		$marker['###REQUIREDTEAMS_CBS###'] = $teamsContent;
 
@@ -188,6 +230,21 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 		$content = $this->cObj->substituteMarkerArray($template, $marker);
 
 		return $content;
+	}
+	
+	/**
+	 * Sets defaultValues with TypoScript conf (if not set before)
+	 * and dormats defaultValues for output
+	 *
+	 * @param	array		$data: defaultValues (call by reference)
+	 */
+	function initDefaultValues(&$data) {
+		if ($data === array()) {
+			$data = $this->conf['defaultValues.'];
+		}
+		foreach ($data as $k => $v) {
+					$data[$k] = is_array($v) ? implode(',',$v) : $v;	
+		}
 	}
 
 	/**
@@ -258,7 +315,7 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 	/**
 	 * Validates submitted data and removes wrapping whitespace
 	 *
-	 * @return	boolean		if data is valid: true
+	 * @return	boolean		if data is valid -> true
 	 */
 	function doSubmit_validate() {
 		$result = true;
