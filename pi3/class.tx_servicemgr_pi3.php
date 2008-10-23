@@ -23,7 +23,7 @@
  ***************************************************************/
 
 require_once(t3lib_extMgm::extPath('servicemgr').'class.tx_servicemgr.php');
-
+require_once(t3lib_extMgm::extPath('servicemgr').'class.tx_servicemgr_mp3.php');
 
 /**
  * Plugin 'Sermon administration' for the 'servicemgr' extension.
@@ -141,11 +141,10 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 				}
 
 				$markerArray['###DATE###'] = date('d.m.Y', $rowEvent['datetime']);
-				$markerArray['###SUBJECT###'] = $this->pi_linkToPage(
+				$markerArray['###SUBJECT###'] = $this->tx_linkToPage(
 					$rowEvent['subject'],
 					$GLOBALS['TSFE']->id,
-					$target='',
-					$urlParameters=array(
+					array(
 						$this->prefixId.'[eventId]'=>$rowEvent['uid'],
 						$this->prefixId.'[action]'=>'detail'
 					)
@@ -154,15 +153,22 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 				$markerArray['###AUDIOFILES###'] = $rowEvent['audiofiles'];
 
 				if (empty($rowEvent['audiofiles'])) {
-					$markerArray['###UPLOAD###'] = $this->pi_linkToPage(
-	        			'&gt;',
-						$GLOBALS['TSFE']->id,
-						$target='',
-						$urlParameters=array(
-							$this->prefixId.'[eventId]'=>$rowEvent['uid'],
-						$this->prefixId.'[action]'=>'uploadform'
+					$markerArray['###UPLOAD###'] = $this->cObj->typoLink(
+						'&gt;',
+						array(
+							'parameter' => $GLOBALS['TSFE']->id,
+							'addQueryString' => 1,
+							'addQueryString.' => array(
+								'exclude' => 'cHash,no_cache',
+							),
+							'additionalParams' => implode('&',array(
+								'&no_cache=1',
+								$this->prefixId.'[eventId]='.$rowEvent['uid'],
+								$this->prefixId.'[action]=uploadform'
+							)),
+							'useCacheHash' => false,
 						)
-					);
+					); 
 				} else {
 					$markerArray['###UPLOAD###'] = '';
 				}
@@ -290,7 +296,17 @@ class tx_servicemgr_pi3 extends tx_servicemgr {
 		$markerArray['###TAGS###'] = $outputTags;
 		$markerArray['###SUBMIT###'] = '<input type="submit" name="'.$this->prefixId.'[upload][submit]" value="'.$this->pi_getLL('submitform').'" />';
 
-		$content = '<form name="'.$this->prefixId.'[upload]" action="'.$this->pi_getPageLink($GLOBALS['TSFE']->id).'" method="post" enctype="multipart/form-data">';
+		$actionLink = $this->cObj->typoLink_URL(array(
+			'parameter' => $GLOBALS['TSFE']->id,
+			'addQueryString' => 1,
+			'addQueryString.' => array(
+				'exclude' => 'cHash,no_cache',
+			),
+			'additionalParams' => '&no_cache=1',
+			'useCacheHash' => false,
+		)); 
+		
+		$content = '<form name="'.$this->prefixId.'[upload]" action="'.$actionLink.'" method="post" enctype="multipart/form-data">';
 		$content .= '<input type="hidden" name="'.$this->prefixId.'[action]" value="doupload" />';
 		$content .= '<input type="hidden" name="'.$this->prefixId.'[eventId]" value="'.$eventId.'" />';
 		$content .= $this->cObj->substituteMarkerArray($subpart,$markerArray);
