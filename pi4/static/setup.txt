@@ -1,0 +1,8 @@
+plugin.tx_servicemgr_pi4 {
+  defaultValues {
+    time = 20:00
+    public = 1
+    dutyscheduleopen = 1
+  }
+  requiredFields = date,time,subject,series
+}
