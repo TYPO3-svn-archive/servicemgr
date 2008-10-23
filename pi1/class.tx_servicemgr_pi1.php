@@ -61,19 +61,11 @@ class tx_servicemgr_pi1 extends tx_servicemgr {
 
 		//DEBUG-CONFIG
 		$GLOBALS['TYPO3_DB']->debugOutput = true;
-		//t3lib_div::debug($this->conf, 'TypoScript');
-		//t3lib_div::debug($this->extConf, 'extConf');
-		//t3lib_div::debug($this->generalConf, 'generalConf');
-		//t3lib_div::debug($this->piVars, 'piVars');
-
+		
+		
 		$this->piVars['eventId'] = intVal($this->piVars['eventId']);
 
-		$this->template = $this->generalConf['TemplateFile'];
-		if (!$this->template) {
-			$this->template = 'EXT:servicemgr/res/tables.tmpl';
-		}
-		$this->template = $this->cObj->fileResource($this->template);
-
+		
 		if (empty($this->piVars['eventId'])) {
 			$content = $this->listView();
 		} else {

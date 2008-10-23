@@ -75,6 +75,12 @@ class tx_servicemgr_pi5 extends tx_servicemgr {
 		return $this->pi_wrapInBaseClass($content);
 	}
 	
+	/**
+	 * Returns personal duty schedule form
+	 *
+	 * @param	integer		$userID: uid of fe_user
+	 * @return	string		HTML
+	 */
 	function personalView($userID) {
 		
 		$user = $this->getUserData(intval($userID));
@@ -153,6 +159,12 @@ class tx_servicemgr_pi5 extends tx_servicemgr {
 		return $content;
 	}
 	
+	/**
+	 * Returns array with user data
+	 *
+	 * @param	integer		$feuser_uid: uid of fe_user
+	 * @return	array		user data
+	 */
 	function getUserData($feuser_uid) {
 		//get content from database
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
@@ -169,6 +181,11 @@ class tx_servicemgr_pi5 extends tx_servicemgr {
 		}
 	}
 	
+	/**
+	 * Returns general duty schedule table
+	 *
+	 * @return	string		HTML
+	 */
 	function listView() {
 				
 		$teams = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,title,tx_servicemgr_dsname',
@@ -221,6 +238,13 @@ class tx_servicemgr_pi5 extends tx_servicemgr {
 		return $content;
 	}
 	
+	/**
+	 * Returns css-class for a team-table-cell
+	 *
+	 * @param	mixed		$requiredTeams: arary or comma-seperated list of required teams
+	 * @param 	array		$team: team data
+	 * @return	string		css-class
+	 */
 	function getCssClass($requiredTeams,$team) {
 		$cssClass = 'dsc-normal';
 		
@@ -235,6 +259,12 @@ class tx_servicemgr_pi5 extends tx_servicemgr {
 		return $cssClass;
 	}
 	
+	/**
+	 * Builds HTML output for duty schedule
+	 *
+	 * @param	array		$data: data to be displayed $data[row][cell][data/cssClass]
+	 * @return	string		HTML
+	 */
 	function setData2Template($data) {
 		$template = $this->cObj->getSubpart($this->template,'###DUTYSCHEDULE###');
 		$subparts = $this->getSubparts($template, array('###HEADERROW###','###DATAROW###','###HEADERCELL###','###DATACELL###'));
@@ -275,6 +305,11 @@ class tx_servicemgr_pi5 extends tx_servicemgr {
 		return $content;
 	}
 	
+	/**
+	 * Returns array with EventHeaders
+	 *
+	 * @return	array		array[][data][cssClass]
+	 */
 	function getEventHeaders() {
 		$temp[] = array($this->pi_getLL('date'),'');
 		$temp[] = array($this->pi_getLL('subject'),'');
@@ -282,6 +317,13 @@ class tx_servicemgr_pi5 extends tx_servicemgr {
 		return $temp;
 	}
 	
+	/**
+	 * Returns Team headers
+	 * and sets team members in given teams array -> $teams[members]
+	 *
+	 * @param	array		$teams: array of teams
+	 * @return	array		data[cell][data/cssClass]
+	 */
 	function getTeamHeaders(&$teams) {
 		$temp = array();
 		if (is_array($teams)) {
@@ -294,6 +336,13 @@ class tx_servicemgr_pi5 extends tx_servicemgr {
 		return $temp;
 	}
 	
+	/**
+	 * Returns event information
+	 *
+	 * @param	array		$event: event data
+	 * @param	array		$infos: table fields to be displayed
+	 * @return	array		data[cell][data/cssClass]
+	 */
 	function getEventInformation($event,$infos) {
 		$event['datetime'] = date('d.m.Y', $event['datetime']);
 		
@@ -314,6 +363,12 @@ class tx_servicemgr_pi5 extends tx_servicemgr {
 		return $temp;
 	}
 	
+	/**
+	 * Processes duty schedule submission
+	 * and calls function for specific submission type
+	 *
+	 * @param	string		$submitType: type of submitted data
+	 */
 	function doSubmit($submitType) {
 		switch ($submitType) {
 			CASE 'personal':

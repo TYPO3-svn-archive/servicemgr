@@ -465,7 +465,7 @@ class tx_servicemgr extends tslib_pibase {
 	}
 	
 	/**
-	 * extracts extension from filename
+	 * extracts extension of filename
 	 *
 	 * @param	string		$filename: name of file
 	 * @return	string		extension of file (without leading dot)

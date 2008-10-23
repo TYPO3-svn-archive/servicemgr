@@ -42,7 +42,7 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 	 *
 	 * @param	string		$content: The PlugIn content
 	 * @param	array		$conf: The PlugIn configuration
-	 * @return	The		content that is displayed on the website
+	 * @return	string		The	content that is displayed on the website
 	 */
 	function main($content,$conf)	{
 		$this->conf=$conf;
@@ -73,6 +73,12 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 		return $this->pi_wrapInBaseClass($content);
 	}
 
+	/**
+	 * Returns Form for adding a new event
+	 *
+	 * @param	array	$defaultValues: data array with default form data
+	 * @return	string	HTML
+	 */
 	function showForm($defaultValues = array()) {
 		$template = $this->cObj->getSubpart($this->template, '###ADDNEWEVENT###');
 
@@ -175,6 +181,12 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 		return $content;
 	}
 
+	/**
+	 * Returns date2cal image-buttons
+	 *
+	 * @param	string		$inputField: name of inputfield (id: name_hr) 
+	 * @return	string		HTML
+	 */
 	function getDate2Cal($inputField) {
 		$content = '';
 		if (t3lib_extMgm::isLoaded('date2cal')) {
@@ -187,6 +199,11 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 		return $content;
 	}
 
+	/**
+	 * Processes submission of new event
+	 *
+	 * @return	string	HTML
+	 */
 	function doSubmit() {
 		if ($this->piVars['submit'] && $this->doSubmit_validate()) {
 			$startingPoints[0] = $GLOBALS['TSFE']->id;
@@ -229,6 +246,11 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 		return $content;
 	}
 
+	/**
+	 * Validates submitted data and removes wrapping whitespace
+	 *
+	 * @return	boolean		if data is valid: true
+	 */
 	function doSubmit_validate() {
 		$result = true;
 		foreach($this->piVars as $k => $v) {

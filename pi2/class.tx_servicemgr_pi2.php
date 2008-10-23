@@ -62,12 +62,7 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 		
 		$this->piVars['eventId'] = intVal($this->piVars['eventId']);
 
-		$this->template = $this->generalConf['TemplateFile'];
-		if (empty($this->template)) {
-			$this->template = 'EXT:servicemgr/res/tables.tmpl';
-		}
-		$this->template = $this->cObj->fileResource($this->template);
-
+		
 		if (!$this->piVars['eventId']) {
 			$content = $this->listView();
 		} else {
@@ -101,6 +96,11 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 		return $content;
 	}
 	
+	/**
+	 * Returns latest sermon
+	 *
+	 * @return	string		HTML
+	 */
 	function getLatest() {
 		$content = '';
 		$subpart = $this->cObj->getSubpart($this->template,'###SERMONLIST_LATEST###');
@@ -160,6 +160,11 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 		return $content;
 	}
 	
+	/**
+	 * Returns list of sermons
+	 *
+	 * @return	string		HTML
+	 */
 	function getList() {
 		//Template preparation
 		$subpart = $this->cObj->getSubpart($this->template,'###SERMONLIST###');
@@ -315,10 +320,10 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 	}
 
 	/**
-	 * [Describe function...]
+	 * Returns formarted filesize
 	 *
-	 * @param	[type]		$path: ...
-	 * @return	[type]		...
+	 * @param	string		$path: path to file
+	 * @return	string		formarted file size
 	 */
 	function getFileSizeFormarted($path) {
 		if (@file_exists($path)) {
