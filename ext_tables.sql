@@ -178,6 +178,7 @@ CREATE TABLE fe_groups (
   tx_servicemgr_dutyschedule tinyint(3) NOT NULL default '0',
   tx_servicemgr_leaders blob NOT NULL,
   tx_servicemgr_isteam tinyint(3) NOT NULL default '0',
+  tx_servicemgr_publicteam tinyint(3) NOT NULL default '0',
   tx_servicemgr_image blob NOT NULL,
   tx_servicemgr_asteaminschedule tinyint(3) NOT NULL default '0',
   tx_servicemgr_dsname  varchar(30) NOT NULL default '',

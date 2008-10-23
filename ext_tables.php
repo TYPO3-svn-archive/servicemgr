@@ -207,6 +207,13 @@ $tempColumns = Array (
 			"type" => "check",
 		)
 	),
+	"tx_servicemgr_publicteam" => Array (		
+		"exclude" => 1,		
+		"label" => "LLL:EXT:servicemgr/locallang_db.xml:fe_groups.tx_servicemgr_publicteam",		
+		"config" => Array (
+			"type" => "check",
+		)
+	),
 	"tx_servicemgr_dutyschedule" => Array (		
 		"exclude" => 1,		
 		"label" => "LLL:EXT:servicemgr/locallang_db.xml:fe_groups.tx_servicemgr_dutyschedule",		
@@ -249,7 +256,7 @@ $tempColumns = Array (
 
 t3lib_div::loadTCA("fe_groups");
 t3lib_extMgm::addTCAcolumns("fe_groups",$tempColumns,1);
-t3lib_extMgm::addToAllTCAtypes("fe_groups","tx_servicemgr_leaders;;;;1-1-1, tx_servicemgr_category, tx_servicemgr_isteam, tx_servicemgr_dutyschedule, tx_servicemgr_dsname, tx_servicemgr_asteaminschedule, tx_servicemgr_image");
+t3lib_extMgm::addToAllTCAtypes("fe_groups","tx_servicemgr_leaders;;;;1-1-1, tx_servicemgr_category, tx_servicemgr_isteam, tx_servicemgr_publicteam, tx_servicemgr_dutyschedule, tx_servicemgr_dsname, tx_servicemgr_asteaminschedule, tx_servicemgr_image");
 
 
 
@@ -279,6 +286,13 @@ $TCA['tt_content']['types']['list']['subtypes_excludelist'][$_EXTKEY.'_pi3']='la
 
 t3lib_extMgm::addPlugin(array('LLL:EXT:servicemgr/locallang_db.xml:tt_content.list_type_pi3', $_EXTKEY.'_pi3'),'list_type');
 t3lib_extMgm::addStaticFile($_EXTKEY,"pi3/static/","Sermon administration");
+
+
+t3lib_div::loadTCA('tt_content');
+$TCA['tt_content']['types']['list']['subtypes_excludelist'][$_EXTKEY.'_pi4']='layout,select_key';
+
+t3lib_extMgm::addPlugin(array('LLL:EXT:servicemgr/locallang_db.xml:tt_content.list_type_pi4', $_EXTKEY.'_pi4'),'list_type');
+t3lib_extMgm::addStaticFile($_EXTKEY,"pi4/static/","Event administration");
 
 
 t3lib_div::loadTCA('tt_content');

@@ -48,6 +48,7 @@
 			<label index="fe_groups.tx_servicemgr_leaders">leader(s)</label>
 			<label index="fe_groups.tx_servicemgr_categroy">Category</label>
 			<label index="fe_groups.tx_servicemgr_isteam">is team?</label>
+			<label index="fe_groups.tx_servicemgr_publicteam">public team?</label>
 			<label index="fe_groups.tx_servicemgr_dutyschedule">in Dutyschedule?</label>
 			<label index="fe_groups.tx_servicemgr_image">Image</label>
 			<label index="fe_groups.tx_servicemgr_description">Description</label>
@@ -56,6 +57,7 @@
 			<label index="tt_content.list_type_pi1">Event preview</label>
 			<label index="tt_content.list_type_pi2">Sermon archive</label>
 			<label index="tt_content.list_type_pi3">Sermon administration</label>
+			<label index="tt_content.list_type_pi4">Event administration</label>
 			<label index="tt_content.list_type_pi5">Duty schedule</label>
 			<label index="tt_content.pi_flexform.sheet_general">General</label>
 			<label index="tt_content.pi_flexform.previewdays">number days for event preview</label>
@@ -112,6 +114,7 @@
 			<label index="fe_groups.tx_servicemgr_leaders">Leiter</label>
 			<label index="fe_groups.tx_servicemgr_categroy">Kategorie</label>
 			<label index="fe_groups.tx_servicemgr_isteam">Team?</label>
+			<label index="fe_groups.tx_servicemgr_publicteam">öffentliches Team?</label>
 			<label index="fe_groups.tx_servicemgr_dutyschedule">im Dienstplan?</label>
 			<label index="fe_groups.tx_servicemgr_image">Bild</label>
 			<label index="fe_groups.tx_servicemgr_description">Beschreibung</label>
@@ -120,6 +123,7 @@
 			<label index="tt_content.list_type_pi1">Programmvorschau</label>
 			<label index="tt_content.list_type_pi2">Predigtarchiv</label>
 			<label index="tt_content.list_type_pi3">Predigt-Verwaltung</label>
+			<label index="tt_content.list_type_pi4">Veranstaltungsverwaltung</label>
 			<label index="tt_content.list_type_pi5">Dienstplan</label>
 			<label index="tt_content.pi_flexform.sheet_general">Allgemein</label>
 			<label index="tt_content.pi_flexform.previewdays">Anzahl Tage für Vorschau</label>
