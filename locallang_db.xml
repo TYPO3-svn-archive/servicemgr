@@ -70,6 +70,7 @@
 			<label index="tt_content.pi_flexform.archive">Archive</label>
 			<label index="tt_content.pi_flexform.personal">Personal</label>
 			<label index="tt_content.pi_flexform.list">List</label>
+			<label index="tt_content.pi_flexform.categorizebyseries">Group Events by Series</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="tx_servicemgr_events">Veranstaltungen</label>
@@ -136,6 +137,7 @@
 			<label index="tt_content.pi_flexform.archive">Archiv</label>
 			<label index="tt_content.pi_flexform.personal">Persönlich</label>
 			<label index="tt_content.pi_flexform.list">Liste</label>
+			<label index="tt_content.pi_flexform.categorizebyseries">Veranstaltungen nach Serien gruppieren</label>
 		</languageKey>
 	</data>
 </T3locallang>

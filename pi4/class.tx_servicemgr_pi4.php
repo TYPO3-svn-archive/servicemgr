@@ -71,7 +71,7 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 					break;
 				CASE 'LIST':
 				default:
-					$content = $this->showList();
+					$content = $this->showOptionList();
 			}
 		}
 
@@ -113,13 +113,17 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 	 *
 	 * @return	string		HTML
 	 */
-	function showList() {
+	function showOptionList() {
 		$links[] = $this->tx_linkToPage(
 			'Add new Event',
 			$GLOBALS['TSFE']->id,
 			array($this->prefixId.'[code]'=>'ADD')
 		);
-
+		$links[] = $this->tx_linkToPage(
+			'Edit Event',
+			$GLOBALS['TSFE']->id,
+			array($this->prefixId.'[code]'=>'EDIT')
+		);
 
 		$content = '<ul>';
 		foreach ($links as $link) {

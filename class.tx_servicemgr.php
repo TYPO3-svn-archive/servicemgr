@@ -36,16 +36,16 @@ require_once(PATH_t3lib.'class.t3lib_page.php');
 require_once(PATH_t3lib.'class.t3lib_tstemplate.php');
 require_once(PATH_t3lib.'class.t3lib_tsparser_ext.php');
 
- /**
-  * Top level class for the 'servicemgr' extension.
-  *
-  * Class contains general functions for the servicemgr-extension.
-  * All plugin classes extend this class.
-  *
-  * @author Peter Schuster <typo3@peschuster.de>
-  * @package TYPO3
-  * @subpackage tx_servicemgr
-  */
+/**
+	* Top level class for the 'servicemgr' extension.
+	*
+	* Class contains general functions for the servicemgr-extension.
+	* All plugin classes extend this class.
+	*
+	* @author Peter Schuster <typo3@peschuster.de>
+	* @package TYPO3
+	* @subpackage tx_servicemgr
+	*/
 class tx_servicemgr extends tslib_pibase {
 	var $prefixId		= 'tx_servicemgr';		// Same as class name
 	var $scriptRelPath	= 'class.tx_servicemgr.php';	// Path to this script relative to the extension dir.
@@ -156,9 +156,9 @@ class tx_servicemgr extends tslib_pibase {
 	function getTeamMembers($teamUID, $fillName=true) {
 		//get alle fe_users from database
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-        	'uid, username, name, first_name, last_name, usergroup',   #select
-        	'fe_users', #from
-        	'usergroup<>\'\' AND deleted=0'  #where
+					'uid, username, name, first_name, last_name, usergroup',   #select
+					'fe_users', #from
+					'usergroup<>\'\' AND deleted=0'  #where
 		);
 
 		// dump arrays
@@ -195,9 +195,9 @@ class tx_servicemgr extends tslib_pibase {
 	 */
 	function getTags() {
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-        	'uid, name, parrent',   #select
-        	'tx_servicemgr_tags', #from
-        	'hidden=0 AND deleted=0'  #where
+					'uid, name, parrent',   #select
+					'tx_servicemgr_tags', #from
+					'hidden=0 AND deleted=0'  #where
 		);
 
 
@@ -224,9 +224,9 @@ class tx_servicemgr extends tslib_pibase {
 	 */
 	function getSingleEvent($eventId) {
 		$resEvent = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-        	'uid, datetime, subject, public, series, tags, requiredteams, documents, notes',   #select
-        	'tx_servicemgr_events', #from
-        	'uid='.$eventId.' and hidden=0 and deleted=0',  #where
+					'uid, datetime, subject, public, series, tags, requiredteams, documents, notes',   #select
+					'tx_servicemgr_events', #from
+					'uid='.$eventId.' and hidden=0 and deleted=0',  #where
 			'', '',
 			'0,1' #limit
 		);
@@ -250,9 +250,9 @@ class tx_servicemgr extends tslib_pibase {
 			$where .= ' AND uid='.intval($uid);
 		}
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-        	'uid, name',   #select
-        	'tx_servicemgr_series', #from
-        	$where  #where
+					'uid, name',   #select
+					'tx_servicemgr_series', #from
+					$where  #where
 		);
 
 		// dump arrays
@@ -308,9 +308,9 @@ class tx_servicemgr extends tslib_pibase {
 	 */
 	function getAudioFiles($eventId) {
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-        	'uid, event, title, file, filedate, playtime, filesize, bitrate, album',   #select
-        	'tx_servicemgr_sermons', #from
-        	'event='.$eventId.' and hidden=0 and deleted=0'  #where
+					'uid, event, title, file, filedate, playtime, filesize, bitrate, album',   #select
+					'tx_servicemgr_sermons', #from
+					'event='.$eventId.' and hidden=0 and deleted=0'  #where
 		);
 
 		$resultVar = array();
@@ -332,6 +332,28 @@ class tx_servicemgr extends tslib_pibase {
 	 */
 	function getAudiosPerEvent($eventId) {
 		return count($this->getAudioFiles($eventId));
+	}
+
+	/**
+	 * Groups events by series, but keeps still the old order
+	 *
+	 * @param	array		$events: array of events
+	 * @return	array		data[group][event] = array(eventKey) / data[group][series] = seriesId
+	 */
+	function wireEventsAndSeries($events) {
+		$eventSeriesWiring = array();
+		foreach ($events as $key => $event) {
+			if ($eventSeriesWiring == array()) {
+				$eventSeriesWiring[] = array('events' => array($key), 'series' => $event['series']);
+			} elseif ($events[($key-1)]['series'] == $events[$key]['series']) {
+				$keys = array_keys($eventSeriesWiring);
+				$lastKey = end($keys);
+				$eventSeriesWiring[$lastKey]['events'][] = $key;
+			} else {
+				$eventSeriesWiring[] = array('events' => array($key), 'series' => $event['series']);
+			}
+		}
+		return $eventSeriesWiring;
 	}
 
 	/**
@@ -507,14 +529,14 @@ class tx_servicemgr extends tslib_pibase {
 			$additionalParams .= '&'.$key.'='.$value;
 		}
 		$content = $this->cObj->typoLink(
-        	$str,
-        	array (
-        		'parameter' => $id,
-        		'useCacheHash'=>1,
-        		'additionalParams'=>$additionalParams,
-        	)
-        );
-        return $content;
+					$str,
+					array (
+						'parameter' => $id,
+						'useCacheHash'=>1,
+						'additionalParams'=>$additionalParams,
+					)
+				);
+				return $content;
 	}
 
 	/**

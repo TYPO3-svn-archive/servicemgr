@@ -1,5 +1,5 @@
 plugin.tx_servicemgr {
-  TemplateFile = EXT:servicemgr/res/tables.tmpl
-  SermonArchivePID = 82
-  PreacherTeamUID = 2
+	TemplateFile = EXT:servicemgr/res/tables.tmpl
+	SermonArchivePID = 82
+	PreacherTeamUID = 2
 }

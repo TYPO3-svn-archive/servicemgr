@@ -16,6 +16,8 @@
 			<label index="file">File</label>
 			<label index="preacher">Preacher</label>
 			<label index="error">unknown Error</label>
+			<label index="download">Download</label>
+			<label index="play">Play</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="back">Zurück</label>
@@ -23,11 +25,13 @@
 			<label index="subject">Thema</label>
 			<label index="series">Serie</label>
 			<label index="tags">Tags</label>
-			<label index="notes">Bemerkungen</label>
+			<label index="notes">Notizen</label>
 			<label index="submitform">Senden</label>
 			<label index="file">Datei</label>
 			<label index="preacher">Prediger</label>
 			<label index="error">unbekannter Fehler</label>
+			<label index="download">Download</label>
+			<label index="play">Play</label>
 		</languageKey>
 	</data>
 </T3locallang>

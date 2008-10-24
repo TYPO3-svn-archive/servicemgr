@@ -23,12 +23,12 @@
 ***************************************************************/
 /**
  * class.tx_servicemgr_pi1.php
- * 
+ *
  * includes FrontEnd-Plugin 1 ('Event preview') class for servicemgr extension
- * 
+ *
  * $Id$
- * 
- * @author Peter Schuster <typo3@peschuster.de> 
+ *
+ * @author Peter Schuster <typo3@peschuster.de>
  */
 
 require_once(t3lib_extMgm::extPath('servicemgr').'class.tx_servicemgr.php');
@@ -61,28 +61,29 @@ class tx_servicemgr_pi1 extends tx_servicemgr {
 
 		$this->tx_init();
 		$this->tx_loadLL();
-		
+
 		$this->fetchConfigValue('previewdays');
 		$this->fetchConfigValue('shownelements');
 		$this->fetchConfigValue('upcoming');
 		$this->fetchConfigValue('previewcolumns');
 		$this->fetchConfigValue('detailviewPID');
+		$this->fetchConfigValue('categorizebyseries');
 
 		//DEBUG-CONFIG
 		$GLOBALS['TYPO3_DB']->debugOutput = true;
-		
-		
+
+
 		$this->piVars['eventId'] = intVal($this->piVars['eventId']);
 
-		
+
 		if (empty($this->piVars['eventId'])) {
 			$content = $this->listView();
 		} else {
 			$this->piVars['backlink'] = intVal($this->piVars['backlink']);
 			if (!t3lib_div::testInt($this->piVars['backlink']) || $this->piVars['backlink'] == 0) {
-				 $this->piVars['backlink'] = $GLOBALS['TSFE']->id;
+				$this->piVars['backlink'] = $GLOBALS['TSFE']->id;
 			}
-			
+
 			$content= $this->detailViewEvent(
 				$this->piVars['eventId'],
 				array(
@@ -101,80 +102,139 @@ class tx_servicemgr_pi1 extends tx_servicemgr {
 	 * @return	string		event preview table
 	 */
 	function listView() {
+		if($this->conf['shownelements'] != 0) {
+			$limit = '0,'.intval($this->conf['shownelements']);
+		}
+		if($this->conf['upcoming'] == 1) {
+			$d = mktime(0,0,1);
+			$andWhere = ' AND datetime>'.$d;
+		}
+		if (!$this->conf['detailviewPID']) {
+			$this->conf['detailviewPID'] = $GLOBALS['TSFE']->id;
+		}
 
-		//Template preparation
-        $subpart = $this->cObj->getSubpart($this->template,'###PREVIEWLIST###');
-        $headerrow = $this->cObj->getSubpart($subpart,'###HEADERROW###');
-        $singlerow = $this->cObj->getSubpart($subpart,'###ROW###');
-
-        if (empty($this->conf['previewcolumns'])) {
-        	$cols = array('date','subject','notes');
-        } else {
-        	$cols = split(',',$this->conf['previewcolumns']);
-        }
-        
-        $colHeaders = '';
-        $colHeader = $this->cObj->getSubpart($headerrow,'###LABEL###');
-        foreach ($cols as $col) {
-        	$colHeaders .= $this->cObj->substituteMarker($colHeader,'###H_LABEL###',$this->pi_getLL($col));
-        }
-        $subpartArray['###HEADERROW###'] = $this->cObj->substituteSubpart($headerrow,'###LABEL###',$colHeaders);
-        
-        if($this->conf['shownelements'] != 0) {
-        	$limit = '0,'.intval($this->conf['shownelements']);
-        }
-        if($this->conf['upcoming'] == 1) {
-        	$d = mktime(0,0,1);
-        	$andWhere = ' AND datetime>'.$d;
-        }
-        if (!$this->conf['detailviewPID']) {
-        	$this->conf['detailviewPID'] = $GLOBALS['TSFE']->id;
-        }
-                
 		//get content from database
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-        	'uid, datetime, subject, notes',   #select
-        	'tx_servicemgr_events', #from
-        	'hidden=0 AND deleted=0'.$andWhere,  #where
-        	$groupBy='',
-        	'datetime',
-        	$limit
-        );
+		$events = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+			'uid, datetime, subject, series, notes',   #select
+			'tx_servicemgr_events', #from
+			'hidden=0 AND deleted=0'.$andWhere,  #where
+			$groupBy='',
+			'datetime',
+			$limit
+		);
 
 
-        //substitue table rows in template
-        if ($res) {
-        	$colValue = $this->cObj->getSubpart($singlerow,'###VALUE###');
-        	while ($row=$GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-        		$markerArray['date'] = date('d.m.Y', $row['datetime']);
 
-        		//create link to sermon archive?
-        		if ($this->generalConf['SermonArchivePID']) {
-        			$markerArray['subject'] = $this->tx_linkToPage(
-        				$row['subject'],
-        				$this->conf['detailviewPID'],
-        				array(
-        					'tx_servicemgr_pi1[eventId]' => $row['uid'],
-        					'tx_servicemgr_pi1[backlink]' => $GLOBALS['TSFE']->id,
-        				)
-        			);
-        		} else {
-        			$markerArray['subject'] = $row['subject'];
-        		}
+		if (is_array($events)) {
+			$content = $this->getEventListTable($events);
+		}
+		return $content;
+	}
 
-        		$markerArray['notes'] = $row['notes'];
-        		
-        		$rowContent = '';
-        		foreach ($cols as $col) {
-        			$rowContent .= $this->cObj->substituteMarker($colValue,'###H_VALUE###',$markerArray[$col]);
-        		}
-        		
-                $liste .= $this->cObj->substituteSubpart($singlerow,'###VALUE###',$rowContent);
-            }
-            $subpartArray['###ROW###']=$liste;
-        }
+	function getEventListTable($events) {
+		//Template preparation
+		$subpart = $this->cObj->getSubpart($this->template,'###PREVIEWLIST###');
+		$headerrow = $this->cObj->getSubpart($subpart,'###HEADERROW###');
+		$singlerow = $this->cObj->getSubpart($subpart,'###ROW###');
 
+		if (empty($this->conf['previewcolumns'])) {
+			$cols = array('date','subject','notes');
+		} else {
+			$cols = split(',',$this->conf['previewcolumns']);
+		}
+
+		$colHeaders = array();
+		foreach ($cols as $col) {
+			$colHeaders[]= $this->pi_getLL($col);
+		}
+		$subpartArray['###HEADERROW###'] = $this->getTemplatedRow($headerrow,'###LABEL###',$colHeaders);
+
+		$series = $this->getSeries();
+
+		if ($this->conf['categorizebyseries'] == 1) {
+			$wiredEventsSeries = $this->wireEventsAndSeries($events);
+
+			$tempEvents = array();
+			foreach ($wiredEventsSeries as $k => $eventGroupAndSeries) {
+
+				if (!(($this->conf['defaultSeriesId'] == $eventGroupAndSeries['series']) && ($this->conf['dontShowDefaultSeries'] == 1))) {
+					$tempEvents[] = array(
+						'isSeries' => 1,
+						'subject' => '&nbsp;',
+						'param' => ' colspan="'.count($cols).'"',
+					);
+					$tempEvents[] = array(
+						'isSeries' => 1,
+						'subject' => $series[$eventGroupAndSeries['series']]['name'],
+						'param' => ' colspan="'.count($cols).'" class="sep-series"' ,
+					);
+				} elseif ($k !== 0) {
+					$tempEvents[] = array(
+						'isSeries' => 1,
+						'subject' => '&nbsp;',
+						'param' => ' colspan="'.count($cols).'"',
+					);
+				}
+				foreach ($eventGroupAndSeries['events'] as $singleEventOfSeries) {
+					$tempEvents[] = $events[$singleEventOfSeries];
+				}
+			}
+		} else {
+			$tempEvents = $events;
+		}
+
+		foreach ($tempEvents as $row) {
+			if ($row['isSeries'] == 1) {
+				$rowData = array($row['subject']);
+				$liste .= $this->getTemplatedRow($singlerow,'###VALUE###',$rowData, $row['param']);
+			} else {
+				$rowData = array();
+				$rowData['date'] = date('d.m.Y', $row['datetime']);
+
+				//create link to sermon archive?
+				if ($this->generalConf['SermonArchivePID']) {
+					$rowData['subject'] = $this->tx_linkToPage(
+						$row['subject'],
+						$this->conf['detailviewPID'],
+						array(
+							'tx_servicemgr_pi1[eventId]' => $row['uid'],
+							'tx_servicemgr_pi1[backlink]' => $GLOBALS['TSFE']->id,
+						)
+					);
+				} else {
+					$rowData['subject'] = $row['subject'];
+				}
+
+				$rowData['notes'] = $row['notes'];
+
+				$liste .= $this->getTemplatedRow($singlerow,'###VALUE###',$rowData);
+			}
+		}
+		$subpartArray['###ROW###']=$liste;
 		return $this->substituteMarkersAndSubparts($subpart,array(),$subpartArray);
+	}
+
+	/**
+	 * Generates table row with data
+	 *
+	 * @param	string		$wrap: template with subpart and markers included
+	 * @param	string		$subpart: name of subpart in wrap
+	 * @param	array		$rowData: array of data
+	 * @param	string		$cellParam: parameter for table cell, must start with leading whitespace
+	 * @return	string		HTML
+	 */
+	function getTemplatedRow($wrap, $subpart, $rowData, $cellParam = '') {
+		$template = $this->cObj->getSubpart($wrap, $subpart);
+
+		foreach ($rowData as $data) {
+			$markers = array(
+				'###DATA###' => $data,
+				'###CELLPARAM###' => $cellParam,
+			);
+			$rowContent .= $this->cObj->substituteMarkerArray($template,$markers);
+		}
+
+		return $this->cObj->substituteSubpart($wrap,$subpart,$rowContent);
 	}
 }
 

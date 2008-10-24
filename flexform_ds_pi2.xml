@@ -10,6 +10,14 @@
 				</TCEforms>
 				<type>array</type>
 				<el>
+					<categorizebyseries>
+						<TCEforms>
+							<label>LLL:EXT:servicemgr/locallang_db.php:tt_content.pi_flexform.categorizebyseries</label>
+							<config>
+								<type>check</type>
+							</config>
+						</TCEforms>
+					</categorizebyseries>
 					<viewmode>
 						<TCEforms>
 							<label>LLL:EXT:servicemgr/locallang_db.php:tt_content.pi_flexform.viewmode</label>
