@@ -23,12 +23,12 @@
  ***************************************************************/
 /**
  * class.tx_servicemgr_pi4.php
- * 
+ *
  * includes FrontEnd-Plugin 4 ('Event administration') class for servicemgr extension
- * 
+ *
  * $Id$
- * 
- * @author Peter Schuster <typo3@peschuster.de> 
+ *
+ * @author Peter Schuster <typo3@peschuster.de>
  */
 
 require_once(t3lib_extMgm::extPath('servicemgr').'class.tx_servicemgr.php');
@@ -55,41 +55,49 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 	 * @param	array		$conf: The PlugIn configuration
 	 * @return	string		The	content that is displayed on the website
 	 */
-	function main($content,$conf)	{
-		
-		$this->init($conf);
+	function main($content,$conf,$code='LIST')	{
+
+		$this->init($conf,$code);
 
 		$GLOBALS['TYPO3_DB']->debugOutput = true;
 
 		if ($this->piVars['submit']) {
 			$content = $this->doSubmit();
 		} else {
-			$content = $this->showForm();
+
+			switch ($this->code) {
+				CASE 'ADD':
+					$content = $this->showForm();
+					break;
+				CASE 'LIST':
+				default:
+					$content = $this->showList();
+			}
 		}
 
 		return $this->pi_wrapInBaseClass($content);
 	}
-	
+
 	/**
 	 * Does some initialization
 	 *
 	 * @param	array		$conf: conf array
 	 * @return	void
 	 */
-	function init($conf) {
+	function init($conf,$code) {
 		$this->conf=$conf;
 		$this->pi_setPiVarDefaults();
 
 		$this->tx_init();
 		$this->tx_loadLL();
-		
-		
+
+		$this->code = $code;
+		if (!empty($this->piVars['code'])) $this->code = $this->piVars['code'];
+
 		$this->conf['requiredFields'] = t3lib_div::trimExplode(',',$this->conf['requiredFields']);
-		
 		$this->userID = $GLOBALS['TSFE']->fe_user->user[uid];
-		
 		$this->ts = mktime();
-		
+
 		$this->fetchConfigValue('viewmode');
 
 		if (t3lib_extMgm::isLoaded('date2cal')) {
@@ -98,6 +106,27 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 				$GLOBALS['TSFE']->additionalHeaderData['servicemgr_date2cal'] = $jsCode;
 			}
 		}
+	}
+
+	/**
+	 * Returns list with plugin options
+	 *
+	 * @return	string		HTML
+	 */
+	function showList() {
+		$links[] = $this->tx_linkToPage(
+			'Add new Event',
+			$GLOBALS['TSFE']->id,
+			array($this->prefixId.'[code]'=>'ADD')
+		);
+
+
+		$content = '<ul>';
+		foreach ($links as $link) {
+			$content .= '<li>'.$link.'</li>';
+		}
+		$content .= '</ul>';
+		return $content;
 	}
 
 	/**
@@ -110,8 +139,8 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 		$template = $this->cObj->getSubpart($this->template, '###ADDNEWEVENT###');
 
 		$this->initDefaultValues($defaultValues);
-		
-		
+
+
 		$marker = array(
 			'###L_DATE###' => $this->pi_getLL('L_DATE'),
 			'###L_TIME###' => $this->pi_getLL('L_TIME'),
@@ -127,7 +156,7 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 			'###L_NOTESINTERNAL###' => $this->pi_getLL('L_NOTESINTERNAL'),
 			'###L_SUBMIT###' => $this->pi_getLL('L_SUBMIT'),
 		);
-		
+
 		$marker = array_merge(
 			$marker, array(
 			'###V_DATE###' => $defaultValues['date'],
@@ -140,7 +169,7 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 			'###V_NOTESINTERNAL###' => $defaultValues['notesinternal'],
 		));
 
-		
+
 		if (is_array($this->formValidationErrors)) {
 			$formError = $this->pi_getLL('error_missingfields').' ';
 			foreach ($this->formValidationErrors as $k => $v) {
@@ -150,12 +179,12 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 			$formError = $this->throwErrorMsg($formError);
 		}
 		$marker['###FORM_ERRORS###'] = $formError;
-		
-		
-		$marker['###DATE_CAL###'] = $this->getDate2Cal('tx_servicemgr_pi4[date]');
+
+
+		$marker['###DATE_CAL###'] = $this->getDate2Cal('tx_servicemgr_pi4[date]',$defaultValues['date']);
 		$marker['###TIME_CAL###'] = '';
 
-		
+
 		//SERIES
 		$series = $this->getSeries();
 		if (!is_array($series)) {
@@ -166,7 +195,7 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 				$seriesContent .= '	<option value="'.$serie['uid'].'"';
 				if ($serie['uid'] == $defaultValues['series'])
 					$seriesContent .= ' selected="selected"';
-				
+
 				$seriesContent .= '>'.$serie['name'].'</option>'."\n";
 			}
 			$seriesContent .= '</select>'."\n";
@@ -175,7 +204,7 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 		$marker['###SERIES_SELECTOR###'] = $seriesContent;
 		$marker['###SERIES_ADDLINK###'] = $seriesAddLink;
 
-		
+
 		//TAGS
 		$tags = $this->getTags();
 		if (!is_array($series)) {
@@ -194,7 +223,7 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 		$marker['###TAGS_CBS###'] = $tagsContent;
 		$marker['###TAGS_ADDLINK###'] = $tagsAddLink;
 
-		
+
 		//TEAMS
 		$teams = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,title',
 					'fe_groups', 'deleted=0 AND tx_servicemgr_isteam=1');
@@ -212,10 +241,10 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 		}
 		$marker['###REQUIREDTEAMS_CBS###'] = $teamsContent;
 
-		
+
 		$marker['###DOCUMENTS_ADDLINK###'] = '<img title="'.$this->pi_getLL('title_addlink_documents').'" alt="'.$this->pi_getLL('alt_addlink_documents').'" src="'.$this->conf['addlink_img'].'" />';
 
-		
+
 		$actionLink = $this->cObj->typoLink_URL(array(
 			'parameter' => $GLOBALS['TSFE']->id,
 			'addQueryString' => 1,
@@ -231,7 +260,7 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 
 		return $content;
 	}
-	
+
 	/**
 	 * Sets defaultValues with TypoScript conf (if not set before)
 	 * and dormats defaultValues for output
@@ -243,22 +272,25 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 			$data = $this->conf['defaultValues.'];
 		}
 		foreach ($data as $k => $v) {
-					$data[$k] = is_array($v) ? implode(',',$v) : $v;	
+					$data[$k] = is_array($v) ? implode(',',$v) : $v;
 		}
 	}
 
 	/**
 	 * Returns date2cal image-buttons
 	 *
-	 * @param	string		$inputField: name of inputfield (id: name_hr) 
+	 * @param	string		$inputField: name of inputfield (id: name_hr)
 	 * @return	string		HTML
 	 */
-	function getDate2Cal($inputField) {
+	function getDate2Cal($inputField,$date='') {
 		$content = '';
 		if (t3lib_extMgm::isLoaded('date2cal')) {
 			$this->JSCalendar->setDateFormat(false);
 			$this->JSCalendar->setConfigOption('format','%d.%m.%Y');
 			$this->JSCalendar->setConfigOption('ifFormat','%d.%m.%Y');
+			if (!empty($date)) {
+				$this->JSCalendar->setConfigOption('date', $date);
+			}
 			$this->JSCalendar->setInputField($inputField);
 			$content = $this->JSCalendar->renderImages();
 		}
@@ -333,13 +365,13 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 			$result = false;
 		}
 
-		
+
 		$this->piVars['public'] = $this->piVars['public'] == 1 ? 1 : 0;
 		$this->piVars['dutyscheduleopen'] = $this->piVars['dutyscheduleopen'] == 1 ? 1 : 0;
 		$this->piVars['tags'] = is_array($this->piVars['tags']) ? $this->piVars['tags'] : array();
 		$this->piVars['requiredteams'] = is_array($this->piVars['requiredteams']) ? $this->piVars['requiredteams'] : array();
 
-				
+
 		if (@count($this->formValidationErrors) !== 0) {
 			$result = false;
 		}

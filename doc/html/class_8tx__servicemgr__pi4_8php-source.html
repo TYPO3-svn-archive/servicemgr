@@ -53,272 +53,296 @@
 <a name="l00048"></a><a class="code" href="classtx__servicemgr__pi4.html#a91851e6300e1e350c1acccd045e72f0">00048</a>     var <a class="code" href="classtx__servicemgr__pi4.html#a91851e6300e1e350c1acccd045e72f0">$ts</a>;            <span class="comment">//TimeStamp</span>
 <a name="l00049"></a><a class="code" href="classtx__servicemgr__pi4.html#eb6d7648ff153229ebca048ee987db89">00049</a>     var <a class="code" href="classtx__servicemgr__pi4.html#eb6d7648ff153229ebca048ee987db89">$JSCalendar</a>;    <span class="comment">//JSCalendar (date2cal)</span>
 <a name="l00050"></a>00050 
-<a name="l00058"></a><a class="code" href="classtx__servicemgr__pi4.html#ef6bade143b44e45d76a96c1b8cdd2af">00058</a>     function <a class="code" href="classtx__servicemgr__pi4.html#ef6bade143b44e45d76a96c1b8cdd2af">main</a>($content,$conf)   {
-<a name="l00059"></a>00059         
-<a name="l00060"></a>00060         $this-&gt;<a class="code" href="classtx__servicemgr__pi4.html#ea38d8d12fe78aa7274f22d2723d7059">init</a>($conf);
+<a name="l00058"></a><a class="code" href="classtx__servicemgr__pi4.html#5dedb687bcf9bed387fa2a1c3e93d862">00058</a>     function <a class="code" href="classtx__servicemgr__pi4.html#5dedb687bcf9bed387fa2a1c3e93d862">main</a>($content,$conf,$code=<span class="stringliteral">'LIST'</span>)  {
+<a name="l00059"></a>00059 
+<a name="l00060"></a>00060         $this-&gt;<a class="code" href="classtx__servicemgr__pi4.html#fef8a566a2235c6c55a3ae6e5003056e">init</a>($conf,$code);
 <a name="l00061"></a>00061 
 <a name="l00062"></a>00062         $GLOBALS[<span class="stringliteral">'TYPO3_DB'</span>]-&gt;debugOutput = <span class="keyword">true</span>;
 <a name="l00063"></a>00063 
 <a name="l00064"></a>00064         <span class="keywordflow">if</span> ($this-&gt;piVars[<span class="stringliteral">'submit'</span>]) {
 <a name="l00065"></a>00065             $content = $this-&gt;<a class="code" href="classtx__servicemgr__pi4.html#cc6dab4121d5e58750803ec8e9472876">doSubmit</a>();
 <a name="l00066"></a>00066         } <span class="keywordflow">else</span> {
-<a name="l00067"></a>00067             $content = $this-&gt;<a class="code" href="classtx__servicemgr__pi4.html#b194052faf38235839a66e59e3db7f4d">showForm</a>();
-<a name="l00068"></a>00068         }
-<a name="l00069"></a>00069 
-<a name="l00070"></a>00070         <span class="keywordflow">return</span> $this-&gt;pi_wrapInBaseClass($content);
-<a name="l00071"></a>00071     }
-<a name="l00072"></a>00072     
-<a name="l00079"></a><a class="code" href="classtx__servicemgr__pi4.html#ea38d8d12fe78aa7274f22d2723d7059">00079</a>     function <a class="code" href="classtx__servicemgr__pi4.html#ea38d8d12fe78aa7274f22d2723d7059">init</a>($conf) {
-<a name="l00080"></a>00080         $this-&gt;conf=$conf;
-<a name="l00081"></a>00081         $this-&gt;pi_setPiVarDefaults();
-<a name="l00082"></a>00082 
-<a name="l00083"></a>00083         $this-&gt;<a class="code" href="classtx__servicemgr.html#4103c17af98c1b1adf4be5739e56b24d">tx_init</a>();
-<a name="l00084"></a>00084         $this-&gt;<a class="code" href="classtx__servicemgr.html#99d458ef7415d2978747b8bfcbbd4af5">tx_loadLL</a>();
-<a name="l00085"></a>00085         
-<a name="l00086"></a>00086         
-<a name="l00087"></a>00087         $this-&gt;conf[<span class="stringliteral">'requiredFields'</span>] = t3lib_div::trimExplode(<span class="charliteral">','</span>,$this-&gt;conf[<span class="stringliteral">'requiredFields'</span>]);
-<a name="l00088"></a>00088         
-<a name="l00089"></a>00089         $this-&gt;userID = $GLOBALS[<span class="stringliteral">'TSFE'</span>]-&gt;fe_user-&gt;user[uid];
-<a name="l00090"></a>00090         
-<a name="l00091"></a>00091         $this-&gt;ts = mktime();
-<a name="l00092"></a>00092         
-<a name="l00093"></a>00093         $this-&gt;<a class="code" href="classtx__servicemgr.html#1c57acb71a614afd249fb2c3c644e9d6">fetchConfigValue</a>(<span class="stringliteral">'viewmode'</span>);
-<a name="l00094"></a>00094 
-<a name="l00095"></a>00095         <span class="keywordflow">if</span> (t3lib_extMgm::isLoaded(<span class="stringliteral">'date2cal'</span>)) {
-<a name="l00096"></a>00096             $this-&gt;JSCalendar = JSCalendar::getInstance();
-<a name="l00097"></a>00097             <span class="keywordflow">if</span> (($jsCode = $this-&gt;JSCalendar-&gt;getMainJS()) != <span class="stringliteral">''</span>) {
-<a name="l00098"></a>00098                 $GLOBALS[<span class="stringliteral">'TSFE'</span>]-&gt;additionalHeaderData[<span class="stringliteral">'servicemgr_date2cal'</span>] = $jsCode;
-<a name="l00099"></a>00099             }
-<a name="l00100"></a>00100         }
-<a name="l00101"></a>00101     }
+<a name="l00067"></a>00067 
+<a name="l00068"></a>00068             <span class="keywordflow">switch</span> ($this-&gt;code) {
+<a name="l00069"></a>00069                 CASE <span class="stringliteral">'ADD'</span>:
+<a name="l00070"></a>00070                     $content = $this-&gt;<a class="code" href="classtx__servicemgr__pi4.html#b194052faf38235839a66e59e3db7f4d">showForm</a>();
+<a name="l00071"></a>00071                     <span class="keywordflow">break</span>;
+<a name="l00072"></a>00072                 CASE <span class="stringliteral">'LIST'</span>:
+<a name="l00073"></a>00073                 <span class="keywordflow">default</span>:
+<a name="l00074"></a>00074                     $content = $this-&gt;<a class="code" href="classtx__servicemgr__pi4.html#b07672c4dba53a60d6c2caef9a4e6fd2">showList</a>();
+<a name="l00075"></a>00075             }
+<a name="l00076"></a>00076         }
+<a name="l00077"></a>00077 
+<a name="l00078"></a>00078         <span class="keywordflow">return</span> $this-&gt;pi_wrapInBaseClass($content);
+<a name="l00079"></a>00079     }
+<a name="l00080"></a>00080 
+<a name="l00087"></a><a class="code" href="classtx__servicemgr__pi4.html#fef8a566a2235c6c55a3ae6e5003056e">00087</a>     function <a class="code" href="classtx__servicemgr__pi4.html#fef8a566a2235c6c55a3ae6e5003056e">init</a>($conf,$code) {
+<a name="l00088"></a>00088         $this-&gt;conf=$conf;
+<a name="l00089"></a>00089         $this-&gt;pi_setPiVarDefaults();
+<a name="l00090"></a>00090 
+<a name="l00091"></a>00091         $this-&gt;<a class="code" href="classtx__servicemgr.html#4103c17af98c1b1adf4be5739e56b24d">tx_init</a>();
+<a name="l00092"></a>00092         $this-&gt;<a class="code" href="classtx__servicemgr.html#99d458ef7415d2978747b8bfcbbd4af5">tx_loadLL</a>();
+<a name="l00093"></a>00093 
+<a name="l00094"></a>00094         $this-&gt;code = $code;
+<a name="l00095"></a>00095         <span class="keywordflow">if</span> (!empty($this-&gt;piVars[<span class="stringliteral">'code'</span>])) $this-&gt;code = $this-&gt;piVars[<span class="stringliteral">'code'</span>];
+<a name="l00096"></a>00096 
+<a name="l00097"></a>00097         $this-&gt;conf[<span class="stringliteral">'requiredFields'</span>] = t3lib_div::trimExplode(<span class="charliteral">','</span>,$this-&gt;conf[<span class="stringliteral">'requiredFields'</span>]);
+<a name="l00098"></a>00098         $this-&gt;userID = $GLOBALS[<span class="stringliteral">'TSFE'</span>]-&gt;fe_user-&gt;user[uid];
+<a name="l00099"></a>00099         $this-&gt;ts = mktime();
+<a name="l00100"></a>00100 
+<a name="l00101"></a>00101         $this-&gt;<a class="code" href="classtx__servicemgr.html#1c57acb71a614afd249fb2c3c644e9d6">fetchConfigValue</a>(<span class="stringliteral">'viewmode'</span>);
 <a name="l00102"></a>00102 
-<a name="l00109"></a><a class="code" href="classtx__servicemgr__pi4.html#b194052faf38235839a66e59e3db7f4d">00109</a>     function <a class="code" href="classtx__servicemgr__pi4.html#b194052faf38235839a66e59e3db7f4d">showForm</a>($defaultValues = array()) {
-<a name="l00110"></a>00110         $template = $this-&gt;cObj-&gt;getSubpart($this-&gt;<span class="keyword">template</span>, <span class="stringliteral">'###ADDNEWEVENT###'</span>);
-<a name="l00111"></a>00111 
-<a name="l00112"></a>00112         $this-&gt;<a class="code" href="classtx__servicemgr__pi4.html#f705f4118b3eab24b05eb5eb0a59dfbb">initDefaultValues</a>($defaultValues);
-<a name="l00113"></a>00113         
-<a name="l00114"></a>00114         
-<a name="l00115"></a>00115         $marker = array(
-<a name="l00116"></a>00116             <span class="stringliteral">'###L_DATE###'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'L_DATE'</span>),
-<a name="l00117"></a>00117             <span class="stringliteral">'###L_TIME###'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'L_TIME'</span>),
-<a name="l00118"></a>00118             <span class="stringliteral">'###L_DATETIME###'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'L_DATETIME'</span>),
-<a name="l00119"></a>00119             <span class="stringliteral">'###L_SUBJECT###'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'L_SUBJECT'</span>),
-<a name="l00120"></a>00120             <span class="stringliteral">'###L_SERIES###'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'L_SERIES'</span>),
-<a name="l00121"></a>00121             <span class="stringliteral">'###L_PUBLIC###'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'L_PUBLIC'</span>),
-<a name="l00122"></a>00122             <span class="stringliteral">'###L_TAGS###'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'L_TAGS'</span>),
-<a name="l00123"></a>00123             <span class="stringliteral">'###L_REQUIREDTEAMS###'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'L_REQUIREDTEAMS'</span>),
-<a name="l00124"></a>00124             <span class="stringliteral">'###L_DUTYSCHEDULEOPEN###'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'L_DUTYSCHEDULEOPEN'</span>),
-<a name="l00125"></a>00125             <span class="stringliteral">'###L_DOCUMENTS###'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'L_DOCUMENTS'</span>),
-<a name="l00126"></a>00126             <span class="stringliteral">'###L_NOTES###'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'L_NOTES'</span>),
-<a name="l00127"></a>00127             <span class="stringliteral">'###L_NOTESINTERNAL###'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'L_NOTESINTERNAL'</span>),
-<a name="l00128"></a>00128             <span class="stringliteral">'###L_SUBMIT###'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'L_SUBMIT'</span>),
-<a name="l00129"></a>00129         );
-<a name="l00130"></a>00130         
-<a name="l00131"></a>00131         $marker = array_merge(
-<a name="l00132"></a>00132             $marker, array(
-<a name="l00133"></a>00133             <span class="stringliteral">'###V_DATE###'</span> =&gt; $defaultValues[<span class="stringliteral">'date'</span>],
-<a name="l00134"></a>00134             <span class="stringliteral">'###V_TIME###'</span> =&gt; $defaultValues[<span class="stringliteral">'time'</span>],
-<a name="l00135"></a>00135             <span class="stringliteral">'###V_DATETIME###'</span> =&gt; $defaultValues[<span class="stringliteral">'datetime'</span>],
-<a name="l00136"></a>00136             <span class="stringliteral">'###V_SUBJECT###'</span> =&gt; $defaultValues[<span class="stringliteral">'subject'</span>],
-<a name="l00137"></a>00137             <span class="stringliteral">'###V_PUBLIC###'</span> =&gt; $defaultValues[<span class="stringliteral">'public'</span>] ? <span class="stringliteral">'checked="checked" '</span> : <span class="stringliteral">''</span>,
-<a name="l00138"></a>00138             <span class="stringliteral">'###V_DUTYSCHEDULEOPEN###'</span> =&gt; $defaultValues[<span class="stringliteral">'dutyscheduleopen'</span>] ? <span class="stringliteral">'checked="checked" '</span> : <span class="stringliteral">''</span>,
-<a name="l00139"></a>00139             <span class="stringliteral">'###V_NOTES###'</span> =&gt; $defaultValues[<span class="stringliteral">'notes'</span>],
-<a name="l00140"></a>00140             <span class="stringliteral">'###V_NOTESINTERNAL###'</span> =&gt; $defaultValues[<span class="stringliteral">'notesinternal'</span>],
-<a name="l00141"></a>00141         ));
+<a name="l00103"></a>00103         <span class="keywordflow">if</span> (t3lib_extMgm::isLoaded(<span class="stringliteral">'date2cal'</span>)) {
+<a name="l00104"></a>00104             $this-&gt;JSCalendar = JSCalendar::getInstance();
+<a name="l00105"></a>00105             <span class="keywordflow">if</span> (($jsCode = $this-&gt;JSCalendar-&gt;getMainJS()) != <span class="stringliteral">''</span>) {
+<a name="l00106"></a>00106                 $GLOBALS[<span class="stringliteral">'TSFE'</span>]-&gt;additionalHeaderData[<span class="stringliteral">'servicemgr_date2cal'</span>] = $jsCode;
+<a name="l00107"></a>00107             }
+<a name="l00108"></a>00108         }
+<a name="l00109"></a>00109     }
+<a name="l00110"></a>00110 
+<a name="l00116"></a><a class="code" href="classtx__servicemgr__pi4.html#b07672c4dba53a60d6c2caef9a4e6fd2">00116</a>     function <a class="code" href="classtx__servicemgr__pi4.html#b07672c4dba53a60d6c2caef9a4e6fd2">showList</a>() {
+<a name="l00117"></a>00117         $links[] = $this-&gt;<a class="code" href="classtx__servicemgr.html#f7856445454371a911abe578139d1ac0">tx_linkToPage</a>(
+<a name="l00118"></a>00118             <span class="stringliteral">'Add new Event'</span>,
+<a name="l00119"></a>00119             $GLOBALS[<span class="stringliteral">'TSFE'</span>]-&gt;<span class="keywordtype">id</span>,
+<a name="l00120"></a>00120             array($this-&gt;prefixId.<span class="stringliteral">'[code]'</span>=&gt;<span class="stringliteral">'ADD'</span>)
+<a name="l00121"></a>00121         );
+<a name="l00122"></a>00122 
+<a name="l00123"></a>00123 
+<a name="l00124"></a>00124         $content = <span class="stringliteral">'&lt;ul&gt;'</span>;
+<a name="l00125"></a>00125         <span class="keywordflow">foreach</span> ($links as $link) {
+<a name="l00126"></a>00126             $content .= <span class="stringliteral">'&lt;li&gt;'</span>.$link.<span class="stringliteral">'&lt;/li&gt;'</span>;
+<a name="l00127"></a>00127         }
+<a name="l00128"></a>00128         $content .= <span class="stringliteral">'&lt;/ul&gt;'</span>;
+<a name="l00129"></a>00129         <span class="keywordflow">return</span> $content;
+<a name="l00130"></a>00130     }
+<a name="l00131"></a>00131 
+<a name="l00138"></a><a class="code" href="classtx__servicemgr__pi4.html#b194052faf38235839a66e59e3db7f4d">00138</a>     function <a class="code" href="classtx__servicemgr__pi4.html#b194052faf38235839a66e59e3db7f4d">showForm</a>($defaultValues = array()) {
+<a name="l00139"></a>00139         $template = $this-&gt;cObj-&gt;getSubpart($this-&gt;<span class="keyword">template</span>, <span class="stringliteral">'###ADDNEWEVENT###'</span>);
+<a name="l00140"></a>00140 
+<a name="l00141"></a>00141         $this-&gt;<a class="code" href="classtx__servicemgr__pi4.html#f705f4118b3eab24b05eb5eb0a59dfbb">initDefaultValues</a>($defaultValues);
 <a name="l00142"></a>00142 
-<a name="l00143"></a>00143         
-<a name="l00144"></a>00144         <span class="keywordflow">if</span> (is_array($this-&gt;formValidationErrors)) {
-<a name="l00145"></a>00145             $formError = $this-&gt;pi_getLL(<span class="stringliteral">'error_missingfields'</span>).<span class="charliteral">' '</span>;
-<a name="l00146"></a>00146             <span class="keywordflow">foreach</span> ($this-&gt;formValidationErrors as $k =&gt; $v) {
-<a name="l00147"></a>00147                 $formErrors[] = $this-&gt;pi_getLL(<span class="stringliteral">'L_'</span>.strtoupper($k));
-<a name="l00148"></a>00148             }
-<a name="l00149"></a>00149             $formError .= implode(<span class="stringliteral">', '</span>,$formErrors);
-<a name="l00150"></a>00150             $formError = $this-&gt;<a class="code" href="classtx__servicemgr.html#e236918f5cf9103ea81d95268556ec77">throwErrorMsg</a>($formError);
-<a name="l00151"></a>00151         }
-<a name="l00152"></a>00152         $marker[<span class="stringliteral">'###FORM_ERRORS###'</span>] = $formError;
-<a name="l00153"></a>00153         
-<a name="l00154"></a>00154         
-<a name="l00155"></a>00155         $marker[<span class="stringliteral">'###DATE_CAL###'</span>] = $this-&gt;<a class="code" href="classtx__servicemgr__pi4.html#8823624b31949d416d808ddcac6be238">getDate2Cal</a>(<span class="stringliteral">'tx_servicemgr_pi4[date]'</span>);
-<a name="l00156"></a>00156         $marker[<span class="stringliteral">'###TIME_CAL###'</span>] = <span class="stringliteral">''</span>;
-<a name="l00157"></a>00157 
-<a name="l00158"></a>00158         
-<a name="l00159"></a>00159         <span class="comment">//SERIES</span>
-<a name="l00160"></a>00160         $series = $this-&gt;<a class="code" href="classtx__servicemgr.html#13f5ab92166f830c717dcf87630f1cb6">getSeries</a>();
-<a name="l00161"></a>00161         <span class="keywordflow">if</span> (!is_array($series)) {
-<a name="l00162"></a>00162             $seriesContent = $this-&gt;pi_getLL(<span class="stringliteral">'error_noseries'</span>);
-<a name="l00163"></a>00163         } <span class="keywordflow">else</span> {
-<a name="l00164"></a>00164             $seriesContent = <span class="stringliteral">'&lt;select name="tx_servicemgr_pi4[series]" id="frm-series"&gt;'</span>.<span class="stringliteral">"\n"</span>;
-<a name="l00165"></a>00165             <span class="keywordflow">foreach</span> ($series as $serie) {
-<a name="l00166"></a>00166                 $seriesContent .= <span class="stringliteral">' &lt;option value="'</span>.$serie[<span class="stringliteral">'uid'</span>].<span class="charliteral">'"'</span>;
-<a name="l00167"></a>00167                 <span class="keywordflow">if</span> ($serie[<span class="stringliteral">'uid'</span>] == $defaultValues[<span class="stringliteral">'series'</span>])
-<a name="l00168"></a>00168                     $seriesContent .= <span class="stringliteral">' selected="selected"'</span>;
-<a name="l00169"></a>00169                 
-<a name="l00170"></a>00170                 $seriesContent .= <span class="charliteral">'&gt;'</span>.$serie[<span class="stringliteral">'name'</span>].<span class="stringliteral">'&lt;/option&gt;'</span>.<span class="stringliteral">"\n"</span>;
-<a name="l00171"></a>00171             }
-<a name="l00172"></a>00172             $seriesContent .= <span class="stringliteral">'&lt;/select&gt;'</span>.<span class="stringliteral">"\n"</span>;
-<a name="l00173"></a>00173             $seriesAddLink = <span class="stringliteral">'&lt;img title="'</span>.$this-&gt;pi_getLL(<span class="stringliteral">'title_addlink_series'</span>).<span class="stringliteral">'" alt="'</span>.$this-&gt;pi_getLL(<span class="stringliteral">'alt_addlink_series'</span>).<span class="stringliteral">'" src="'</span>.$this-&gt;conf[<span class="stringliteral">'addlink_img'</span>].<span class="stringliteral">'" class="addIcon" /&gt;'</span>;
-<a name="l00174"></a>00174         }
-<a name="l00175"></a>00175         $marker[<span class="stringliteral">'###SERIES_SELECTOR###'</span>] = $seriesContent;
-<a name="l00176"></a>00176         $marker[<span class="stringliteral">'###SERIES_ADDLINK###'</span>] = $seriesAddLink;
-<a name="l00177"></a>00177 
-<a name="l00178"></a>00178         
-<a name="l00179"></a>00179         <span class="comment">//TAGS</span>
-<a name="l00180"></a>00180         $tags = $this-&gt;<a class="code" href="classtx__servicemgr.html#e255137e42c2a438c99d891d1d8a1e03">getTags</a>();
-<a name="l00181"></a>00181         <span class="keywordflow">if</span> (!is_array($series)) {
-<a name="l00182"></a>00182             $tagsContent = $this-&gt;pi_getLL(<span class="stringliteral">'error_notags'</span>);
-<a name="l00183"></a>00183         } <span class="keywordflow">else</span> {
-<a name="l00184"></a>00184             $defaultValues[<span class="stringliteral">'tags'</span>] = split(<span class="charliteral">','</span>,$defaultValues[<span class="stringliteral">'tags'</span>]);
-<a name="l00185"></a>00185             <span class="keywordflow">foreach</span> ($tags as $tag) {
-<a name="l00186"></a>00186                 $tagsContent .= <span class="stringliteral">'&lt;input type="checkbox" name="tx_servicemgr_pi4[tags][]" value="'</span>.$tag[<span class="stringliteral">'uid'</span>].<span class="stringliteral">'" id="frm-tags-'</span>.$tag[<span class="stringliteral">'uid'</span>].<span class="charliteral">'"'</span>;
-<a name="l00187"></a>00187                 <span class="keywordflow">if</span> (in_array($tag[<span class="stringliteral">'uid'</span>], $defaultValues[<span class="stringliteral">'tags'</span>])) {
-<a name="l00188"></a>00188                     $tagsContent .= <span class="stringliteral">' checked="checked"'</span>;
-<a name="l00189"></a>00189                 }
-<a name="l00190"></a>00190                 $tagsContent .= <span class="stringliteral">' /&gt; &lt;label for="frm-tags-'</span>.$tag[<span class="stringliteral">'uid'</span>].<span class="stringliteral">'"&gt;'</span>.$tag[<span class="stringliteral">'name'</span>].<span class="stringliteral">'&lt;/label&gt;&lt;br /&gt;'</span>;
-<a name="l00191"></a>00191             }
-<a name="l00192"></a>00192         }
-<a name="l00193"></a>00193         $tagsAddLink = <span class="stringliteral">'&lt;img title="'</span>.$this-&gt;pi_getLL(<span class="stringliteral">'title_addlink_tags'</span>).<span class="stringliteral">'" alt="'</span>.$this-&gt;pi_getLL(<span class="stringliteral">'alt_addlink_tags'</span>).<span class="stringliteral">'" src="'</span>.$this-&gt;conf[<span class="stringliteral">'addlink_img'</span>].<span class="stringliteral">'" /&gt;'</span>;
-<a name="l00194"></a>00194         $marker[<span class="stringliteral">'###TAGS_CBS###'</span>] = $tagsContent;
-<a name="l00195"></a>00195         $marker[<span class="stringliteral">'###TAGS_ADDLINK###'</span>] = $tagsAddLink;
-<a name="l00196"></a>00196 
-<a name="l00197"></a>00197         
-<a name="l00198"></a>00198         <span class="comment">//TEAMS</span>
-<a name="l00199"></a>00199         $teams = $GLOBALS[<span class="stringliteral">'TYPO3_DB'</span>]-&gt;exec_SELECTgetRows(<span class="stringliteral">'uid,title'</span>,
-<a name="l00200"></a>00200                     <span class="stringliteral">'fe_groups'</span>, <span class="stringliteral">'deleted=0 AND tx_servicemgr_isteam=1'</span>);
-<a name="l00201"></a>00201         <span class="keywordflow">if</span> (!is_array($teams)) {
-<a name="l00202"></a>00202             $teamsContent = $this-&gt;pi_getLL(<span class="stringliteral">'error_noteams'</span>);
-<a name="l00203"></a>00203         } <span class="keywordflow">else</span> {
-<a name="l00204"></a>00204             $defaultValues[<span class="stringliteral">'requiredteams'</span>] = split(<span class="charliteral">','</span>,$defaultValues[<span class="stringliteral">'requiredteams'</span>]);
-<a name="l00205"></a>00205             <span class="keywordflow">foreach</span> ($teams as $team) {
-<a name="l00206"></a>00206                 $teamsContent .= <span class="stringliteral">'&lt;input type="checkbox" name="tx_servicemgr_pi4[requiredteams][]" value="'</span>.$team[<span class="stringliteral">'uid'</span>].<span class="stringliteral">'" id="frm-requiredteams-'</span>.$team[<span class="stringliteral">'uid'</span>].<span class="charliteral">'"'</span>;
-<a name="l00207"></a>00207                 <span class="keywordflow">if</span> (in_array($team[<span class="stringliteral">'uid'</span>], $defaultValues[<span class="stringliteral">'requiredteams'</span>])) {
-<a name="l00208"></a>00208                     $teamsContent .= <span class="stringliteral">' checked="checked"'</span>;
-<a name="l00209"></a>00209                 }
-<a name="l00210"></a>00210                 $teamsContent .= <span class="stringliteral">' /&gt; &lt;label for="frm-requiredteams-'</span>.$team[<span class="stringliteral">'uid'</span>].<span class="stringliteral">'"&gt;'</span>.$team[<span class="stringliteral">'title'</span>].<span class="stringliteral">'&lt;/label&gt;&lt;br /&gt;'</span>;
-<a name="l00211"></a>00211             }
-<a name="l00212"></a>00212         }
-<a name="l00213"></a>00213         $marker[<span class="stringliteral">'###REQUIREDTEAMS_CBS###'</span>] = $teamsContent;
-<a name="l00214"></a>00214 
-<a name="l00215"></a>00215         
-<a name="l00216"></a>00216         $marker[<span class="stringliteral">'###DOCUMENTS_ADDLINK###'</span>] = <span class="stringliteral">'&lt;img title="'</span>.$this-&gt;pi_getLL(<span class="stringliteral">'title_addlink_documents'</span>).<span class="stringliteral">'" alt="'</span>.$this-&gt;pi_getLL(<span class="stringliteral">'alt_addlink_documents'</span>).<span class="stringliteral">'" src="'</span>.$this-&gt;conf[<span class="stringliteral">'addlink_img'</span>].<span class="stringliteral">'" /&gt;'</span>;
-<a name="l00217"></a>00217 
-<a name="l00218"></a>00218         
-<a name="l00219"></a>00219         $actionLink = $this-&gt;cObj-&gt;typoLink_URL(array(
-<a name="l00220"></a>00220             <span class="stringliteral">'parameter'</span> =&gt; $GLOBALS[<span class="stringliteral">'TSFE'</span>]-&gt;<span class="keywordtype">id</span>,
-<a name="l00221"></a>00221             <span class="stringliteral">'addQueryString'</span> =&gt; 1,
-<a name="l00222"></a>00222             <span class="stringliteral">'addQueryString.'</span> =&gt; array(
-<a name="l00223"></a>00223                 <span class="stringliteral">'exclude'</span> =&gt; <span class="stringliteral">'cHash,no_cache'</span>,
-<a name="l00224"></a>00224         ),
-<a name="l00225"></a>00225             <span class="stringliteral">'additionalParams'</span> =&gt; <span class="stringliteral">'&amp;no_cache=1'</span>,
-<a name="l00226"></a>00226             <span class="stringliteral">'useCacheHash'</span> =&gt; <span class="keyword">false</span>,
-<a name="l00227"></a>00227         ));
-<a name="l00228"></a>00228         $marker[<span class="stringliteral">'###ACTION_LINK###'</span>] = $actionLink;
-<a name="l00229"></a>00229 
-<a name="l00230"></a>00230         $content = $this-&gt;cObj-&gt;substituteMarkerArray($template, $marker);
-<a name="l00231"></a>00231 
-<a name="l00232"></a>00232         <span class="keywordflow">return</span> $content;
-<a name="l00233"></a>00233     }
-<a name="l00234"></a>00234     
-<a name="l00241"></a><a class="code" href="classtx__servicemgr__pi4.html#f705f4118b3eab24b05eb5eb0a59dfbb">00241</a>     function <a class="code" href="classtx__servicemgr__pi4.html#f705f4118b3eab24b05eb5eb0a59dfbb">initDefaultValues</a>(&amp;$data) {
-<a name="l00242"></a>00242         <span class="keywordflow">if</span> ($data === array()) {
-<a name="l00243"></a>00243             $data = $this-&gt;conf[<span class="stringliteral">'defaultValues.'</span>];
-<a name="l00244"></a>00244         }
-<a name="l00245"></a>00245         <span class="keywordflow">foreach</span> ($data as $k =&gt; $v) {
-<a name="l00246"></a>00246                     $data[$k] = is_array($v) ? implode(<span class="charliteral">','</span>,$v) : $v;    
-<a name="l00247"></a>00247         }
-<a name="l00248"></a>00248     }
-<a name="l00249"></a>00249 
-<a name="l00256"></a><a class="code" href="classtx__servicemgr__pi4.html#8823624b31949d416d808ddcac6be238">00256</a>     function <a class="code" href="classtx__servicemgr__pi4.html#8823624b31949d416d808ddcac6be238">getDate2Cal</a>($inputField) {
-<a name="l00257"></a>00257         $content = <span class="stringliteral">''</span>;
-<a name="l00258"></a>00258         <span class="keywordflow">if</span> (t3lib_extMgm::isLoaded(<span class="stringliteral">'date2cal'</span>)) {
-<a name="l00259"></a>00259             $this-&gt;JSCalendar-&gt;setDateFormat(<span class="keyword">false</span>);
-<a name="l00260"></a>00260             $this-&gt;JSCalendar-&gt;setConfigOption(<span class="stringliteral">'format'</span>,<span class="stringliteral">'%d.%m.%Y'</span>);
-<a name="l00261"></a>00261             $this-&gt;JSCalendar-&gt;setConfigOption(<span class="stringliteral">'ifFormat'</span>,<span class="stringliteral">'%d.%m.%Y'</span>);
-<a name="l00262"></a>00262             $this-&gt;JSCalendar-&gt;setInputField($inputField);
-<a name="l00263"></a>00263             $content = $this-&gt;JSCalendar-&gt;renderImages();
-<a name="l00264"></a>00264         }
-<a name="l00265"></a>00265         <span class="keywordflow">return</span> $content;
-<a name="l00266"></a>00266     }
-<a name="l00267"></a>00267 
-<a name="l00273"></a><a class="code" href="classtx__servicemgr__pi4.html#cc6dab4121d5e58750803ec8e9472876">00273</a>     function <a class="code" href="classtx__servicemgr__pi4.html#cc6dab4121d5e58750803ec8e9472876">doSubmit</a>() {
-<a name="l00274"></a>00274         <span class="keywordflow">if</span> ($this-&gt;piVars[<span class="stringliteral">'submit'</span>] &amp;&amp; $this-&gt;<a class="code" href="classtx__servicemgr__pi4.html#981dd217165cc5480305fac06fb575e8">doSubmit_validate</a>()) {
-<a name="l00275"></a>00275             $startingPoints[0] = $GLOBALS[<span class="stringliteral">'TSFE'</span>]-&gt;id;
-<a name="l00276"></a>00276             <span class="keywordflow">if</span> (!empty($this-&gt;cObj-&gt;data[<span class="stringliteral">"pages"</span>])) {
-<a name="l00277"></a>00277                 $startingPoints = explode(<span class="charliteral">','</span>,$this-&gt;cObj-&gt;data[<span class="stringliteral">"pages"</span>]);
-<a name="l00278"></a>00278             }
-<a name="l00279"></a>00279             list($date[<span class="stringliteral">'day'</span>], $date[<span class="stringliteral">'month'</span>], $date[<span class="stringliteral">'year'</span>]) = split(<span class="charliteral">'\.'</span>,$this-&gt;piVars[<span class="stringliteral">'date'</span>]);
-<a name="l00280"></a>00280             list($time[<span class="stringliteral">'hour'</span>], $time[<span class="stringliteral">'minute'</span>]) = split(<span class="charliteral">':'</span>,$this-&gt;piVars[<span class="stringliteral">'time'</span>]);
-<a name="l00281"></a>00281             $datetime = mktime(intval($time[<span class="stringliteral">'hour'</span>]),intval($time[<span class="stringliteral">'minute'</span>]),0,intval($date[<span class="stringliteral">'month'</span>]),intval($date[<span class="stringliteral">'day'</span>]),intval($date[<span class="stringliteral">'year'</span>]));
-<a name="l00282"></a>00282 
-<a name="l00283"></a>00283             $record = array(
-<a name="l00284"></a>00284                 <span class="stringliteral">'pid'</span> =&gt; $startingPoints[0],
-<a name="l00285"></a>00285                 <span class="stringliteral">'datetime'</span> =&gt; $datetime,
-<a name="l00286"></a>00286                 <span class="stringliteral">'subject'</span> =&gt; $this-&gt;piVars[<span class="stringliteral">'subject'</span>],
-<a name="l00287"></a>00287                 <span class="stringliteral">'series'</span> =&gt; intval($this-&gt;piVars[<span class="stringliteral">'series'</span>]),
-<a name="l00288"></a>00288                 <span class="stringliteral">'public'</span> =&gt; intval($this-&gt;piVars[<span class="stringliteral">'public'</span>]),
-<a name="l00289"></a>00289                 <span class="stringliteral">'tags'</span> =&gt; implode(<span class="charliteral">','</span>,$this-&gt;piVars[<span class="stringliteral">'tags'</span>]),
-<a name="l00290"></a>00290                 <span class="stringliteral">'requiredteams'</span> =&gt; implode(<span class="charliteral">','</span>,$this-&gt;piVars[<span class="stringliteral">'requiredteams'</span>]),
-<a name="l00291"></a>00291                 <span class="stringliteral">'dutyscheduleopen'</span> =&gt; intval($this-&gt;piVars[<span class="stringliteral">'dutyscheduleopen'</span>]),
-<a name="l00292"></a>00292                 <span class="stringliteral">'notes'</span> =&gt; $this-&gt;piVars[<span class="stringliteral">'notes'</span>],
-<a name="l00293"></a>00293                 <span class="stringliteral">'notes_internal'</span> =&gt; $this-&gt;piVars[<span class="stringliteral">'notes_internal'</span>],
-<a name="l00294"></a>00294             );
-<a name="l00295"></a>00295             $record[<span class="stringliteral">'l18n_diffsource'</span>] = serialize($record);
-<a name="l00296"></a>00296             $record[<span class="stringliteral">'tstamp'</span>] = $record[<span class="stringliteral">'crdate'</span>] = $this-&gt;ts;
-<a name="l00297"></a>00297 
-<a name="l00298"></a>00298             $GLOBALS[<span class="stringliteral">'TYPO3_DB'</span>]-&gt;exec_INSERTquery(<span class="stringliteral">'tx_servicemgr_events'</span>, $record);
-<a name="l00299"></a>00299             $newUid = $GLOBALS[<span class="stringliteral">'TYPO3_DB'</span>]-&gt;sql_insert_id();
-<a name="l00300"></a>00300 
-<a name="l00301"></a>00301             $content=$this-&gt;<a class="code" href="classtx__servicemgr.html#d24bb050a0d1372d6c021bf7968d239e">detailViewEvent</a>(
-<a name="l00302"></a>00302                 $newUid,
-<a name="l00303"></a>00303                 array(
-<a name="l00304"></a>00304                     <span class="stringliteral">'subparts'</span> =&gt; array(<span class="stringliteral">'subject'</span>,<span class="stringliteral">'datetime'</span>,<span class="stringliteral">'series'</span>,<span class="stringliteral">'notes'</span>,<span class="stringliteral">'backlink'</span>),
-<a name="l00305"></a>00305                     <span class="stringliteral">'backlink'</span> =&gt; array(<span class="stringliteral">'str'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'back'</span>), <span class="stringliteral">'id'</span> =&gt; $GLOBALS[<span class="stringliteral">'TSFE'</span>]-&gt;<span class="keywordtype">id</span>),
-<a name="l00306"></a>00306                 ),
-<a name="l00307"></a>00307                 $this-&gt;cObj-&gt;getSubpart($this-&gt;cObj-&gt;fileResource(<span class="stringliteral">'EXT:servicemgr/res/esv.html'</span>), <span class="stringliteral">'###SINGLEEVENTEL###'</span>)
-<a name="l00308"></a>00308             );
-<a name="l00309"></a>00309         } <span class="keywordflow">else</span> {
-<a name="l00310"></a>00310             $content = $this-&gt;<a class="code" href="classtx__servicemgr__pi4.html#b194052faf38235839a66e59e3db7f4d">showForm</a>($this-&gt;piVars);
-<a name="l00311"></a>00311         }
-<a name="l00312"></a>00312         <span class="keywordflow">return</span> $content;
-<a name="l00313"></a>00313     }
-<a name="l00314"></a>00314 
-<a name="l00320"></a><a class="code" href="classtx__servicemgr__pi4.html#981dd217165cc5480305fac06fb575e8">00320</a>     function <a class="code" href="classtx__servicemgr__pi4.html#981dd217165cc5480305fac06fb575e8">doSubmit_validate</a>() {
-<a name="l00321"></a>00321         $result = <span class="keyword">true</span>;
-<a name="l00322"></a>00322         <span class="keywordflow">foreach</span>($this-&gt;piVars as $k =&gt; $v) {
-<a name="l00323"></a>00323             $this-&gt;piVars[$k] = !is_array($v) ? trim($v) : $v;
-<a name="l00324"></a>00324         }
-<a name="l00325"></a>00325 
-<a name="l00326"></a>00326         <span class="keywordflow">if</span> (is_array($this-&gt;conf[<span class="stringliteral">'requiredFields'</span>])) {
-<a name="l00327"></a>00327             <span class="keywordflow">foreach</span> ($this-&gt;conf[<span class="stringliteral">'requiredFields'</span>] as $field) {
-<a name="l00328"></a>00328                 <span class="keywordflow">if</span> (!$this-&gt;piVars[$field]) {
-<a name="l00329"></a>00329                     $this-&gt;formValidationErrors[$field] = 1;
-<a name="l00330"></a>00330                 }
-<a name="l00331"></a>00331             }
-<a name="l00332"></a>00332         } <span class="keywordflow">else</span> {
-<a name="l00333"></a>00333             $result = <span class="keyword">false</span>;
-<a name="l00334"></a>00334         }
-<a name="l00335"></a>00335 
-<a name="l00336"></a>00336         
-<a name="l00337"></a>00337         $this-&gt;piVars[<span class="stringliteral">'public'</span>] = $this-&gt;piVars[<span class="stringliteral">'public'</span>] == 1 ? 1 : 0;
-<a name="l00338"></a>00338         $this-&gt;piVars[<span class="stringliteral">'dutyscheduleopen'</span>] = $this-&gt;piVars[<span class="stringliteral">'dutyscheduleopen'</span>] == 1 ? 1 : 0;
-<a name="l00339"></a>00339         $this-&gt;piVars[<span class="stringliteral">'tags'</span>] = is_array($this-&gt;piVars[<span class="stringliteral">'tags'</span>]) ? $this-&gt;piVars[<span class="stringliteral">'tags'</span>] : array();
-<a name="l00340"></a>00340         $this-&gt;piVars[<span class="stringliteral">'requiredteams'</span>] = is_array($this-&gt;piVars[<span class="stringliteral">'requiredteams'</span>]) ? $this-&gt;piVars[<span class="stringliteral">'requiredteams'</span>] : array();
-<a name="l00341"></a>00341 
-<a name="l00342"></a>00342                 
-<a name="l00343"></a>00343         <span class="keywordflow">if</span> (@count($this-&gt;formValidationErrors) !== 0) {
-<a name="l00344"></a>00344             $result = <span class="keyword">false</span>;
-<a name="l00345"></a>00345         }
-<a name="l00346"></a>00346         <span class="keywordflow">return</span> $result;
-<a name="l00347"></a>00347     }
-<a name="l00348"></a>00348 
-<a name="l00349"></a>00349 }
-<a name="l00350"></a>00350 
-<a name="l00351"></a>00351 <span class="keywordflow">if</span> (defined(<span class="stringliteral">'TYPO3_MODE'</span>) &amp;&amp; <a class="code" href="ext__localconf_8php.html#f8927cf9b35964f2abfcf22bd5d87015">$TYPO3_CONF_VARS</a>[TYPO3_MODE][<span class="stringliteral">'XCLASS'</span>][<span class="stringliteral">'ext/servicemgr/pi4/class.tx_servicemgr_pi4.php'</span>])  {
-<a name="l00352"></a>00352     include_once(<a class="code" href="ext__localconf_8php.html#f8927cf9b35964f2abfcf22bd5d87015">$TYPO3_CONF_VARS</a>[TYPO3_MODE][<span class="stringliteral">'XCLASS'</span>][<span class="stringliteral">'ext/servicemgr/pi4/class.tx_servicemgr_pi4.php'</span>]);
-<a name="l00353"></a>00353 }
+<a name="l00143"></a>00143 
+<a name="l00144"></a>00144         $marker = array(
+<a name="l00145"></a>00145             <span class="stringliteral">'###L_DATE###'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'L_DATE'</span>),
+<a name="l00146"></a>00146             <span class="stringliteral">'###L_TIME###'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'L_TIME'</span>),
+<a name="l00147"></a>00147             <span class="stringliteral">'###L_DATETIME###'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'L_DATETIME'</span>),
+<a name="l00148"></a>00148             <span class="stringliteral">'###L_SUBJECT###'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'L_SUBJECT'</span>),
+<a name="l00149"></a>00149             <span class="stringliteral">'###L_SERIES###'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'L_SERIES'</span>),
+<a name="l00150"></a>00150             <span class="stringliteral">'###L_PUBLIC###'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'L_PUBLIC'</span>),
+<a name="l00151"></a>00151             <span class="stringliteral">'###L_TAGS###'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'L_TAGS'</span>),
+<a name="l00152"></a>00152             <span class="stringliteral">'###L_REQUIREDTEAMS###'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'L_REQUIREDTEAMS'</span>),
+<a name="l00153"></a>00153             <span class="stringliteral">'###L_DUTYSCHEDULEOPEN###'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'L_DUTYSCHEDULEOPEN'</span>),
+<a name="l00154"></a>00154             <span class="stringliteral">'###L_DOCUMENTS###'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'L_DOCUMENTS'</span>),
+<a name="l00155"></a>00155             <span class="stringliteral">'###L_NOTES###'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'L_NOTES'</span>),
+<a name="l00156"></a>00156             <span class="stringliteral">'###L_NOTESINTERNAL###'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'L_NOTESINTERNAL'</span>),
+<a name="l00157"></a>00157             <span class="stringliteral">'###L_SUBMIT###'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'L_SUBMIT'</span>),
+<a name="l00158"></a>00158         );
+<a name="l00159"></a>00159 
+<a name="l00160"></a>00160         $marker = array_merge(
+<a name="l00161"></a>00161             $marker, array(
+<a name="l00162"></a>00162             <span class="stringliteral">'###V_DATE###'</span> =&gt; $defaultValues[<span class="stringliteral">'date'</span>],
+<a name="l00163"></a>00163             <span class="stringliteral">'###V_TIME###'</span> =&gt; $defaultValues[<span class="stringliteral">'time'</span>],
+<a name="l00164"></a>00164             <span class="stringliteral">'###V_DATETIME###'</span> =&gt; $defaultValues[<span class="stringliteral">'datetime'</span>],
+<a name="l00165"></a>00165             <span class="stringliteral">'###V_SUBJECT###'</span> =&gt; $defaultValues[<span class="stringliteral">'subject'</span>],
+<a name="l00166"></a>00166             <span class="stringliteral">'###V_PUBLIC###'</span> =&gt; $defaultValues[<span class="stringliteral">'public'</span>] ? <span class="stringliteral">'checked="checked" '</span> : <span class="stringliteral">''</span>,
+<a name="l00167"></a>00167             <span class="stringliteral">'###V_DUTYSCHEDULEOPEN###'</span> =&gt; $defaultValues[<span class="stringliteral">'dutyscheduleopen'</span>] ? <span class="stringliteral">'checked="checked" '</span> : <span class="stringliteral">''</span>,
+<a name="l00168"></a>00168             <span class="stringliteral">'###V_NOTES###'</span> =&gt; $defaultValues[<span class="stringliteral">'notes'</span>],
+<a name="l00169"></a>00169             <span class="stringliteral">'###V_NOTESINTERNAL###'</span> =&gt; $defaultValues[<span class="stringliteral">'notesinternal'</span>],
+<a name="l00170"></a>00170         ));
+<a name="l00171"></a>00171 
+<a name="l00172"></a>00172 
+<a name="l00173"></a>00173         <span class="keywordflow">if</span> (is_array($this-&gt;formValidationErrors)) {
+<a name="l00174"></a>00174             $formError = $this-&gt;pi_getLL(<span class="stringliteral">'error_missingfields'</span>).<span class="charliteral">' '</span>;
+<a name="l00175"></a>00175             <span class="keywordflow">foreach</span> ($this-&gt;formValidationErrors as $k =&gt; $v) {
+<a name="l00176"></a>00176                 $formErrors[] = $this-&gt;pi_getLL(<span class="stringliteral">'L_'</span>.strtoupper($k));
+<a name="l00177"></a>00177             }
+<a name="l00178"></a>00178             $formError .= implode(<span class="stringliteral">', '</span>,$formErrors);
+<a name="l00179"></a>00179             $formError = $this-&gt;<a class="code" href="classtx__servicemgr.html#e236918f5cf9103ea81d95268556ec77">throwErrorMsg</a>($formError);
+<a name="l00180"></a>00180         }
+<a name="l00181"></a>00181         $marker[<span class="stringliteral">'###FORM_ERRORS###'</span>] = $formError;
+<a name="l00182"></a>00182 
+<a name="l00183"></a>00183 
+<a name="l00184"></a>00184         $marker[<span class="stringliteral">'###DATE_CAL###'</span>] = $this-&gt;<a class="code" href="classtx__servicemgr__pi4.html#8823624b31949d416d808ddcac6be238">getDate2Cal</a>(<span class="stringliteral">'tx_servicemgr_pi4[date]'</span>);
+<a name="l00185"></a>00185         $marker[<span class="stringliteral">'###TIME_CAL###'</span>] = <span class="stringliteral">''</span>;
+<a name="l00186"></a>00186 
+<a name="l00187"></a>00187 
+<a name="l00188"></a>00188         <span class="comment">//SERIES</span>
+<a name="l00189"></a>00189         $series = $this-&gt;<a class="code" href="classtx__servicemgr.html#13f5ab92166f830c717dcf87630f1cb6">getSeries</a>();
+<a name="l00190"></a>00190         <span class="keywordflow">if</span> (!is_array($series)) {
+<a name="l00191"></a>00191             $seriesContent = $this-&gt;pi_getLL(<span class="stringliteral">'error_noseries'</span>);
+<a name="l00192"></a>00192         } <span class="keywordflow">else</span> {
+<a name="l00193"></a>00193             $seriesContent = <span class="stringliteral">'&lt;select name="tx_servicemgr_pi4[series]" id="frm-series"&gt;'</span>.<span class="stringliteral">"\n"</span>;
+<a name="l00194"></a>00194             <span class="keywordflow">foreach</span> ($series as $serie) {
+<a name="l00195"></a>00195                 $seriesContent .= <span class="stringliteral">' &lt;option value="'</span>.$serie[<span class="stringliteral">'uid'</span>].<span class="charliteral">'"'</span>;
+<a name="l00196"></a>00196                 <span class="keywordflow">if</span> ($serie[<span class="stringliteral">'uid'</span>] == $defaultValues[<span class="stringliteral">'series'</span>])
+<a name="l00197"></a>00197                     $seriesContent .= <span class="stringliteral">' selected="selected"'</span>;
+<a name="l00198"></a>00198 
+<a name="l00199"></a>00199                 $seriesContent .= <span class="charliteral">'&gt;'</span>.$serie[<span class="stringliteral">'name'</span>].<span class="stringliteral">'&lt;/option&gt;'</span>.<span class="stringliteral">"\n"</span>;
+<a name="l00200"></a>00200             }
+<a name="l00201"></a>00201             $seriesContent .= <span class="stringliteral">'&lt;/select&gt;'</span>.<span class="stringliteral">"\n"</span>;
+<a name="l00202"></a>00202             $seriesAddLink = <span class="stringliteral">'&lt;img title="'</span>.$this-&gt;pi_getLL(<span class="stringliteral">'title_addlink_series'</span>).<span class="stringliteral">'" alt="'</span>.$this-&gt;pi_getLL(<span class="stringliteral">'alt_addlink_series'</span>).<span class="stringliteral">'" src="'</span>.$this-&gt;conf[<span class="stringliteral">'addlink_img'</span>].<span class="stringliteral">'" class="addIcon" /&gt;'</span>;
+<a name="l00203"></a>00203         }
+<a name="l00204"></a>00204         $marker[<span class="stringliteral">'###SERIES_SELECTOR###'</span>] = $seriesContent;
+<a name="l00205"></a>00205         $marker[<span class="stringliteral">'###SERIES_ADDLINK###'</span>] = $seriesAddLink;
+<a name="l00206"></a>00206 
+<a name="l00207"></a>00207 
+<a name="l00208"></a>00208         <span class="comment">//TAGS</span>
+<a name="l00209"></a>00209         $tags = $this-&gt;<a class="code" href="classtx__servicemgr.html#e255137e42c2a438c99d891d1d8a1e03">getTags</a>();
+<a name="l00210"></a>00210         <span class="keywordflow">if</span> (!is_array($series)) {
+<a name="l00211"></a>00211             $tagsContent = $this-&gt;pi_getLL(<span class="stringliteral">'error_notags'</span>);
+<a name="l00212"></a>00212         } <span class="keywordflow">else</span> {
+<a name="l00213"></a>00213             $defaultValues[<span class="stringliteral">'tags'</span>] = split(<span class="charliteral">','</span>,$defaultValues[<span class="stringliteral">'tags'</span>]);
+<a name="l00214"></a>00214             <span class="keywordflow">foreach</span> ($tags as $tag) {
+<a name="l00215"></a>00215                 $tagsContent .= <span class="stringliteral">'&lt;input type="checkbox" name="tx_servicemgr_pi4[tags][]" value="'</span>.$tag[<span class="stringliteral">'uid'</span>].<span class="stringliteral">'" id="frm-tags-'</span>.$tag[<span class="stringliteral">'uid'</span>].<span class="charliteral">'"'</span>;
+<a name="l00216"></a>00216                 <span class="keywordflow">if</span> (in_array($tag[<span class="stringliteral">'uid'</span>], $defaultValues[<span class="stringliteral">'tags'</span>])) {
+<a name="l00217"></a>00217                     $tagsContent .= <span class="stringliteral">' checked="checked"'</span>;
+<a name="l00218"></a>00218                 }
+<a name="l00219"></a>00219                 $tagsContent .= <span class="stringliteral">' /&gt; &lt;label for="frm-tags-'</span>.$tag[<span class="stringliteral">'uid'</span>].<span class="stringliteral">'"&gt;'</span>.$tag[<span class="stringliteral">'name'</span>].<span class="stringliteral">'&lt;/label&gt;&lt;br /&gt;'</span>;
+<a name="l00220"></a>00220             }
+<a name="l00221"></a>00221         }
+<a name="l00222"></a>00222         $tagsAddLink = <span class="stringliteral">'&lt;img title="'</span>.$this-&gt;pi_getLL(<span class="stringliteral">'title_addlink_tags'</span>).<span class="stringliteral">'" alt="'</span>.$this-&gt;pi_getLL(<span class="stringliteral">'alt_addlink_tags'</span>).<span class="stringliteral">'" src="'</span>.$this-&gt;conf[<span class="stringliteral">'addlink_img'</span>].<span class="stringliteral">'" /&gt;'</span>;
+<a name="l00223"></a>00223         $marker[<span class="stringliteral">'###TAGS_CBS###'</span>] = $tagsContent;
+<a name="l00224"></a>00224         $marker[<span class="stringliteral">'###TAGS_ADDLINK###'</span>] = $tagsAddLink;
+<a name="l00225"></a>00225 
+<a name="l00226"></a>00226 
+<a name="l00227"></a>00227         <span class="comment">//TEAMS</span>
+<a name="l00228"></a>00228         $teams = $GLOBALS[<span class="stringliteral">'TYPO3_DB'</span>]-&gt;exec_SELECTgetRows(<span class="stringliteral">'uid,title'</span>,
+<a name="l00229"></a>00229                     <span class="stringliteral">'fe_groups'</span>, <span class="stringliteral">'deleted=0 AND tx_servicemgr_isteam=1'</span>);
+<a name="l00230"></a>00230         <span class="keywordflow">if</span> (!is_array($teams)) {
+<a name="l00231"></a>00231             $teamsContent = $this-&gt;pi_getLL(<span class="stringliteral">'error_noteams'</span>);
+<a name="l00232"></a>00232         } <span class="keywordflow">else</span> {
+<a name="l00233"></a>00233             $defaultValues[<span class="stringliteral">'requiredteams'</span>] = split(<span class="charliteral">','</span>,$defaultValues[<span class="stringliteral">'requiredteams'</span>]);
+<a name="l00234"></a>00234             <span class="keywordflow">foreach</span> ($teams as $team) {
+<a name="l00235"></a>00235                 $teamsContent .= <span class="stringliteral">'&lt;input type="checkbox" name="tx_servicemgr_pi4[requiredteams][]" value="'</span>.$team[<span class="stringliteral">'uid'</span>].<span class="stringliteral">'" id="frm-requiredteams-'</span>.$team[<span class="stringliteral">'uid'</span>].<span class="charliteral">'"'</span>;
+<a name="l00236"></a>00236                 <span class="keywordflow">if</span> (in_array($team[<span class="stringliteral">'uid'</span>], $defaultValues[<span class="stringliteral">'requiredteams'</span>])) {
+<a name="l00237"></a>00237                     $teamsContent .= <span class="stringliteral">' checked="checked"'</span>;
+<a name="l00238"></a>00238                 }
+<a name="l00239"></a>00239                 $teamsContent .= <span class="stringliteral">' /&gt; &lt;label for="frm-requiredteams-'</span>.$team[<span class="stringliteral">'uid'</span>].<span class="stringliteral">'"&gt;'</span>.$team[<span class="stringliteral">'title'</span>].<span class="stringliteral">'&lt;/label&gt;&lt;br /&gt;'</span>;
+<a name="l00240"></a>00240             }
+<a name="l00241"></a>00241         }
+<a name="l00242"></a>00242         $marker[<span class="stringliteral">'###REQUIREDTEAMS_CBS###'</span>] = $teamsContent;
+<a name="l00243"></a>00243 
+<a name="l00244"></a>00244 
+<a name="l00245"></a>00245         $marker[<span class="stringliteral">'###DOCUMENTS_ADDLINK###'</span>] = <span class="stringliteral">'&lt;img title="'</span>.$this-&gt;pi_getLL(<span class="stringliteral">'title_addlink_documents'</span>).<span class="stringliteral">'" alt="'</span>.$this-&gt;pi_getLL(<span class="stringliteral">'alt_addlink_documents'</span>).<span class="stringliteral">'" src="'</span>.$this-&gt;conf[<span class="stringliteral">'addlink_img'</span>].<span class="stringliteral">'" /&gt;'</span>;
+<a name="l00246"></a>00246 
+<a name="l00247"></a>00247 
+<a name="l00248"></a>00248         $actionLink = $this-&gt;cObj-&gt;typoLink_URL(array(
+<a name="l00249"></a>00249             <span class="stringliteral">'parameter'</span> =&gt; $GLOBALS[<span class="stringliteral">'TSFE'</span>]-&gt;<span class="keywordtype">id</span>,
+<a name="l00250"></a>00250             <span class="stringliteral">'addQueryString'</span> =&gt; 1,
+<a name="l00251"></a>00251             <span class="stringliteral">'addQueryString.'</span> =&gt; array(
+<a name="l00252"></a>00252                 <span class="stringliteral">'exclude'</span> =&gt; <span class="stringliteral">'cHash,no_cache'</span>,
+<a name="l00253"></a>00253         ),
+<a name="l00254"></a>00254             <span class="stringliteral">'additionalParams'</span> =&gt; <span class="stringliteral">'&amp;no_cache=1'</span>,
+<a name="l00255"></a>00255             <span class="stringliteral">'useCacheHash'</span> =&gt; <span class="keyword">false</span>,
+<a name="l00256"></a>00256         ));
+<a name="l00257"></a>00257         $marker[<span class="stringliteral">'###ACTION_LINK###'</span>] = $actionLink;
+<a name="l00258"></a>00258 
+<a name="l00259"></a>00259         $content = $this-&gt;cObj-&gt;substituteMarkerArray($template, $marker);
+<a name="l00260"></a>00260 
+<a name="l00261"></a>00261         <span class="keywordflow">return</span> $content;
+<a name="l00262"></a>00262     }
+<a name="l00263"></a>00263 
+<a name="l00270"></a><a class="code" href="classtx__servicemgr__pi4.html#f705f4118b3eab24b05eb5eb0a59dfbb">00270</a>     function <a class="code" href="classtx__servicemgr__pi4.html#f705f4118b3eab24b05eb5eb0a59dfbb">initDefaultValues</a>(&amp;$data) {
+<a name="l00271"></a>00271         <span class="keywordflow">if</span> ($data === array()) {
+<a name="l00272"></a>00272             $data = $this-&gt;conf[<span class="stringliteral">'defaultValues.'</span>];
+<a name="l00273"></a>00273         }
+<a name="l00274"></a>00274         <span class="keywordflow">foreach</span> ($data as $k =&gt; $v) {
+<a name="l00275"></a>00275                     $data[$k] = is_array($v) ? implode(<span class="charliteral">','</span>,$v) : $v;
+<a name="l00276"></a>00276         }
+<a name="l00277"></a>00277     }
+<a name="l00278"></a>00278 
+<a name="l00285"></a><a class="code" href="classtx__servicemgr__pi4.html#8823624b31949d416d808ddcac6be238">00285</a>     function <a class="code" href="classtx__servicemgr__pi4.html#8823624b31949d416d808ddcac6be238">getDate2Cal</a>($inputField) {
+<a name="l00286"></a>00286         $content = <span class="stringliteral">''</span>;
+<a name="l00287"></a>00287         <span class="keywordflow">if</span> (t3lib_extMgm::isLoaded(<span class="stringliteral">'date2cal'</span>)) {
+<a name="l00288"></a>00288             $this-&gt;JSCalendar-&gt;setDateFormat(<span class="keyword">false</span>);
+<a name="l00289"></a>00289             $this-&gt;JSCalendar-&gt;setConfigOption(<span class="stringliteral">'format'</span>,<span class="stringliteral">'%d.%m.%Y'</span>);
+<a name="l00290"></a>00290             $this-&gt;JSCalendar-&gt;setConfigOption(<span class="stringliteral">'ifFormat'</span>,<span class="stringliteral">'%d.%m.%Y'</span>);
+<a name="l00291"></a>00291             $this-&gt;JSCalendar-&gt;setInputField($inputField);
+<a name="l00292"></a>00292             $content = $this-&gt;JSCalendar-&gt;renderImages();
+<a name="l00293"></a>00293         }
+<a name="l00294"></a>00294         <span class="keywordflow">return</span> $content;
+<a name="l00295"></a>00295     }
+<a name="l00296"></a>00296 
+<a name="l00302"></a><a class="code" href="classtx__servicemgr__pi4.html#cc6dab4121d5e58750803ec8e9472876">00302</a>     function <a class="code" href="classtx__servicemgr__pi4.html#cc6dab4121d5e58750803ec8e9472876">doSubmit</a>() {
+<a name="l00303"></a>00303         <span class="keywordflow">if</span> ($this-&gt;piVars[<span class="stringliteral">'submit'</span>] &amp;&amp; $this-&gt;<a class="code" href="classtx__servicemgr__pi4.html#981dd217165cc5480305fac06fb575e8">doSubmit_validate</a>()) {
+<a name="l00304"></a>00304             $startingPoints[0] = $GLOBALS[<span class="stringliteral">'TSFE'</span>]-&gt;id;
+<a name="l00305"></a>00305             <span class="keywordflow">if</span> (!empty($this-&gt;cObj-&gt;data[<span class="stringliteral">"pages"</span>])) {
+<a name="l00306"></a>00306                 $startingPoints = explode(<span class="charliteral">','</span>,$this-&gt;cObj-&gt;data[<span class="stringliteral">"pages"</span>]);
+<a name="l00307"></a>00307             }
+<a name="l00308"></a>00308             list($date[<span class="stringliteral">'day'</span>], $date[<span class="stringliteral">'month'</span>], $date[<span class="stringliteral">'year'</span>]) = split(<span class="charliteral">'\.'</span>,$this-&gt;piVars[<span class="stringliteral">'date'</span>]);
+<a name="l00309"></a>00309             list($time[<span class="stringliteral">'hour'</span>], $time[<span class="stringliteral">'minute'</span>]) = split(<span class="charliteral">':'</span>,$this-&gt;piVars[<span class="stringliteral">'time'</span>]);
+<a name="l00310"></a>00310             $datetime = mktime(intval($time[<span class="stringliteral">'hour'</span>]),intval($time[<span class="stringliteral">'minute'</span>]),0,intval($date[<span class="stringliteral">'month'</span>]),intval($date[<span class="stringliteral">'day'</span>]),intval($date[<span class="stringliteral">'year'</span>]));
+<a name="l00311"></a>00311 
+<a name="l00312"></a>00312             $record = array(
+<a name="l00313"></a>00313                 <span class="stringliteral">'pid'</span> =&gt; $startingPoints[0],
+<a name="l00314"></a>00314                 <span class="stringliteral">'datetime'</span> =&gt; $datetime,
+<a name="l00315"></a>00315                 <span class="stringliteral">'subject'</span> =&gt; $this-&gt;piVars[<span class="stringliteral">'subject'</span>],
+<a name="l00316"></a>00316                 <span class="stringliteral">'series'</span> =&gt; intval($this-&gt;piVars[<span class="stringliteral">'series'</span>]),
+<a name="l00317"></a>00317                 <span class="stringliteral">'public'</span> =&gt; intval($this-&gt;piVars[<span class="stringliteral">'public'</span>]),
+<a name="l00318"></a>00318                 <span class="stringliteral">'tags'</span> =&gt; implode(<span class="charliteral">','</span>,$this-&gt;piVars[<span class="stringliteral">'tags'</span>]),
+<a name="l00319"></a>00319                 <span class="stringliteral">'requiredteams'</span> =&gt; implode(<span class="charliteral">','</span>,$this-&gt;piVars[<span class="stringliteral">'requiredteams'</span>]),
+<a name="l00320"></a>00320                 <span class="stringliteral">'dutyscheduleopen'</span> =&gt; intval($this-&gt;piVars[<span class="stringliteral">'dutyscheduleopen'</span>]),
+<a name="l00321"></a>00321                 <span class="stringliteral">'notes'</span> =&gt; $this-&gt;piVars[<span class="stringliteral">'notes'</span>],
+<a name="l00322"></a>00322                 <span class="stringliteral">'notes_internal'</span> =&gt; $this-&gt;piVars[<span class="stringliteral">'notes_internal'</span>],
+<a name="l00323"></a>00323             );
+<a name="l00324"></a>00324             $record[<span class="stringliteral">'l18n_diffsource'</span>] = serialize($record);
+<a name="l00325"></a>00325             $record[<span class="stringliteral">'tstamp'</span>] = $record[<span class="stringliteral">'crdate'</span>] = $this-&gt;ts;
+<a name="l00326"></a>00326 
+<a name="l00327"></a>00327             $GLOBALS[<span class="stringliteral">'TYPO3_DB'</span>]-&gt;exec_INSERTquery(<span class="stringliteral">'tx_servicemgr_events'</span>, $record);
+<a name="l00328"></a>00328             $newUid = $GLOBALS[<span class="stringliteral">'TYPO3_DB'</span>]-&gt;sql_insert_id();
+<a name="l00329"></a>00329 
+<a name="l00330"></a>00330             $content=$this-&gt;<a class="code" href="classtx__servicemgr.html#d24bb050a0d1372d6c021bf7968d239e">detailViewEvent</a>(
+<a name="l00331"></a>00331                 $newUid,
+<a name="l00332"></a>00332                 array(
+<a name="l00333"></a>00333                     <span class="stringliteral">'subparts'</span> =&gt; array(<span class="stringliteral">'subject'</span>,<span class="stringliteral">'datetime'</span>,<span class="stringliteral">'series'</span>,<span class="stringliteral">'notes'</span>,<span class="stringliteral">'backlink'</span>),
+<a name="l00334"></a>00334                     <span class="stringliteral">'backlink'</span> =&gt; array(<span class="stringliteral">'str'</span> =&gt; $this-&gt;pi_getLL(<span class="stringliteral">'back'</span>), <span class="stringliteral">'id'</span> =&gt; $GLOBALS[<span class="stringliteral">'TSFE'</span>]-&gt;<span class="keywordtype">id</span>),
+<a name="l00335"></a>00335                 ),
+<a name="l00336"></a>00336                 $this-&gt;cObj-&gt;getSubpart($this-&gt;cObj-&gt;fileResource(<span class="stringliteral">'EXT:servicemgr/res/esv.html'</span>), <span class="stringliteral">'###SINGLEEVENTEL###'</span>)
+<a name="l00337"></a>00337             );
+<a name="l00338"></a>00338         } <span class="keywordflow">else</span> {
+<a name="l00339"></a>00339             $content = $this-&gt;<a class="code" href="classtx__servicemgr__pi4.html#b194052faf38235839a66e59e3db7f4d">showForm</a>($this-&gt;piVars);
+<a name="l00340"></a>00340         }
+<a name="l00341"></a>00341         <span class="keywordflow">return</span> $content;
+<a name="l00342"></a>00342     }
+<a name="l00343"></a>00343 
+<a name="l00349"></a><a class="code" href="classtx__servicemgr__pi4.html#981dd217165cc5480305fac06fb575e8">00349</a>     function <a class="code" href="classtx__servicemgr__pi4.html#981dd217165cc5480305fac06fb575e8">doSubmit_validate</a>() {
+<a name="l00350"></a>00350         $result = <span class="keyword">true</span>;
+<a name="l00351"></a>00351         <span class="keywordflow">foreach</span>($this-&gt;piVars as $k =&gt; $v) {
+<a name="l00352"></a>00352             $this-&gt;piVars[$k] = !is_array($v) ? trim($v) : $v;
+<a name="l00353"></a>00353         }
 <a name="l00354"></a>00354 
-<a name="l00355"></a>00355 ?&gt;
+<a name="l00355"></a>00355         <span class="keywordflow">if</span> (is_array($this-&gt;conf[<span class="stringliteral">'requiredFields'</span>])) {
+<a name="l00356"></a>00356             <span class="keywordflow">foreach</span> ($this-&gt;conf[<span class="stringliteral">'requiredFields'</span>] as $field) {
+<a name="l00357"></a>00357                 <span class="keywordflow">if</span> (!$this-&gt;piVars[$field]) {
+<a name="l00358"></a>00358                     $this-&gt;formValidationErrors[$field] = 1;
+<a name="l00359"></a>00359                 }
+<a name="l00360"></a>00360             }
+<a name="l00361"></a>00361         } <span class="keywordflow">else</span> {
+<a name="l00362"></a>00362             $result = <span class="keyword">false</span>;
+<a name="l00363"></a>00363         }
+<a name="l00364"></a>00364 
+<a name="l00365"></a>00365 
+<a name="l00366"></a>00366         $this-&gt;piVars[<span class="stringliteral">'public'</span>] = $this-&gt;piVars[<span class="stringliteral">'public'</span>] == 1 ? 1 : 0;
+<a name="l00367"></a>00367         $this-&gt;piVars[<span class="stringliteral">'dutyscheduleopen'</span>] = $this-&gt;piVars[<span class="stringliteral">'dutyscheduleopen'</span>] == 1 ? 1 : 0;
+<a name="l00368"></a>00368         $this-&gt;piVars[<span class="stringliteral">'tags'</span>] = is_array($this-&gt;piVars[<span class="stringliteral">'tags'</span>]) ? $this-&gt;piVars[<span class="stringliteral">'tags'</span>] : array();
+<a name="l00369"></a>00369         $this-&gt;piVars[<span class="stringliteral">'requiredteams'</span>] = is_array($this-&gt;piVars[<span class="stringliteral">'requiredteams'</span>]) ? $this-&gt;piVars[<span class="stringliteral">'requiredteams'</span>] : array();
+<a name="l00370"></a>00370 
+<a name="l00371"></a>00371 
+<a name="l00372"></a>00372         <span class="keywordflow">if</span> (@count($this-&gt;formValidationErrors) !== 0) {
+<a name="l00373"></a>00373             $result = <span class="keyword">false</span>;
+<a name="l00374"></a>00374         }
+<a name="l00375"></a>00375         <span class="keywordflow">return</span> $result;
+<a name="l00376"></a>00376     }
+<a name="l00377"></a>00377 
+<a name="l00378"></a>00378 }
+<a name="l00379"></a>00379 
+<a name="l00380"></a>00380 <span class="keywordflow">if</span> (defined(<span class="stringliteral">'TYPO3_MODE'</span>) &amp;&amp; <a class="code" href="ext__localconf_8php.html#f8927cf9b35964f2abfcf22bd5d87015">$TYPO3_CONF_VARS</a>[TYPO3_MODE][<span class="stringliteral">'XCLASS'</span>][<span class="stringliteral">'ext/servicemgr/pi4/class.tx_servicemgr_pi4.php'</span>])  {
+<a name="l00381"></a>00381     include_once(<a class="code" href="ext__localconf_8php.html#f8927cf9b35964f2abfcf22bd5d87015">$TYPO3_CONF_VARS</a>[TYPO3_MODE][<span class="stringliteral">'XCLASS'</span>][<span class="stringliteral">'ext/servicemgr/pi4/class.tx_servicemgr_pi4.php'</span>]);
+<a name="l00382"></a>00382 }
+<a name="l00383"></a>00383 
+<a name="l00384"></a>00384 ?&gt;
 </pre></div></div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Fri Oct 24 10:58:58 2008 for servicemgr by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Fri Oct 24 11:22:19 2008 for servicemgr by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.7.1 </small></address>
 </body>

@@ -37,9 +37,11 @@ Inheritance diagram for tx_servicemgr_pi4:</div>
 <a href="classtx__servicemgr__pi4-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtx__servicemgr__pi4.html#ef6bade143b44e45d76a96c1b8cdd2af">main</a> ($content, $conf)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtx__servicemgr__pi4.html#5dedb687bcf9bed387fa2a1c3e93d862">main</a> ($content, $conf, $code='LIST')</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtx__servicemgr__pi4.html#ea38d8d12fe78aa7274f22d2723d7059">init</a> ($conf)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtx__servicemgr__pi4.html#fef8a566a2235c6c55a3ae6e5003056e">init</a> ($conf, $code)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtx__servicemgr__pi4.html#b07672c4dba53a60d6c2caef9a4e6fd2">showList</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtx__servicemgr__pi4.html#b194052faf38235839a66e59e3db7f4d">showForm</a> ($defaultValues=array())</td></tr>
 
@@ -86,7 +88,7 @@ Inheritance diagram for tx_servicemgr_pi4:</div>
 Processes submission of new event<p>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>string HTML </dd></dl>
 
-<p>Definition at line <a class="el" href="class_8tx__servicemgr__pi4_8php-source.html#l00273">273</a> of file <a class="el" href="class_8tx__servicemgr__pi4_8php-source.html">class.tx_servicemgr_pi4.php</a>.</p>
+<p>Definition at line <a class="el" href="class_8tx__servicemgr__pi4_8php-source.html#l00302">302</a> of file <a class="el" href="class_8tx__servicemgr__pi4_8php-source.html">class.tx_servicemgr_pi4.php</a>.</p>
 
 </div>
 </div><p>
@@ -109,7 +111,7 @@ Processes submission of new event<p>
 Validates submitted data and removes wrapping whitespace<p>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>boolean if data is valid -&gt; true </dd></dl>
 
-<p>Definition at line <a class="el" href="class_8tx__servicemgr__pi4_8php-source.html#l00320">320</a> of file <a class="el" href="class_8tx__servicemgr__pi4_8php-source.html">class.tx_servicemgr_pi4.php</a>.</p>
+<p>Definition at line <a class="el" href="class_8tx__servicemgr__pi4_8php-source.html#l00349">349</a> of file <a class="el" href="class_8tx__servicemgr__pi4_8php-source.html">class.tx_servicemgr_pi4.php</a>.</p>
 
 </div>
 </div><p>
@@ -138,11 +140,11 @@ Returns date2cal image-buttons<p>
 </dl>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>string HTML </dd></dl>
 
-<p>Definition at line <a class="el" href="class_8tx__servicemgr__pi4_8php-source.html#l00256">256</a> of file <a class="el" href="class_8tx__servicemgr__pi4_8php-source.html">class.tx_servicemgr_pi4.php</a>.</p>
+<p>Definition at line <a class="el" href="class_8tx__servicemgr__pi4_8php-source.html#l00285">285</a> of file <a class="el" href="class_8tx__servicemgr__pi4_8php-source.html">class.tx_servicemgr_pi4.php</a>.</p>
 
 </div>
 </div><p>
-<a class="anchor" name="ea38d8d12fe78aa7274f22d2723d7059"></a><!-- doxytag: member="tx_servicemgr_pi4::init" ref="ea38d8d12fe78aa7274f22d2723d7059" args="($conf)" -->
+<a class="anchor" name="fef8a566a2235c6c55a3ae6e5003056e"></a><!-- doxytag: member="tx_servicemgr_pi4::init" ref="fef8a566a2235c6c55a3ae6e5003056e" args="($conf, $code)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -150,9 +152,18 @@ Returns date2cal image-buttons<p>
           <td class="memname">tx_servicemgr_pi4::init           </td>
           <td>(</td>
           <td class="paramtype">$&nbsp;</td>
-          <td class="paramname"> <em>conf</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
+          <td class="paramname"> <em>conf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">$&nbsp;</td>
+          <td class="paramname"> <em>code</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
         </tr>
       </table>
 </div>
@@ -167,7 +178,7 @@ Does some initialization<p>
 </dl>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>void </dd></dl>
 
-<p>Definition at line <a class="el" href="class_8tx__servicemgr__pi4_8php-source.html#l00079">79</a> of file <a class="el" href="class_8tx__servicemgr__pi4_8php-source.html">class.tx_servicemgr_pi4.php</a>.</p>
+<p>Definition at line <a class="el" href="class_8tx__servicemgr__pi4_8php-source.html#l00087">87</a> of file <a class="el" href="class_8tx__servicemgr__pi4_8php-source.html">class.tx_servicemgr_pi4.php</a>.</p>
 
 </div>
 </div><p>
@@ -195,11 +206,11 @@ Sets defaultValues with TypoScript conf (if not set before) and dormats defaultV
   </table>
 </dl>
 
-<p>Definition at line <a class="el" href="class_8tx__servicemgr__pi4_8php-source.html#l00241">241</a> of file <a class="el" href="class_8tx__servicemgr__pi4_8php-source.html">class.tx_servicemgr_pi4.php</a>.</p>
+<p>Definition at line <a class="el" href="class_8tx__servicemgr__pi4_8php-source.html#l00270">270</a> of file <a class="el" href="class_8tx__servicemgr__pi4_8php-source.html">class.tx_servicemgr_pi4.php</a>.</p>
 
 </div>
 </div><p>
-<a class="anchor" name="ef6bade143b44e45d76a96c1b8cdd2af"></a><!-- doxytag: member="tx_servicemgr_pi4::main" ref="ef6bade143b44e45d76a96c1b8cdd2af" args="($content, $conf)" -->
+<a class="anchor" name="5dedb687bcf9bed387fa2a1c3e93d862"></a><!-- doxytag: member="tx_servicemgr_pi4::main" ref="5dedb687bcf9bed387fa2a1c3e93d862" args="($content, $conf, $code='LIST')" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -213,7 +224,13 @@ Sets defaultValues with TypoScript conf (if not set before) and dormats defaultV
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">$&nbsp;</td>
-          <td class="paramname"> <em>conf</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>conf</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">$&nbsp;</td>
+          <td class="paramname"> <em>code</em> = <code>'LIST'</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -263,7 +280,30 @@ Returns Form for adding a new event<p>
 </dl>
 <dl class="return" compact><dt><b>Returns:</b></dt><dd>string HTML </dd></dl>
 
-<p>Definition at line <a class="el" href="class_8tx__servicemgr__pi4_8php-source.html#l00109">109</a> of file <a class="el" href="class_8tx__servicemgr__pi4_8php-source.html">class.tx_servicemgr_pi4.php</a>.</p>
+<p>Definition at line <a class="el" href="class_8tx__servicemgr__pi4_8php-source.html#l00138">138</a> of file <a class="el" href="class_8tx__servicemgr__pi4_8php-source.html">class.tx_servicemgr_pi4.php</a>.</p>
+
+</div>
+</div><p>
+<a class="anchor" name="b07672c4dba53a60d6c2caef9a4e6fd2"></a><!-- doxytag: member="tx_servicemgr_pi4::showList" ref="b07672c4dba53a60d6c2caef9a4e6fd2" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">tx_servicemgr_pi4::showList           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Returns list with plugin options<p>
+<dl class="return" compact><dt><b>Returns:</b></dt><dd>string HTML </dd></dl>
+
+<p>Definition at line <a class="el" href="class_8tx__servicemgr__pi4_8php-source.html#l00116">116</a> of file <a class="el" href="class_8tx__servicemgr__pi4_8php-source.html">class.tx_servicemgr_pi4.php</a>.</p>
 
 </div>
 </div><p>
@@ -362,7 +402,7 @@ Returns Form for adding a new event<p>
 <hr>The documentation for this class was generated from the following file:<ul>
 <li><a class="el" href="class_8tx__servicemgr__pi4_8php-source.html">class.tx_servicemgr_pi4.php</a></ul>
 </div>
-<hr size="1"><address style="text-align: right;"><small>Generated on Fri Oct 24 10:58:58 2008 for servicemgr by&nbsp;
+<hr size="1"><address style="text-align: right;"><small>Generated on Fri Oct 24 11:22:19 2008 for servicemgr by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.5.7.1 </small></address>
 </body>
