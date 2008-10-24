@@ -22,14 +22,30 @@
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  * **************************************************************/
- 
+/**
+ * class.tx_servicemgr_mp3.php
+ *
+ * includes class for dealing with mp3 files
+ *
+ * $Id$
+ *
+ * @author Peter Schuster <typo3@peschuster.de>
+ */
+
+/**
+ * Functions for handling mp3 files for the 'servicemgr' extension.
+ *
+ * @author Peter Schuster <typo3@peschuster.de>
+ * @package TYPO3
+ * @subpackage tx_servicemgr
+ */
 class tx_servicemgr_mp3 {
 
 	/**
 	 * Get ID3-Information from MP3-File
 	 *
-	 * @param	string		$path
-	 * @return	array
+	 * @param	string		$path: path to file
+	 * @return	array		id3 audio data
 	 */
 	function getAudioInformation($path) {
 
@@ -70,9 +86,9 @@ class tx_servicemgr_mp3 {
 	/**
 	 * Writes tags to MP3-file
 	 *
-	 * @param	string		$path
-	 * @param	array		$fileInformation
-	 * @return	boolean/string		true or error msg
+	 * @param	string		$path: path to file
+	 * @param	array		$fileInformation: id3 data to be set
+	 * @return	mixed		true or error msg
 	 */
 	function setAudioInformation($path, $fileInformation) {
 		if (t3lib_extMgm::isLoaded('t3getid3')) {
@@ -125,7 +141,7 @@ class tx_servicemgr_mp3 {
 		}
 	}
 
-} // end class
+}
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/servicemgr/class.tx_servicemgr_mp3.php'])	{
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/servicemgr/class.tx_servicemgr_mp3.php']);
