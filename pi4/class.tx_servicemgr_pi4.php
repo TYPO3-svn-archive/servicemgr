@@ -67,7 +67,13 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 
 			switch ($this->code) {
 				CASE 'ADD':
-					$content = $this->showForm();
+					$content = $this->showAddForm();
+					break;
+				CASE 'EDITLIST':
+					$content = $this->showEditList();
+					break;
+				CASE 'EDIT':
+					$content = $this->showEditForm($this->piVars['eventUid']);
 					break;
 				CASE 'LIST':
 				default:
@@ -122,7 +128,7 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 		$links[] = $this->tx_linkToPage(
 			'Edit Event',
 			$GLOBALS['TSFE']->id,
-			array($this->prefixId.'[code]'=>'EDIT')
+			array($this->prefixId.'[code]'=>'EDITLIST')
 		);
 
 		$content = '<ul>';
@@ -133,13 +139,31 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 		return $content;
 	}
 
+	function showEditList() {
+		// Find starting record
+		$page = max(1, intval($this->piVars['page']));
+		$rpp = 15;
+		$start = $rpp*($page - 1);
+
+		// Get records
+		$sorting = 'datetime DESC';
+		
+		$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('uid,subject,datetime',
+					'tx_servicemgr_events', 'deleted = 0', '', $sorting, $start . ',' . $rpp);
+		
+	}
+	
+	function showEditForm($eventUid) {
+		
+	}
+	
 	/**
 	 * Returns Form for adding a new event
 	 *
-	 * @param	array	$defaultValues: data array with default form data
-	 * @return	string	HTML
+	 * @param	array		$defaultValues: data array with default form data
+	 * @return	string		HTML
 	 */
-	function showForm($defaultValues = array()) {
+	function showAddForm($defaultValues = array()) {
 		$template = $this->cObj->getSubpart($this->template, '###ADDNEWEVENT###');
 
 		$this->initDefaultValues($defaultValues);
@@ -253,8 +277,8 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 			'parameter' => $GLOBALS['TSFE']->id,
 			'addQueryString' => 1,
 			'addQueryString.' => array(
-				'exclude' => 'cHash,no_cache',
-		),
+				'exclude' => 'cHash,no_cache,tx_servicemgr_pi4[code]',
+			),
 			'additionalParams' => '&no_cache=1',
 			'useCacheHash' => false,
 		));
@@ -284,6 +308,7 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 	 * Returns date2cal image-buttons
 	 *
 	 * @param	string		$inputField: name of inputfield (id: name_hr)
+	 * @param	string		$date: initial value for calendar
 	 * @return	string		HTML
 	 */
 	function getDate2Cal($inputField,$date='') {
@@ -332,10 +357,10 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 			$record['tstamp'] = $record['crdate'] = $this->ts;
 
 			$GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_servicemgr_events', $record);
-			$newUid = $GLOBALS['TYPO3_DB']->sql_insert_id();
+			$uid = $GLOBALS['TYPO3_DB']->sql_insert_id();
 
-			$content=$this->detailViewEvent(
-				$newUid,
+			$content = $this->detailViewEvent(
+				$uid,
 				array(
 					'subparts' => array('subject','datetime','series','notes','backlink'),
 					'backlink' => array('str' => $this->pi_getLL('back'), 'id' => $GLOBALS['TSFE']->id),
@@ -343,7 +368,7 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 				$this->cObj->getSubpart($this->cObj->fileResource('EXT:servicemgr/res/esv.html'), '###SINGLEEVENTEL###')
 			);
 		} else {
-			$content = $this->showForm($this->piVars);
+			$content = $this->showAddForm($this->piVars);
 		}
 		return $content;
 	}
