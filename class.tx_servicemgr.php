@@ -36,6 +36,8 @@ require_once(PATH_t3lib.'class.t3lib_page.php');
 require_once(PATH_t3lib.'class.t3lib_tstemplate.php');
 require_once(PATH_t3lib.'class.t3lib_tsparser_ext.php');
 
+require_once(t3lib_extMgm::extPath('servicemgr').'class.tx_servicemgr_mp3.php');
+
 /**
 	* Top level class for the 'servicemgr' extension.
 	*
@@ -59,6 +61,8 @@ class tx_servicemgr extends tslib_pibase {
 	 * @return	boolean		returns true when initiated succesfull
 	 */
 	function tx_init() {
+		if (!$this->cObj) $this->cObj = t3lib_div::makeInstance('tslib_cObj');
+
 		$this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['servicemgr']);
 
 		$this->generalConf = t3lib_div::makeInstance('t3lib_tsparser_ext');
@@ -224,9 +228,9 @@ class tx_servicemgr extends tslib_pibase {
 	 */
 	function getSingleEvent($eventId) {
 		$resEvent = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-					'uid, datetime, subject, public, series, tags, requiredteams, documents, notes',   #select
-					'tx_servicemgr_events', #from
-					'uid='.$eventId.' and hidden=0 and deleted=0',  #where
+			'uid, datetime, subject, public, series, tags, requiredteams, documents, notes',   #select
+			'tx_servicemgr_events', #from
+			'uid='.$eventId.' and hidden=0 and deleted=0',  #where
 			'', '',
 			'0,1' #limit
 		);
@@ -440,6 +444,7 @@ class tx_servicemgr extends tslib_pibase {
 			$audioFiles = $this->getAudioFiles($eventId);
 			$allPreachers = $this->getTeamMembers($this->generalConf['PreacherTeamUID']);
 			$duty = $this->getSingleSchedule($eventId);
+
 			$preacher = $duty[$this->generalConf['PreacherTeamUID']];
 			if (is_array($preacher)) {
 				$outPreacher = '';

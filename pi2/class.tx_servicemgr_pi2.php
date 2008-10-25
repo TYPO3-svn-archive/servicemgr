@@ -61,6 +61,7 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 
 		$this->tx_init();
 		$this->tx_loadLL();
+		$this->mp3Class = t3lib_div::makeInstance('tx_servicemgr_mp3');
 
 		$this->fetchConfigValue('viewmode');
 		$this->fetchConfigValue('detailviewPID');
@@ -125,6 +126,8 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 			$sermon = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 			$event = $this->getSingleEvent($sermon['event']);
 			$duty = $this->getSingleSchedule($sermon['event']);
+
+			$sermon = $this->mp3Class->checkFile($sermon['uid']);
 
 			$allPreachers = $this->getTeamMembers($this->generalConf['PreacherTeamUID']);
 			$preacher = $duty[$this->generalConf['PreacherTeamUID']];
@@ -243,6 +246,9 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 
 			$audioFileOutput = '';
 			foreach ($sermons as $sermon) {
+
+				$sermon = $this->mp3Class->checkFile($sermon['uid']);
+
 				$markerArray['###FILETITLE###'] = (count($sermons)>1) ? $sermon['title'].' &#0150; ' : '';
 				$markerArray['###SIZE###'] = $this->formatBytes($sermon['filesize']);
 				$markerArray['###LENGTH###'] = $this->formatTime($sermon['playtime']);
