@@ -32,10 +32,6 @@
  */
 
 require_once(PATH_tslib.'class.tslib_pibase.php');
-require_once(PATH_t3lib.'class.t3lib_page.php');
-require_once(PATH_t3lib.'class.t3lib_tstemplate.php');
-require_once(PATH_t3lib.'class.t3lib_tsparser_ext.php');
-
 require_once(t3lib_extMgm::extPath('servicemgr').'class.tx_servicemgr_mp3.php');
 
 /**
@@ -65,14 +61,7 @@ class tx_servicemgr extends tslib_pibase {
 
 		$this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['servicemgr']);
 
-		$this->generalConf = t3lib_div::makeInstance('t3lib_tsparser_ext');
-		$this->generalConf->tt_track = 0;
-		$this->generalConf->init();
-		$sys_page = t3lib_div::makeInstance('t3lib_pageSelect');
-		$rootLine = $sys_page->getRootLine($GLOBALS['TSFE']->id);
-		$this->generalConf->runThroughTemplates($rootLine);
-		$this->generalConf->generateConfig();
-		$this->generalConf = $this->generalConf->setup['plugin.']['tx_servicemgr.'];
+		$this->generalConf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_servicemgr.'];
 
 		$this->template = $this->generalConf['TemplateFile'];
 		if (!$this->template) {
