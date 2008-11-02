@@ -84,7 +84,9 @@ Erkl&auml;rung:
 		###FORM_ERRORS###
 	</div>
 	<div class="smgr-ae-body">
+		###DUTYSCHEDULE_CLIPBOARD###
 		<form action="###ACTION_LINK###" method="post" enctype="multipart/form-data">
+		<!-- ###HIDDENFIELD### --><input type="hidden" name="###HF_NAME###" value="###HF_VALUE###" /><!-- ###HIDDENFIELD### -->
 		<dl>
 			<dt class="col-1dt"><label for="tx_servicemgr_pi4[date]_hr">###L_DATE###</label>:</dt>
 			<dd class="col-1dd"><input name="tx_servicemgr_pi4[date]" type="text" id="tx_servicemgr_pi4[date]_hr" value="###V_DATE###" size="12" maxlength="10" />
@@ -146,10 +148,10 @@ Erkl&auml;rung:
 
 			<dt><label for="frm-notesinternal">###L_NOTESINTERNAL###</label>:</dt>
 			<dd><textarea name="tx_servicemgr_pi4[notes_internal]" cols="30" rows="4" id="frm-notesinternal">###V_NOTESINTERNAL###</textarea></dd>
-
-			<dt></dt>
-			<dd><input type="submit" name="tx_servicemgr_pi4[submit]" value="###L_SUBMIT###" id="frm-submit" /></dd>
 		</dl>
+		<div class="clear"></div>
+		###DUTYSCHEDULE###
+		<input type="submit" name="tx_servicemgr_pi4[submit]" value="###L_SUBMIT###" id="frm-submit" />
 		</form>
 		<div class="clear"></div>
 	</div>
@@ -157,3 +159,37 @@ Erkl&auml;rung:
 	</div>
 </div>
 <!-- ###ADDNEWEVENT### -->
+
+<!-- ###ADDNEWEVENT_DUTY### -->
+<h2>###HEADLINE###</h2>
+<!-- ###CLIPBOARD### -->
+<div class="smgr-ae-dutysched-clipboard" style="display:none;">
+<!-- ###CB_ELEMENT### --><div class="smgr-ae-dutysched-value" id="team-###TEAM_UID###-new">
+	<a href="#" onclick="removeBox(this.parentNode); return false;"><img src="###DELETE_IMAGE###" alt="löschen" class="smgr-ae-duty-delete" /></a>
+	<select name="tx_servicemgr_pi4[duty][###TEAM_UID###][]">
+		###OPTIONS###
+	</select>
+</div>
+<!-- ###CB_ELEMENT### -->
+</div>
+<!-- ###CLIPBOARD### -->
+<div class="smgr-ae-dutysched">
+	<!-- ###ROW### -->
+	<div>
+		<div class="smgr-ae-dutysched-label">###LABEL###:</div>
+		<div class="smgr-ae-dutysched-valuewrap" id="team-###TEAM_UID###">###VALUE###</div>
+		<div class="smgr-ae-duty-add" id="add-button-###TEAM_UID###"><a href="#" onclick="getBox('team-###TEAM_UID###'); return false;"><img src="###ADD_IMAGE###" /></a></div>
+		<div class="clear"></div>
+	</div>
+	<!-- ###ROW### -->
+</div>
+<!-- ###ADDNEWEVENT_DUTY### -->
+
+<!-- ###EVENTADMINLIST### -->
+<table>
+<tr><!-- ###HEADERTAG### -->th<!-- ###HEADERTAG### --></tr>
+<!-- ###DATAROW### -->
+<tr><!-- ###DATATAG### -->td<!-- ###DATATAG### --></tr>
+<!-- ###DATAROW### -->
+</table>
+<!-- ###EVENTADMINLIST### -->

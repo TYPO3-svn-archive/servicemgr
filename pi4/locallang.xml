@@ -19,6 +19,7 @@
 			<label index="L_NOTES">Notes</label>
 			<label index="L_NOTESINTERNAL">Internal Notes</label>
 			<label index="L_SUBMIT">Submit</label>
+			<label index="L_SAVE">Save</label>
 			<label index="title_addlink_tags">add a new tag</label>
 			<label index="title_addlink_series">add a new series</label>
 			<label index="title_addlink_documents">add a new document</label>
@@ -41,6 +42,7 @@
 			<label index="L_NOTES">Bemerkungen</label>
 			<label index="L_NOTESINTERNAL">interne Bemerkungen</label>
 			<label index="L_SUBMIT">Senden</label>
+			<label index="L_SAVE">Speichern</label>
 			<label index="title_addlink_tags">ein neues Tag hinzufügen</label>
 			<label index="title_addlink_series">eine neue Serie hinzufügen</label>
 			<label index="title_addlink_documents">ein neues Document hinzufügen</label>

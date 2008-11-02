@@ -57,5 +57,13 @@
 .smgr-ae-body br { clear: right; }
 .smgr-ae-body dl .clear { clear: both; }
 
+.smgr-ae-dutysched-label { clear: both; float: left; width: 110px; }
+.smgr-ae-dutysched-valuewrap { float: left; padding-bottom: 5px; }
+.smgr-ae-duty-add { float: left; padding-left: 3px; margin: 3px 0 0 3px; }
+.smgr-ae-duty-delete { vertical-align: middle; }
+.smgr-ae-dutysched-value { background-color: #EEEEEE; vertical-align: middle; float: left; padding: 0 2px; margin: 0 1px; }
+.smgr-ae-dutysched-value select { border: solid thin #000033; background-color: #EEEEEE; }
+.smgr-ae-dutysched a img { border: 0 none; }
+
 textarea { background-color:#FEFEFE; border-color:#838EA0 #545861 #545861 #838EA0; border-style:solid; border-width:1px; }
 select, textarea, input { color: #212424; font-family: Verdana,Arial,Helvetica,sans-serif; font-size: 10px; }

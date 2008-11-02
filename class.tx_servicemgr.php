@@ -273,7 +273,7 @@ class tx_servicemgr extends tslib_pibase {
 	 * @param	integer		$eventId: UID of event
 	 * @return	array		unserialized duty column
 	 */
-	function getSingleSchedule($eventId) {
+	function getSingleSchedule($eventId, $onlySchedule=true) {
 		$resSchedule = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 			'uid, event, duty', #select
 			'tx_servicemgr_dutyschedule', #from
@@ -285,7 +285,12 @@ class tx_servicemgr extends tslib_pibase {
 			if (unserialize($row['duty']) == false) {
 				return array();
 			} else {
-				return unserialize($row['duty']);
+				if ($onlySchedule) {
+					return unserialize($row['duty']);
+				} else {
+					$row['duty'] = unserialize($row['duty']);
+					return $row;
+				}
 			}
 		} else {
 			return false;
