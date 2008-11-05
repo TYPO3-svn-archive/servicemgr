@@ -67,7 +67,7 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 
 			switch ($this->code) {
 				CASE 'ADD':
-					$content = $this->showAddForm();
+					$content = $this->showForm();
 					break;
 				CASE 'EDITLIST':
 					$content = $this->showEditList();
@@ -121,12 +121,12 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 	 */
 	function showOptionList() {
 		$links[] = $this->tx_linkToPage(
-			'Add new Event',
+			$this->pi_getLL('add_new_event'),
 			$GLOBALS['TSFE']->id,
 			array($this->prefixId.'[code]'=>'ADD')
 		);
 		$links[] = $this->tx_linkToPage(
-			'Edit Event',
+			$this->pi_getLL('edit_event'),
 			$GLOBALS['TSFE']->id,
 			array($this->prefixId.'[code]'=>'EDITLIST')
 		);
@@ -141,9 +141,16 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 
 	function showEditList() {
 		// Find starting record
-		$page = max(1, intval($this->piVars['page']));
-		$rpp = 15;
-		$start = $rpp*($page - 1);
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('COUNT(uid)',
+					'tx_servicemgr_events', 'deleted = 0');
+		if ($res) {
+			$temp = $GLOBALS['TYPO3_DB']->sql_fetch_row($res);
+			$numberOfPages = $temp[0];
+		}
+
+		$page = intval($this->piVars['page']);
+		$rpp = $this->conf['pageSize'];
+		$start = $rpp*$page;
 
 		// Get records
 		$sorting = 'datetime DESC';
@@ -167,7 +174,7 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 			$temp[] = '<'.$tags['data'].'>'.date('d.m.Y H:i', intval($row['datetime'])).'</'.$tags['data'].'>';
 			$temp[] = '<'.$tags['data'].'>'.$row['subject'].'</'.$tags['data'].'>';
 			$link = $this->pi_linkToPage(
-				'bearbeiten',
+				'<img alt="'.$this->pi_getLL('edit').'" title="'.$this->pi_getLL('edit').'" src="fileadmin/templates/images/icons/pencil.png" />',
 				$GLOBALS['TSFE']->id,'',
 				array(
 					$this->prefixId.'[code]' => 'EDIT',
@@ -179,6 +186,7 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 		}
 		$content = $this->cObj->substituteSubpart($template, '###HEADERTAG###', $headContent);
 		$content = $this->cObj->substituteSubpart($content, '###DATAROW###', implode('', $dataRows));
+		$content = $this->cObj->substituteMarker($content, '###PAGEBROWSER###', $this->getListGetPageBrowser($numberOfPages));
 		return $content;
 	}
 
@@ -198,7 +206,7 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 			$data['time'] = date('H:i', intval($data['datetime']));
 			$data['notesinternal'] = $data['notes_internal'];
 			$data['submit'] = $this->pi_getLL('L_SAVE');
-			$content = $this->showAddForm($data, true);
+			$content = $this->showForm($data, true);
 		} else {
 			$content = $this->showEditList();
 		}
@@ -211,7 +219,7 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 	 * @param	array		$defaultValues: data array with default form data
 	 * @return	string		HTML
 	 */
-	function showAddForm($defaultValues = array(),$showDutySchedule = false) {
+	function showForm($defaultValues = array(),$showDutySchedule = false) {
 		$template = $this->cObj->getSubpart($this->template, '###ADDNEWEVENT###');
 
 		$this->initDefaultValues($defaultValues);
@@ -469,8 +477,6 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 			list($time['hour'], $time['minute']) = split(':',$this->piVars['time']);
 			$datetime = mktime(intval($time['hour']),intval($time['minute']),0,intval($date['month']),intval($date['day']),intval($date['year']));
 
-			t3lib_div::debug($this->piVars);
-
 			$record = array(
 				'pid' => $startingPoints[0],
 				'datetime' => $datetime,
@@ -523,7 +529,7 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 			);
 
 		} else {
-			$content = $this->showAddForm($this->piVars);
+			$content = $this->showForm($this->piVars);
 		}
 		return $content;
 	}

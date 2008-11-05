@@ -27,6 +27,8 @@
 			<label index="alt_addlink_series">add series</label>
 			<label index="alt_addlink_documents">add document</label>
 			<label index="error_missingfields">missing fields:</label>
+			<label index="add_new_event">add new event</label>
+			<label index="edit_event">edit event</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="L_DATE">Datum</label>
@@ -50,6 +52,8 @@
 			<label index="alt_addlink_series">Serie hinzufügen</label>
 			<label index="alt_addlink_documents">Dokument hinzufügen</label>
 			<label index="error_missingfields">Folgende Felder müssen ebenfalls ausgefüllt werden:</label>
+			<label index="add_new_event">neue Veranstaltung hinzufügen</label>
+			<label index="edit_event">Veranstaltung bearbeiten</label>
 		</languageKey>
 	</data>
 </T3locallang>

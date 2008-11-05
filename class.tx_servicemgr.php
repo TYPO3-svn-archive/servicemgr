@@ -68,6 +68,7 @@ class tx_servicemgr extends tslib_pibase {
 			$this->template = 'EXT:servicemgr/res/tables.tmpl';
 		}
 		$this->template = $this->cObj->fileResource($this->template);
+		$this->conf['pageSize'] = $this->conf['pageSize'] ? $this->conf['pageSize'] : 15;
 
 		$this->pi_initPIflexForm();
 
@@ -537,6 +538,22 @@ class tx_servicemgr extends tslib_pibase {
 				);
 				return $content;
 	}
+
+	function getListGetPageBrowser($numberOfPages) {
+		// Get default configuration
+		$conf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_pagebrowse_pi1.'];
+		// Modify this configuration
+		$conf += array(
+				'pageParameterName' => $this->prefixId . '|page',
+				'numberOfPages' => intval($numberOfPages/$this->conf['pageSize']) +
+						(($numberOfPages % $this->conf['pageSize']) == 0 ? 0 : 1),
+		);
+		// Get page browser
+		$cObj = t3lib_div::makeInstance('tslib_cObj');
+		/* @var $cObj tslib_cObj */
+		$cObj->start(array(), '');
+		return $cObj->cObjGetSingle('USER', $conf);
+}
 
 	/**
 	 * Replaces $this->cObj->substituteArrayMarkerCached() because substitued

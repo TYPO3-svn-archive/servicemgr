@@ -19,6 +19,7 @@
 			<label index="download">Download</label>
 			<label index="play">Play</label>
 			<label index="dutyschedule">Dutyschedule</label>
+			<label index="edit">edit</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="back">Zurück</label>
@@ -34,6 +35,7 @@
 			<label index="download">Download</label>
 			<label index="play">Play</label>
 			<label index="dutyschedule">Dienstplan</label>
+			<label index="edit">bearbeiten</label>
 		</languageKey>
 	</data>
 </T3locallang>
