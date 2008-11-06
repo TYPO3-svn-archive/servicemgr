@@ -117,10 +117,13 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 		$subpart = $this->cObj->getSubpart($this->template,'###SERMONLIST_LATEST###');
 
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-					'uid, event, title, file, filedate, playtime, filesize, bitrate, album',   #select
-					'tx_servicemgr_sermons', #from
-					'hidden=0 and deleted=0',  #where
-			'','uid DESC','0,1'
+					'tx_servicemgr_sermons.uid, tx_servicemgr_sermons.event, tx_servicemgr_sermons.title, tx_servicemgr_sermons.file,
+					tx_servicemgr_sermons.filedate, tx_servicemgr_sermons.playtime, tx_servicemgr_sermons.filesize,
+					tx_servicemgr_sermons.bitrate, tx_servicemgr_sermons.album, tx_servicemgr_events.datetime',   #select
+					'tx_servicemgr_sermons, tx_servicemgr_events', #from
+					'tx_servicemgr_events.hidden=0 AND tx_servicemgr_events.deleted=0 AND tx_servicemgr_sermons.hidden=0 AND tx_servicemgr_sermons.deleted=0
+					AND tx_servicemgr_events.uid=tx_servicemgr_sermons.event',  #where
+			'','datetime DESC','0,1'
 		);
 		if ($res) {
 			$sermon = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
