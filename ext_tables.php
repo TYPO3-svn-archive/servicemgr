@@ -165,7 +165,7 @@ $tempColumns = Array (
 		"config" => Array (
 			"type" => "select",
 			"foreign_table" => "fe_users",
-			"foreign_table_where" => "AND fe_users.usergroup LIKE '%###THIS_UID###%' ORDER BY fe_users.uid",
+			"foreign_table_where" => "AND (`usergroup`=###THIS_UID### OR `usergroup` LIKE '%,###THIS_UID###,%' OR `usergroup` LIKE '%,###THIS_UID###' OR `usergroup` LIKE '###THIS_UID###,%') ORDER BY fe_users.username",
 			"size" => 10,
 			"minitems" => 0,
 			"maxitems" => 10,
@@ -227,7 +227,7 @@ $tempColumns = Array (
 			"type" => "group",
 			"internal_type" => "file",
 			"allowed" => $GLOBALS["TYPO3_CONF_VARS"]["GFX"]["imagefile_ext"],
-			"max_size" => 500,
+			"max_size" => 2048,
 			"uploadfolder" => "uploads/tx_servicemgr",
 			"size" => 1,
 			"minitems" => 0,
