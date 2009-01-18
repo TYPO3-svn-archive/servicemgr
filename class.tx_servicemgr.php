@@ -32,7 +32,6 @@
  */
 
 require_once(PATH_tslib.'class.tslib_pibase.php');
-require_once(t3lib_extMgm::extPath('servicemgr').'class.tx_servicemgr_mp3.php');
 
 /**
 	* Top level class for the 'servicemgr' extension.
@@ -65,7 +64,7 @@ class tx_servicemgr extends tslib_pibase {
 
 		$this->template = $this->generalConf['TemplateFile'];
 		if (!$this->template) {
-			$this->template = 'EXT:servicemgr/res/tables.tmpl';
+			$this->template = 'EXT:servicemgr/res/tables.html';
 		}
 		$this->template = $this->cObj->fileResource($this->template);
 		$this->conf['pageSize'] = $this->conf['pageSize'] ? $this->conf['pageSize'] : 15;
@@ -73,6 +72,7 @@ class tx_servicemgr extends tslib_pibase {
 		$this->pi_initPIflexForm();
 
 		$GLOBALS['TSFE']->additionalHeaderData['tx_servicemgr_css'] = '	<link rel="stylesheet" type="text/css" href="'.t3lib_extMgm::siteRelPath(servicemgr).'res/tables.css" />';
+		$GLOBALS['TSFE']->additionalHeaderData['tx_servicemgr_js'] = '	<script type="text/javascript" src="' . t3lib_extMgm::siteRelPath($this->extKey) . 'res/servicemgr.js"></script>';
 		return true;
 	}
 
@@ -83,7 +83,6 @@ class tx_servicemgr extends tslib_pibase {
 	 * @author Dmitry Dulepov <dmitry@typo3.org>
 	 * @param	string		$param	Parameter name. If <code>.</code> is found, the first part is section name, second is key (applies only to $this->conf)
 	 * @return	void
-
 	 */
 	function fetchConfigValue($param) {
 		if (strchr($param, '.')) {
@@ -183,15 +182,18 @@ class tx_servicemgr extends tslib_pibase {
 
 	/**
 	 * Returns all tags from database
-	 * gets uid, name, parrent
+	 * gets uid, name, parent
 	 *
 	 * @return	array		tags as array with key=uid
 	 */
-	function getTags() {
+	function getTags($eventId = 0) {
+		if ($eventId > 0) {
+			$andWhere = ' AND uid IN (SELECT tags FROM tx_servicemgr_events WHERE uid=' . $eventId . ')';
+		}
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-					'uid, name, parrent',   #select
-					'tx_servicemgr_tags', #from
-					'hidden=0 AND deleted=0'  #where
+				'uid, name, parent',   #select
+				'tx_servicemgr_tags', #from
+				'hidden=0 AND deleted=0' . $andWhere  #where
 		);
 
 
@@ -244,7 +246,7 @@ class tx_servicemgr extends tslib_pibase {
 			$where .= ' AND uid='.intval($uid);
 		}
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-					'uid, name',   #select
+					'uid, name, colorscheme',   #select
 					'tx_servicemgr_series', #from
 					$where  #where
 		);
@@ -298,6 +300,12 @@ class tx_servicemgr extends tslib_pibase {
 		}
 	}
 
+	function getUserInCharge($eventId, $teamId) {
+		$dutySchedule = $this->getSingleSchedule($eventId);
+		$userInCharge = is_array($dutySchedule[$teamId]) ? $dutySchedule[$teamId] : array();
+		return $userInCharge;
+	}
+
 	/**
 	 * get all sermon entries in database for specific event
 	 * return array is 2 dimensional
@@ -307,7 +315,7 @@ class tx_servicemgr extends tslib_pibase {
 	 */
 	function getAudioFiles($eventId) {
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-					'uid, event, title, file, filedate, playtime, filesize, bitrate, album',   #select
+					'*',   #select
 					'tx_servicemgr_sermons', #from
 					'event='.$eventId.' and hidden=0 and deleted=0'  #where
 		);
@@ -445,10 +453,13 @@ class tx_servicemgr extends tslib_pibase {
 				$outPreacher = '';
 				foreach($allPreachers as $singlePreacher) {
 					if (in_array($singlePreacher['uid'], $preacher)) {
-						$outPreacher .= $this->pi_linkToPage(
+						$outPreacher .= $this->cObj->typoLink(
 							$singlePreacher['name'],
-							$this->generalConf['preacherdetailPID'],'',
-							array('tx_feuser_pi2[showUid]'=>$singlePreacher['uid'])
+							array(
+								'parameter' => $this->generalConf['preacherdetailPID'],
+								'useCacheHash' => true,
+								'additionalParams' => '&tx_feuser_pi1[showUid]='.$singlePreacher['uid']
+							)
 						);
 					}
 				}
@@ -524,16 +535,12 @@ class tx_servicemgr extends tslib_pibase {
 	 * @return	string		typolink
 	 */
 	function tx_linkToPage($str, $id, $urlParameter) {
-		$additionalParams = '';
-		foreach ($urlParameter as $key => $value) {
-			$additionalParams .= '&'.$key.'='.$value;
-		}
 		$content = $this->cObj->typoLink(
 					$str,
 					array (
 						'parameter' => $id,
 						'useCacheHash'=>1,
-						'additionalParams'=>$additionalParams,
+						'additionalParams'=>t3lib_div::implodeArrayForUrl('',$urlParameter),
 					)
 				);
 				return $content;
@@ -542,18 +549,127 @@ class tx_servicemgr extends tslib_pibase {
 	function getListGetPageBrowser($numberOfPages) {
 		// Get default configuration
 		$conf = $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_pagebrowse_pi1.'];
+
 		// Modify this configuration
 		$conf += array(
 				'pageParameterName' => $this->prefixId . '|page',
 				'numberOfPages' => intval($numberOfPages/$this->conf['pageSize']) +
 						(($numberOfPages % $this->conf['pageSize']) == 0 ? 0 : 1),
 		);
+
 		// Get page browser
 		$cObj = t3lib_div::makeInstance('tslib_cObj');
 		/* @var $cObj tslib_cObj */
 		$cObj->start(array(), '');
 		return $cObj->cObjGetSingle('USER', $conf);
-}
+	}
+
+	/**
+	 * formats bytes in Bytes, Kilobytes or Megabytes
+	 * output with two positions after decimal point
+	 *
+	 * @param	integer		$bytes
+	 * @return	string
+	 */
+	function formatBytes($bytes) {
+		$bytes = intval($bytes);
+		if ($bytes > 1024) {
+			$bytes /= 1024;
+			if ($bytes > 1024) {
+				$bytes /= 1024;
+				$bytes_seperated = split('\.', $bytes);
+				$bytes = $bytes_seperated[0];
+				if ($bytes_seperated[1])
+					$bytes .= $this->pi_getLL('decimalchar').substr($bytes_seperated[1], 0, 2);
+				$bytes .= ' MB';
+			} else {
+				$bytes_seperated = split('\.', $bytes);
+				$bytes = $bytes_seperated[0];
+				if ($bytes_seperated[1])
+					$bytes .= $this->pi_getLL('decimalchar').substr($bytes_seperated[1], 0, 2);
+				$bytes .= ' KB';
+			}
+		} else {
+			$bytes .= ' B';
+		}
+		return $bytes;
+	}
+
+	/**
+	 * formats bits in Bits, Kilobits or Megabits
+	 * output with two positions after decimal point
+	 *
+	 * @param	integer		$bytes
+	 * @return	string
+	 */
+	function formatBits($bits) {
+		$bits = intval($bits);
+		if ($bits > 1000) {
+			$bits /= 1000;
+			if ($bits > 1000) {
+				$bits /= 1000;
+				$bits_seperated = split('\.', $bits);
+				$bits = $bits_seperated[0];
+				if ($bits_seperated[1])
+					$bits .= $this->pi_getLL('decimalchar').substr($bits_seperated[1], 0, 2);
+				$bits .= ' MBit/s';
+			} else {
+				$bits_seperated = split('\.', $bits);
+				$bits = $bits_seperated[0];
+				if ($bits_seperated[1])
+					$bits .= $this->pi_getLL('decimalchar').substr($bits_seperated[1], 0, 2);
+				$bits .= ' kBit/s';
+			}
+		} else {
+			$bits .= ' Bit/s';
+		}
+		return $bits;
+	}
+
+	/**
+	 * splits seconds in seconds, minutes and hours
+	 * output like 'hh:mm:ss Std', 'm:ss Min', ...
+	 *
+	 * @param	integer		$seconds: time in seconds
+	 * @return	string		formated time
+	 */
+	function formatTime($seconds) {
+		$seconds = intval($seconds);
+		$content = '';
+		$output = array();
+		if ($seconds > 60) {
+			$output[0] = $seconds - (60 * intval($seconds / 60));
+			$seconds = intval($seconds / 60);
+			if ($seconds > 60) {
+				$output[1] = $seconds - (60 * intval($seconds / 60));
+				$seconds = intval($seconds / 60);
+				if ($seconds > 60) {
+					$output[2] = $seconds - (60 * intval($seconds / 60));
+					$seconds = intval($seconds / 60);
+				} else {
+					$output[2] = $seconds;
+				}
+			} else {
+				$output[1] = $seconds;
+			}
+		} else {
+			$output[0] = $seconds;
+		}
+		switch (count($output)) {
+			CASE 1:
+				$content = substr('00'.$output[0],-2,2).' s';
+				break;
+			CASE 2:
+				$content = $output[1].':'.substr('00'.$output[0],-2,2).' Min';
+				break;
+			CASE 3:
+				$content = $output[2].substr('00'.$output[1],-2,2).':'.substr('00'.$output[0],-2,2).'Std';
+				break;
+			DEFAULT:
+				$content = '0 s';
+		}
+		return $content;
+	}
 
 	/**
 	 * Replaces $this->cObj->substituteArrayMarkerCached() because substitued

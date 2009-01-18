@@ -32,11 +32,12 @@
  * @author Peter Schuster <typo3@peschuster.de>
  */
 
-require_once(t3lib_extMgm::extPath('servicemgr').'class.tx_servicemgr.php');
+
 if (t3lib_extMgm::isLoaded('t3getid3')) {
 	require_once(t3lib_extMgm::extPath('t3getid3').'getid3/getid3.php');
-
 }
+require_once(t3lib_extMgm::extPath('servicemgr').'class.tx_servicemgr.php');
+//require('/var/www/web0/html/typo3conf/ext/servicemgr/class.tx_servicemgr.php');
 
 /**
  * Functions for handling mp3 files for the 'servicemgr' extension.
@@ -143,7 +144,7 @@ class tx_servicemgr_mp3 extends tx_servicemgr {
 	function checkFile($sermonUid) {
 
 		$sermon = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-					'uid, event, title, file, filedate, playtime, filesize, bitrate, album',   #select
+					'uid, event, title, file, filedate, playtime, filesize, bitrate, album, mimetype',   #select
 					'tx_servicemgr_sermons', #from
 					'uid='.$sermonUid  #where
 		);

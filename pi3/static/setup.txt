@@ -1,13 +1,3 @@
-plugin.tx_servicemgr_pi3._CSS_DEFAULT_STYLE (
-.tx-servicemgr-pi3 #uploadform {background-color: #FFFFF4; width: 450px; }
-.tx-servicemgr-pi3 #uploadform div { padding: 2px; }
-.tx-servicemgr-pi3 #date { clear: right; float: left; left: 30px; position: relative; width: 200px; }
-.tx-servicemgr-pi3 #subject { clear: left; float: left; }
-.tx-servicemgr-pi3 #preacher { clear: left; }
-.tx-servicemgr-pi3 #tags { clear: both; float: none; }
-.tx-servicemgr-pi3 #tagcontainer { border: thin dashed #424242; clear: right; height: 120px; overflow: auto; padding: 7px; width: 250px; }
-.tx-servicemgr-pi3 #taglabel { clear: left; float: left; width: 50px; }
-.tx-servicemgr-pi3 #filediv { clear: both; width: 100%; }
-.tx-servicemgr-pi3 #submit { height: 30px; width: 100%;  }
-.tx-servicemgr-pi3 #submit input { clear: both; float: right; }
-)
+plugin.tx_servicemgr_pi3 {
+
+}

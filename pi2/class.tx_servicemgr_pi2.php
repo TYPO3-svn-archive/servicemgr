@@ -32,6 +32,7 @@
  */
 
 require_once(t3lib_extMgm::extPath('servicemgr').'class.tx_servicemgr.php');
+require_once(t3lib_extMgm::extPath('servicemgr').'class.tx_servicemgr_mp3.php');
 
 /**
  * Plugin 'Sermon archive' for the 'servicemgr' extension.
@@ -75,7 +76,18 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 
 
 		if (!$this->piVars['eventId']) {
-			$content = $this->listView();
+			switch ($this->conf['viewmode']) {
+				CASE 'podcast':
+					$this->podcast();
+					break;
+				CASE 'latest':
+					$content = $this->latest();
+					break;
+				CASE 'archive':
+				default:
+					$content = $this->listView();
+			}
+
 		} else {
 			$content=$this->detailViewEvent(
 			$this->piVars['eventId'],
@@ -90,21 +102,73 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 		return $this->pi_wrapInBaseClass($content);
 	}
 
-	/**
-	 * Returns list of sermons /  latest sermon
-	 *
-	 * @return	string		content to be shown on website
-	 */
-	function listView() {
-		switch ($this->conf['viewmode']) {
-			CASE 'latest':
-				$content = $this->getLatest();
-				break;
-			CASE 'archive':
-			default:
-				$content = $this->getList();
+
+	function sermons($number=0, $start=0, $end=0, $pagebrowser=false) {
+		$where = 'hidden=0 AND deleted=0';
+		if ($start > 0)
+			$where .= ' AND (datetime>' . $start . ' OR datetime=0 )';
+		if ($end > 0)
+			$where .= ' AND (datetime<' . $end . ' OR datetime=0 )';
+		$where .= ' AND uid IN (SELECT event FROM tx_servicemgr_sermons WHERE hidden=0 AND deleted=0)';
+
+		if ($pagebrowser !== false && $number > 0) {
+			$limit = $pagebrowser.','.$number;
+		} elseif ($number > 0) {
+			$limit = '0,'.$number;
 		}
-		return $content;
+
+		$events = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+					'uid, datetime, subject, series',   #select
+					'tx_servicemgr_events', #from
+					$where,  #where
+					'','datetime DESC',$limit
+		);
+
+		if (is_array($events)) {
+
+			foreach ($events as &$event) {
+				$event['sermons'] = $this->getAudioFiles($event['uid']);
+				foreach ($event['sermons'] as &$sermon)
+					$sermon = $this->mp3Class->checkFile($sermon['uid']);
+			}
+		}
+		return $events;
+	}
+
+
+	function podcast() {
+		$data = array(
+			'language' => 'de-DE',
+			'title' => 'D16 - Kirche für Jugendliche: Predigten',
+			'copyright' => 'D16, Freie evangelische Gemeinde Gießen',
+			'author' => 'D16 - Kirche für Jugendliche',
+			'summary' => 'D16 ist die Jugendarbeit der Freien evangelischen Gemeinde Gießen.',
+			'subtitle' => '',
+			'email' => 'website@d16.de',
+			'categorys' => array('Religion & Spirituality' => 'Christianity'),
+		);
+		$events = $this->sermons();
+		foreach ($events as $event) {
+			$data['items'][] = array(
+				'title' => $event['sermons'][0]['title'],
+				'subtitle' => $event['notes'],
+				'summary' => $event['sermons'][0]['summary'],
+				'author' => 'Prediger',
+				'pubDate' => $event['datetime'],
+				'keywords' => $this->getTags($event['uid']),
+				'duration' => $event['sermons'][0]['playtime'],
+				'enclosure' => array(
+					'url' => t3lib_div::getIndpEnv('TYPO3_SITE_URL').$event['sermons'][0]['file'],
+					'length' => $event['sermons'][0]['filesize'],
+					'type' => $event['sermons'][0]['mimetype'],
+				),
+			);
+		}
+		if (t3lib_extMgm::isLoaded('podcastfeed')) {
+			require_once(t3lib_extMgm::extPath('podcastfeed') . 'class.tx_podcastfeed_api.php');
+			$podcastfeed = t3lib_div::makeInstance('tx_podcastfeed_api');
+			$podcastfeed->main($data);
+		}
 	}
 
 	/**
@@ -112,23 +176,30 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 	 *
 	 * @return	string		HTML
 	 */
-	function getLatest() {
+	function latest() {
 		$content = '';
 		$subpart = $this->cObj->getSubpart($this->template,'###SERMONLIST_LATEST###');
 
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-					'tx_servicemgr_sermons.uid, tx_servicemgr_sermons.event, tx_servicemgr_sermons.title, tx_servicemgr_sermons.file,
-					tx_servicemgr_sermons.filedate, tx_servicemgr_sermons.playtime, tx_servicemgr_sermons.filesize,
-					tx_servicemgr_sermons.bitrate, tx_servicemgr_sermons.album, tx_servicemgr_events.datetime',   #select
-					'tx_servicemgr_sermons, tx_servicemgr_events', #from
-					'tx_servicemgr_events.hidden=0 AND tx_servicemgr_events.deleted=0 AND tx_servicemgr_sermons.hidden=0 AND tx_servicemgr_sermons.deleted=0
-					AND tx_servicemgr_events.uid=tx_servicemgr_sermons.event',  #where
-			'','datetime DESC','0,1'
-		);
-		if ($res) {
-			$sermon = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-			$event = $this->getSingleEvent($sermon['event']);
-			$duty = $this->getSingleSchedule($sermon['event']);
+//		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+//					'tx_servicemgr_sermons.uid, tx_servicemgr_sermons.event, tx_servicemgr_sermons.title, tx_servicemgr_sermons.file,
+//					tx_servicemgr_sermons.filedate, tx_servicemgr_sermons.playtime, tx_servicemgr_sermons.filesize,
+//					tx_servicemgr_sermons.bitrate, tx_servicemgr_sermons.album, tx_servicemgr_events.datetime',   #select
+//					'tx_servicemgr_sermons, tx_servicemgr_events', #from
+//					'tx_servicemgr_events.hidden=0 AND tx_servicemgr_events.deleted=0 AND tx_servicemgr_sermons.hidden=0 AND tx_servicemgr_sermons.deleted=0
+//					AND tx_servicemgr_events.uid=tx_servicemgr_sermons.event',  #where
+//			'','datetime DESC','0,1'
+//		);
+//		if ($res) {
+//			$sermon = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+//			$event = $this->getSingleEvent($sermon['event']);
+
+		$events = $this->sermons(1);
+
+		if (is_array($events[0])) {
+
+			$event = $events[0];
+			$sermon = $event['sermons'][0];
+			$duty = $this->getSingleSchedule($event['uid']);
 
 			$sermon = $this->mp3Class->checkFile($sermon['uid']);
 
@@ -138,10 +209,13 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 				$outPreacher = '';
 				foreach($allPreachers as $singlePreacher) {
 					if (in_array($singlePreacher['uid'], $preacher)) {
-						$outPreacher .= $this->tx_linkToPage(
+						$outPreacher .= $this->cObj->typoLink(
 							$singlePreacher['name'],
-							$this->generalConf['preacherdetailPID'],
-							array('tx_feuser_pi2[showUid]' => $singlePreacher['uid'])
+							array(
+								'parameter' => $this->generalConf['preacherdetailPID'],
+								'useCacheHash' => true,
+								'additionalParams' => '&tx_feuser_pi1[showUid]='.$singlePreacher['uid']
+							)
 						);
 					}
 				}
@@ -181,15 +255,23 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 	 *
 	 * @return	string		HTML
 	 */
-	function getList() {
+	function listView() {
 
-		$andWhere = ' AND uid IN (SELECT event FROM tx_servicemgr_sermons WHERE hidden=0 AND deleted=0)';
-		$events = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-					'uid, datetime, subject, series',   #select
-					'tx_servicemgr_events', #from
-					'hidden=0 AND deleted=0'.$andWhere,  #where
-					'','datetime DESC'
-		);
+
+		// Find starting record
+		$where .= 'deleted=0 AND hidden=0 AND uid IN (SELECT event FROM tx_servicemgr_sermons WHERE hidden=0 AND deleted=0)';
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('COUNT(uid)',
+					'tx_servicemgr_events', $where);
+		if ($res) {
+			$temp = $GLOBALS['TYPO3_DB']->sql_fetch_row($res);
+			$numberOfPages = $temp[0];
+		}
+
+		$page = intval($this->piVars['page']);
+		$rpp = $this->conf['pageSize'];
+		$start = $rpp*$page;
+
+		$events = $this->sermons($rpp, 0, 0, $start);
 
 		$series = $this->getSeries();
 
@@ -210,6 +292,8 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 			} else {
 				$content = $this->getSermonListTable($events);
 			}
+
+			$content .= $this->getListGetPageBrowser($numberOfPages);
 		}
 		return $content;
 	}
@@ -231,7 +315,7 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 			require_once(t3lib_extMgm::extPath('audioplayer').'class.tx_audioplayer.php');
 			$audioplayer = t3lib_div::makeInstance('tx_audioplayer');
 			$audioplayer->init();
-			$audioplayer->setOptions(array('initialvolume'=>'80','animation'=>'no'));
+			$audioplayer->setOptions(array('initialvolume'=>'80','animation'=>'no', 'pagebg' => 'E0E9EF'));
 			$audioplayer->setHeaders($audioplayer->renderVars());
 			$GLOBALS['TSFE']->additionalHeaderData['tx_servicemgr_pi2_sermonjs'] = '	<script type="text/javascript" src="typo3conf/ext/servicemgr/res/sermonplayer.js"></script>';
 		}
@@ -239,16 +323,20 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 		$eventRowsOutput = '';
 		foreach ($events as $row) {
 			$markerArray['###DATE###'] = date('d.m.Y', $row['datetime']);
-			$markerArray['###SUBJECT###'] = $this->tx_linkToPage(
+			$markerArray['###SUBJECT###'] = $this->cObj->typoLink(
 				$row['subject'],
-				$GLOBALS['TSFE']->id,
-				array('tx_servicemgr_pi2[eventId]'=>$row['uid'])
+				array(
+					'parameter' => $GLOBALS['TSFE']->id,
+					'useCacheHash' => true,
+					'additionalParams' => '&tx_servicemgr_pi2[eventId]='.$row['uid'],
+					'ATagParams' => 'onclick="return expandSermonElement(\'tx-servicemgr-sa-sermon-' . $row['uid'] . '\');"',
+				)
 			);
+			$markerArray['###UID###'] = $row['uid'];
 
-			$sermons = $this->getAudioFiles($row['uid']);
 
 			$audioFileOutput = '';
-			foreach ($sermons as $sermon) {
+			foreach ($row['sermons'] as $sermon) {
 
 				$sermon = $this->mp3Class->checkFile($sermon['uid']);
 
@@ -276,6 +364,14 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 					'<a href="'.$playLink['href'].'" onclick="'.$playLink['onclick'].'">'
 					.'<img src="'.t3lib_extMgm::extRelPath('servicemgr').'res/control_play_blue.png" alt="play" title="'.$this->pi_getLL('play').'" />'
 					.'</a>';
+				$markerArray['###DETAIL###'] = $this->cObj->typoLink(
+					'<img src="' . t3lib_extMgm::siteRelPath($this->extKey) . 'res/table_go.png' .'" alt="Detail" title="Details" />',
+					array(
+						'parameter' => $GLOBALS['TSFE']->id,
+						'useCacheHash' => true,
+						'additionalParams' => '&tx_servicemgr_pi2[eventId]='.$row['uid'],
+					)
+				);
 				$markerArray['###PLAYERID###'] = $sermon['uid'];
 				$markerArray['###PLAYER###'] = $audioplayer->getFlashPlayer($sermon['file'], $sermon['uid']);
 				$audioFileOutput .= $this->cObj->substituteMarkerArray($filearray,$markerArray);
@@ -285,76 +381,6 @@ class tx_servicemgr_pi2 extends tx_servicemgr {
 		}
 		$subpartArray['###ROW###']=$eventRowsOutput;
 		return $this->substituteMarkersAndSubparts($subpart,$markerArray,$subpartArray);
-	}
-
-	/**
-	 * formats bytes in Bytes, Kilobytes or Megabytes
-	 * output with two positions after decimal point
-	 *
-	 * @param	integer		$bytes
-	 * @return	string
-	 */
-	function formatBytes($bytes) {
-		$bytes = intval($bytes);
-		if ($bytes > 1024) {
-			$bytes /= 1024;
-			if ($bytes > 1024) {
-				$bytes /= 1024;
-				$bytes_seperated = split('\.', $bytes);
-				$bytes = $bytes_seperated[0].$this->pi_getLL('decimalchar').substr($bytes_seperated[1], 0, 2).' MB';
-			} else {
-				$bytes_seperated = split('\.', $bytes);
-				$bytes = $bytes_seperated[0].$this->pi_getLL('decimalchar').substr($bytes_seperated[1], 0, 2).' KB';
-			}
-		} else {
-			$bytes .= ' B';
-		}
-		return $bytes;
-	}
-
-	/**
-	 * splits seconds in seconds, minutes and hours
-	 * output like 'hh:mm:ss Std', 'm:ss Min', ...
-	 *
-	 * @param	integer		$seconds: time in seconds
-	 * @return	string		formated time
-	 */
-	function formatTime($seconds) {
-		$seconds = intval($seconds);
-		$content = '';
-		$output = array();
-		if ($seconds > 60) {
-			$output[0] = $seconds - (60 * intval($seconds / 60));
-			$seconds = intval($seconds / 60);
-			if ($seconds > 60) {
-				$output[1] = $seconds - (60 * intval($seconds / 60));
-				$seconds = intval($seconds / 60);
-				if ($seconds > 60) {
-					$output[2] = $seconds - (60 * intval($seconds / 60));
-					$seconds = intval($seconds / 60);
-				} else {
-					$output[2] = $seconds;
-				}
-			} else {
-				$output[1] = $seconds;
-			}
-		} else {
-			$output[0] = $seconds;
-		}
-		switch (count($output)) {
-			CASE 1:
-				$content = substr('00'.$output[0],-2,2).' s';
-				break;
-			CASE 2:
-				$content = $output[1].':'.substr('00'.$output[0],-2,2).' Min';
-				break;
-			CASE 3:
-				$content = $output[2].substr('00'.$output[1],-2,2).':'.substr('00'.$output[0],-2,2).'Std';
-				break;
-			DEFAULT:
-				$content = '0 s';
-		}
-		return $content;
 	}
 
 	/**

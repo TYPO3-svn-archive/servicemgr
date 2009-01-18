@@ -25,8 +25,15 @@
 .tx-servicemgr-pi1 .sep-series { text-align: center; font-weight: bold; background-color: #DBE5EA; margin-top: 20px; }
 .tx-servicemgr-se-backlink { padding-top: 20px; }
 
+.tx-servicemgr-alert { margin-top: 20px; width: 300px; text-align: center; background:#FFEBC1; border:thin solid #FDBF3B; padding: 5px; font-weight: bold; }
+.tx-servicemgr-alert-links { margin-top: 10px; }
+.tx-servicemgr-alert-links a { color: #0098E6; }
+.tx-servicemgr-alert-links-yes { padding-left: 20px; background: url(accept.png) no-repeat left center; vertical-align: middle; }
+.tx-servicemgr-alert-links-no { margin-left: 50px; padding-left: 20px; background: url(cancel.png) no-repeat left center; vertical-align: middle; }
+
+
 .tx-servicemgr-sa-subjectsermon span { display:block; }
-.tx-servicemgr-sa-sermon { margin-left: 10px; margin-bottom: 7px; width: 250px; }
+.tx-servicemgr-sa-sermon { background-color:#E0E9EF; margin-bottom:7px; margin: 0 7px 0 10px; padding:3px 3px 3px 10px; width:290px; }
 .tx-servicemgr-sa-sermon-info { float:left; padding-right: 5px; }
 .tx-servicemgr-sa-sermon-buttons { float: right; }
 .tx-servicemgr-sa-sermon br { clear:right; }
@@ -53,9 +60,14 @@
 .smgr-ae-body textarea { width: 210px; }
 .smgr-ae-body .smgr-ae-addwrap { text-align: right; }
 .smgr-ae-body .smgr-ae-addwrap img { float: right; clear:both; padding-top: 5px; }
-.smgr-ae-body dd .addIcon { padding-left: 2px; }
+.smgr-ae-body dd .addIcon { padding-left: 2px; cursor: pointer; }
 .smgr-ae-body br { clear: right; }
 .smgr-ae-body dl .clear { clear: both; }
+.smgr-ae-body .sermonitem { background-color:#EEF3F5; border-top-width:0; padding:2px 5px; border:1px solid #84B0C7; width: 500px; margin-bottom: 5px; }
+.smgr-ae-body .sermonitem span { display: block; float: left; padding-right: 15px; }
+.smgr-ae-body .sermonitem span.subject { font-weight: bold; overflow:visible; width:160px; }
+.smgr-ae-body .sermonitem label { padding-right: 20px; }
+.smgr-ae-sermons { margin-bottom: 15px; }
 
 .smgr-ae-dutysched-label { clear: both; float: left; width: 110px; }
 .smgr-ae-dutysched-valuewrap { float: left; padding-bottom: 5px; }
@@ -64,6 +76,13 @@
 .smgr-ae-dutysched-value { background-color: #EEEEEE; vertical-align: middle; float: left; padding: 0 2px; margin: 0 1px; }
 .smgr-ae-dutysched-value select { border: solid thin #000033; background-color: #EEEEEE; }
 .smgr-ae-dutysched a img { border: 0 none; }
+
+.tx-servicemgr-globalsettings { padding-top: 20px; }
+.tx-servicemgr-globalsettings label { display: block; width: 100px; float: left; clear: left; padding-right:5px; text-align:right; width:160px;}
+.tx-servicemgr-globalsettings input { float: left; }
+.tx-servicemgr-globalsettings br { clear: both; }
+.tx-servicemgr-globalsettings span div { display: none; }
+.tx-servicemgr-globalsettings-warning { display: block; float: left; font-size: 8px; color: #BBBBBB; }
 
 textarea { background-color:#FEFEFE; border-color:#838EA0 #545861 #545861 #838EA0; border-style:solid; border-width:1px; }
 select, textarea, input { color: #212424; font-family: Verdana,Arial,Helvetica,sans-serif; font-size: 10px; }

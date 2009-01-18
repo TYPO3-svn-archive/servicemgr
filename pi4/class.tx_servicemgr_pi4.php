@@ -65,6 +65,9 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 			$content = $this->doSubmit();
 		} else {
 
+			$piVars_gs = $this->piVars['gs'];
+			if ($piVars_gs['submit']) $this->processGlobalSettings($piVars_gs);
+
 			switch ($this->code) {
 				CASE 'ADD':
 					$content = $this->showForm();
@@ -78,6 +81,7 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 				CASE 'LIST':
 				default:
 					$content = $this->showOptionList();
+					$content .= $this->showGlobalSettings();
 			}
 		}
 
@@ -109,9 +113,75 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 		if (t3lib_extMgm::isLoaded('date2cal')) {
 			$this->JSCalendar = JSCalendar::getInstance();
 			if (($jsCode = $this->JSCalendar->getMainJS()) != '') {
-				$GLOBALS['TSFE']->additionalHeaderData['servicemgr_date2cal'] = $jsCode;
+				$GLOBALS['TSFE']->additionalHeaderData['date2cal'] = $jsCode;
 			}
 		}
+	}
+
+	function showGlobalSettings() {
+		$template = $this->cObj->getSubpart($this->template, '###SERMONADMMIN_SETTINGS###');
+
+		$startdate = date('d.m.Y', 0); //minimal value
+		$enddate = date('d.m.Y', 9999999999); //maximal value
+		$datetimes = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('datetime', 'tx_servicemgr_events', 'inpreview=1 AND hidden=0 AND deleted=0', '', 'datetime ASC');
+		if (!empty($datetimes) && is_array($datetimes)) {
+			$startdate = date('d.m.Y', intVal($datetimes[0]['datetime']));
+			$enddate = date('d.m.Y', intVal($datetimes[count($datetimes)-1]['datetime']));
+		}
+
+		$actionLink = $this->cObj->typoLink_URL(array(
+			'parameter' => $GLOBALS['TSFE']->id,
+			'addQueryString' => 1,
+			'addQueryString.' => array(
+				'exclude' => 'cHash,no_cache,tx_servicemgr_pi4[code]',
+			),
+			'additionalParams' => '&no_cache=1',
+			'useCacheHash' => false,
+		));
+
+		$marker = array(
+			'###H2###' => $this->pi_getLL('Header_GlobalSettings'),
+			'###H3###' => $this->pi_getLL('Header_GS_Preview'),
+			'###L_STARTDATE###' => $this->pi_getLL('L_STARTDATE'),
+			'###L_ENDDATE###' => $this->pi_getLL('L_ENDDATE'),
+			'###L_CUTSERIES###' => $this->pi_getLL('L_CUTSERIES'),
+			'###L_NOTCUTEXCEPT###' => $this->pi_getLL('L_NOTCUTEXCEPT'),
+			'###L_SUBMIT###' => $this->pi_getLL('L_SUBMIT'),
+			'###L_WARNING_VALUES###' => $this->pi_getLL('L_WARNING_VALUES'),
+
+			'###ACTION_URL###' => $actionLink,
+			'###V_STARTDATE###' => '<input type="text" name="tx_servicemgr_pi4[gs][startdate]" id="tx_servicemgr_pi4[gs][startdate]_hr" value="' . $startdate . '" />' . $this->getDate2Cal('tx_servicemgr_pi4[gs][startdate]', $startdate),
+			'###V_ENDDATE###' => '<input type="text" name="tx_servicemgr_pi4[gs][enddate]" id="tx_servicemgr_pi4[gs][enddate]_hr" value="' . $enddate . '" />' . $this->getDate2Cal('tx_servicemgr_pi4[gs][enddate]', $enddate),
+			'###V_CUTSERIES###' => '<input type="checkbox" value="1" checked="checked" name="tx_servicemgr_pi4[gs][cutseries]" id="tx-servicemgr-pi4-gs-cutseries" />',
+			'###V_NOTCUTEXCEPT###' => '<input type="checkbox" value="1" checked="checked" name="tx_servicemgr_pi4[gs][notcutexcept]" id="tx-servicemgr-pi4-gs-notcutexcept" />',
+		);
+		$content = $this->cObj->substituteMarkerArray($template, $marker);
+		return $content;
+	}
+
+	function processGlobalSettings($data) {
+		list($date['day'], $date['month'], $date['year']) = split('\.',$data['startdate']);
+		$startdate = mktime(0,0,0,intval($date['month']),intval($date['day']),intval($date['year'])) - 1;
+		list($date['day'], $date['month'], $date['year']) = split('\.',$data['enddate']);
+		$enddate = mktime(0,0,0,intval($date['month']),intval($date['day'])+1,intval($date['year']));
+		$cutseries = (intVal($data['cutseries']) == 1 ? true : false);
+		$notcutexcept = (intVal($data['notcutexcept']) == 1 ? true : false);
+
+		$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_servicemgr_events', '1=1', array('inpreview' => 0));
+
+		if ($cutseries === true) {
+			$affectedSeries = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('series', 'tx_servicemgr_events', 'datetime > ' . $startdate . ' AND datetime < ' . $enddate, 'series');
+			$series_out = array();
+			foreach ($affectedSeries as $k => $series) {
+				if (($notcutexcept === false) || (intval($series['series']) != intVal($this->generalConf['defaultSeriesId'])))
+					$series_out[] = $series['series'];
+			}
+			$series_out = implode(',', $series_out);
+			$andWhere[] = ' OR (series IN (' . $series_out . ') AND datetime<' . $enddate . ')';
+		}
+
+		$where = '(datetime>' . $startdate . ' AND datetime<' . $enddate . ')' . implode('', (array)$andWhere);
+		$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_servicemgr_events', $where, array('inpreview' => 1));
 	}
 
 	/**
@@ -283,7 +353,7 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 				$seriesContent .= '>'.$serie['name'].'</option>'."\n";
 			}
 			$seriesContent .= '</select>'."\n";
-			$seriesAddLink = '<img title="'.$this->pi_getLL('title_addlink_series').'" alt="'.$this->pi_getLL('alt_addlink_series').'" src="'.$this->conf['addlink_img'].'" class="addIcon" />';
+			$seriesAddLink = '<img title="'.$this->pi_getLL('title_addlink_series').'" alt="'.$this->pi_getLL('alt_addlink_series').'" src="'.$this->conf['addlink_img'].'" class="addIcon" onclick="addSeries(' . $this->generalConf['storagePID'] . ');" />';
 		}
 		$marker['###SERIES_SELECTOR###'] = $seriesContent;
 		$marker['###SERIES_ADDLINK###'] = $seriesAddLink;
@@ -303,7 +373,7 @@ class tx_servicemgr_pi4 extends tx_servicemgr {
 				$tagsContent .= ' /> <label for="frm-tags-'.$tag['uid'].'">'.$tag['name'].'</label><br />';
 			}
 		}
-		$tagsAddLink = '<img title="'.$this->pi_getLL('title_addlink_tags').'" alt="'.$this->pi_getLL('alt_addlink_tags').'" src="'.$this->conf['addlink_img'].'" />';
+		$tagsAddLink = '<img class="addIcon" title="'.$this->pi_getLL('title_addlink_tags').'" alt="'.$this->pi_getLL('alt_addlink_tags').'" src="'.$this->conf['addlink_img'].'" onclick="addTag(this.previousSibling, \'tx_servicemgr_pi4[tags]\', ' . $this->generalConf['storagePID'] . ');" />';
 		$marker['###TAGS_CBS###'] = $tagsContent;
 		$marker['###TAGS_ADDLINK###'] = $tagsAddLink;
 

@@ -1,4 +1,3 @@
 plugin.tx_servicemgr_pi1 {
-	defaultSeriesId = 1
 	dontShowDefaultSeries = 1
 }

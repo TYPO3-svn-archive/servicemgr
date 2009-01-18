@@ -6,6 +6,27 @@
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
+		<label index="L_DATE">Date</label>
+			<label index="L_TIME">Time</label>
+			<label index="L_DATETIME">Date &amp; Time</label>
+			<label index="L_SUBJECT">Subject</label>
+			<label index="L_SERIES">Series</label>
+			<label index="L_PUBLIC">Public?</label>
+			<label index="L_TAGS">Tags</label>
+			<label index="L_REQUIREDTEAMS">required Teams</label>
+			<label index="L_DUTYSCHEDULEOPEN">Dutyschedule open/editable?</label>
+			<label index="L_DOCUMENTS">Documents</label>
+			<label index="L_NOTES">Notes</label>
+			<label index="L_NOTESINTERNAL">Internal Notes</label>
+			<label index="L_SUBMIT">Submit</label>
+			<label index="L_SAVE">Save</label>
+			<label index="title_addlink_tags">add a new tag</label>
+			<label index="title_addlink_series">add a new series</label>
+			<label index="title_addlink_documents">add a new document</label>
+			<label index="alt_addlink_tags">add tag</label>
+			<label index="alt_addlink_series">add series</label>
+			<label index="alt_addlink_documents">add document</label>
+			<label index="error_missingfields">missing fields:</label>
 			<label index="back">Back</label>
 			<label index="date">Date</label>
 			<label index="subject">Subject</label>
@@ -20,8 +41,33 @@
 			<label index="play">Play</label>
 			<label index="dutyschedule">Dutyschedule</label>
 			<label index="edit">edit</label>
+			<label index="save">save</label>
+			<label index="decimalchar">.</label>
+			<label index="yes">Yes</label>
+			<label index="no">No</label>
 		</languageKey>
 		<languageKey index="de" type="array">
+		<label index="L_DATE">Datum</label>
+			<label index="L_TIME">Zeit</label>
+			<label index="L_DATETIME">Datum &amp; Zeit</label>
+			<label index="L_SUBJECT">Thema</label>
+			<label index="L_SERIES">Serie</label>
+			<label index="L_PUBLIC">Öffentlich?</label>
+			<label index="L_TAGS">Tags</label>
+			<label index="L_REQUIREDTEAMS">benötigte Teams</label>
+			<label index="L_DUTYSCHEDULEOPEN">Dienstplan offen/editierbar?</label>
+			<label index="L_DOCUMENTS">Dokumente</label>
+			<label index="L_NOTES">Bemerkungen</label>
+			<label index="L_NOTESINTERNAL">interne Bemerkungen</label>
+			<label index="L_SUBMIT">Senden</label>
+			<label index="L_SAVE">Speichern</label>
+			<label index="title_addlink_tags">ein neues Tag hinzufügen</label>
+			<label index="title_addlink_series">eine neue Serie hinzufügen</label>
+			<label index="title_addlink_documents">ein neues Document hinzufügen</label>
+			<label index="alt_addlink_tags">Tag hinzufügen</label>
+			<label index="alt_addlink_series">Serie hinzufügen</label>
+			<label index="alt_addlink_documents">Dokument hinzufügen</label>
+			<label index="error_missingfields">Folgende Felder müssen ebenfalls ausgefüllt werden:</label>
 			<label index="back">Zurück</label>
 			<label index="date">Datum</label>
 			<label index="subject">Thema</label>
@@ -36,6 +82,10 @@
 			<label index="play">Play</label>
 			<label index="dutyschedule">Dienstplan</label>
 			<label index="edit">bearbeiten</label>
+			<label index="save">speichern</label>
+			<label index="decimalchar">,</label>
+			<label index="yes">Ja</label>
+			<label index="no">Nein</label>
 		</languageKey>
 	</data>
 </T3locallang>

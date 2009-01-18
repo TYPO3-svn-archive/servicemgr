@@ -13,6 +13,8 @@
 			<label index="ERROR.brokenFile">The file upload process wasn't completed.</label>
 			<label index="ERROR.noFile">Please select a file to upload.</label>
 			<label index="wrongFileExtension">this file type is not allowed as audio file</label>
+			<label index="L_SERMONFILES">Sermon File(s)</label>
+			<label index="sermon_delete">Do really want to delete this sermon?</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="audiofiles">Predigtdateien</label>
@@ -21,6 +23,8 @@
 			<label index="ERROR.largeFile">Die hochgeladene Datei ist zu groß.</label>
 			<label index="ERROR.noFile">Bitte wähle eine Datei zum Hochladen aus.</label>
 			<label index="wrongFileExtension">Dieser Dateityp ist als Audiodatei nicht erlaubt.</label>
+			<label index="L_SERMONFILES">Predigt-Datei(en)</label>
+			<label index="sermon_delete">Möchtest du diese Predigt wirklich löschen?</label>
 		</languageKey>
 	</data>
 </T3locallang>

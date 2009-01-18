@@ -30,29 +30,47 @@ class tx_servicemgr_ajax {
 
 	function main() {
 
-		switch ($_GET['action']) {
+		//DEBUG-CONFIG
+		$GLOBALS['TYPO3_DB']->debugOutput = true;
+
+		switch (t3lib_div::_GP('action')) {
 			CASE 'showinlineplayer':
 				$playerid = intval($_GET['playerid']);
 				$content = $this->getAudioPlayer($playerid);
 				break;
-			default: 
+			CASE 'setsermontitle':
+				$sermonid = intVal(t3lib_div::_GP('sermonid'));
+				$sermontitle = htmlspecialchars(t3lib_div::_GP('sermontitle'));
+				$content = $this->setSermonTitle($sermonid, $sermontitle);
+				break;
+			CASE 'addseries':
+				$seriestitle = htmlspecialchars(t3lib_div::_GP('seriestitle'));
+				$pid = intVal(t3lib_div::_GP('pid'));
+				$content = $this->addSeries($seriestitle, $pid);
+				break;
+			CASE 'addtag':
+				$tagtitle = htmlspecialchars(t3lib_div::_GP('tagtitle'));
+				$pid = intVal(t3lib_div::_GP('pid'));
+				$content = $this->addTag($tagtitle, $pid);
+				break;
+			default:
 				break;
 		}
 		return $content;
 	}
-	
+
 	function getAudioPlayer($playerid) {
-		
+
 		if (t3lib_extMgm::isLoaded('audioplayer')) {
-			
+
 			tslib_eidtools::connectDB();
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-	        	'uid, file',   #select
-        		'tx_servicemgr_sermons', #from
-        		'uid='.$playerid.' and hidden=0 and deleted=0'  #where
+						'uid, file',   #select
+						'tx_servicemgr_sermons', #from
+						'uid='.$playerid.' and hidden=0 and deleted=0'  #where
 			);
 			$res ? $audioFile = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res) : die('no fetching result');
-			
+
 			require_once(t3lib_extMgm::extPath('audioplayer').'class.tx_audioplayer.php');
 			$audioplayer = t3lib_div::makeInstance('tx_audioplayer');
 			$audioplayer->init();
@@ -62,6 +80,36 @@ class tx_servicemgr_ajax {
 			$content = 'notloaded';
 		}
 		return $content;
+	}
+
+	function setSermonTitle($id, $title) {
+		tslib_eidtools::connectDB();
+		$res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
+					'tx_servicemgr_sermons', 'uid='.$id,
+					array('title' => $title)
+		);
+		if ($res) return $title;
+		return 'ERROR';
+	}
+
+	function addSeries($title, $pid) {
+		tslib_eidtools::connectDB();
+		$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery(
+					'tx_servicemgr_series',
+					array('name' => $title, 'colorscheme' => '', 'crdate' => mktime(), 'tstamp' => mktime(), 'pid' => $pid)
+		);
+		if ($res) return $GLOBALS['TYPO3_DB']->sql_insert_id();
+		return 0;
+	}
+
+	function addTag($title, $pid) {
+		tslib_eidtools::connectDB();
+		$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery(
+					'tx_servicemgr_tags',
+					array('name' => $title, 'parent' => '0', 'crdate' => mktime(), 'tstamp' => mktime(), 'pid' => $pid)
+		);
+		if ($res) return $GLOBALS['TYPO3_DB']->sql_insert_id();
+		return 0;
 	}
 }
 

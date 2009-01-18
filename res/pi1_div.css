@@ -1,0 +1,28 @@
+@charset "utf-8";
+.tx-servicemgr-pi1-series { border: thin solid; margin-bottom: 12px; }
+.tx-servicemgr-pi1-seriesheader { margin: 1px; font-weight: bold; color: #FFFFFF; text-align: center; }
+.tx-servicemgr-pi1-seriesheader-left { text-align: left !important; }
+.tx-servicemgr-pi1-event span,
+.tx-servicemgr-pi1-seriesheader-left span { display: block; float: left; }
+.tx-servicemgr-pi1 { width: 70%; }
+.tx-servicemgr-pi1-event { margin: 1px; }
+.tx-servicemgr-pi1-event a { display: block; }
+span.tx-servicemgr-pi1-date { width: 60px; padding-left: 5px; color: #000000; }
+span.tx-servicemgr-pi1-subject { }
+span.tx-servicemgr-pi1-notes { float: right; width: 130px; color: #000000; }
+
+.yellowseries { border-color: #FFD86F; }
+.yellowseries .tx-servicemgr-pi1-seriesheader { background-color: #FDBF3B; }
+.yellowseries .tx-servicemgr-pi1-event { background-color: #FFEBC1; }
+
+.blueseries { border-color: #53AADF; }
+.blueseries .tx-servicemgr-pi1-seriesheader { background-color: #8FC1E0; }
+.blueseries .tx-servicemgr-pi1-event { background-color: #E0E9EF; }
+
+.greenseries { border-color: #A9CF4D; }
+.greenseries .tx-servicemgr-pi1-seriesheader { background-color: #C1DF45; }
+.greenseries .tx-servicemgr-pi1-event { background-color: #F6FFDF; }
+
+.redseries { border-color: #EF654A; }
+.redseries .tx-servicemgr-pi1-seriesheader { background-color: #DF4729; }
+.redseries .tx-servicemgr-pi1-event { background-color: #FFE7DF; }

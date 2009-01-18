@@ -117,7 +117,7 @@ class tx_servicemgr_pi1 extends tx_servicemgr {
 		$events = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'uid, datetime, subject, series, notes',   #select
 			'tx_servicemgr_events', #from
-			'hidden=0 AND deleted=0'.$andWhere,  #where
+			'hidden=0 AND deleted=0 AND inpreview=1'.$andWhere,  #where
 			$groupBy='',
 			'datetime',
 			$limit
@@ -126,7 +126,20 @@ class tx_servicemgr_pi1 extends tx_servicemgr {
 
 
 		if (is_array($events)) {
-			$content = $this->getEventListTable($events);
+			if($this->conf['upcoming'] == 1) {
+				$content = $this->getEventListTable($events);
+			} else {
+				$this->templateCode = $this->cObj->fileResource('EXT:servicemgr/res/pi1_div.html');
+				$key = 'tx_servicemgr_' . md5($this->templateCode);
+				if (!isset($GLOBALS['TSFE']->additionalHeaderData[$key])) {
+					$headerParts = $this->cObj->getSubpart($this->templateCode, '###HEADER_ADDITIONS###');
+				if ($headerParts) {
+					$headerParts = $this->cObj->substituteMarker($headerParts, '###SITE_REL_PATH###', t3lib_extMgm::siteRelPath('servicemgr'));
+					$GLOBALS['TSFE']->additionalHeaderData[$key] = $headerParts;
+				}
+			}
+				$content = $this->getEventListDiv($events);
+			}
 		}
 		return $content;
 	}
@@ -157,7 +170,7 @@ class tx_servicemgr_pi1 extends tx_servicemgr {
 			$tempEvents = array();
 			foreach ($wiredEventsSeries as $k => $eventGroupAndSeries) {
 
-				if (!(($this->conf['defaultSeriesId'] == $eventGroupAndSeries['series']) && ($this->conf['dontShowDefaultSeries'] == 1))) {
+				if (!(($this->generalConf['defaultSeriesId'] == $eventGroupAndSeries['series']) && ($this->conf['dontShowDefaultSeries'] == 1))) {
 					$tempEvents[] = array(
 						'isSeries' => 1,
 						'subject' => '&nbsp;',
@@ -235,6 +248,69 @@ class tx_servicemgr_pi1 extends tx_servicemgr {
 		}
 
 		return $this->cObj->substituteSubpart($wrap,$subpart,$rowContent);
+	}
+
+	function getEventListDiv($events) {
+		$subpart = $this->cObj->getSubpart($this->templateCode,'###PI1_LIST###');
+		$singlerow = $this->cObj->getSubpart($subpart,'###EVENT###');
+
+		if (empty($this->conf['previewcolumns'])) {
+			$cols = array('date','subject','notes');
+		} else {
+			$cols = split(',',$this->conf['previewcolumns']);
+		}
+
+
+		$series = $this->getSeries();
+
+		if ($this->conf['categorizebyseries'] == 1) {
+			$wiredEventsSeries = $this->wireEventsAndSeries($events);
+
+			$output = array();
+			foreach ($wiredEventsSeries as $k => $eventGroupAndSeries) {
+
+				$marker = array(
+					'###HEADER###' => '',
+					'###HEADER_CLASS###' => '',
+					'###SERIES_CLASS###' => $series[$eventGroupAndSeries['series']]['colorscheme'] ? ' ' . $series[$eventGroupAndSeries['series']]['colorscheme'] : ' blueseries',
+				);
+
+				if (!(($this->generalConf['defaultSeriesId'] == $eventGroupAndSeries['series']) && ($this->conf['dontShowDefaultSeries'] == 1))) {
+					$marker['###HEADER###'] = $this->pi_getLL('series') . ': ' . $series[$eventGroupAndSeries['series']]['name'];
+				} else {
+					$marker['###HEADER###'] = '';
+				}
+
+				$output_events = array();
+				foreach ($eventGroupAndSeries['events'] as $singleEventOfSeries) {
+					$events[$singleEventOfSeries]['date'] = date('d.m.', $events[$singleEventOfSeries]['datetime']);
+					$tempOutput = '';
+					foreach ($cols as $col) {
+						$tempOutput .= '<span class="tx-servicemgr-pi1-' . $col . '>' . $events[$singleEventOfSeries][$col] . '</span>';
+					}
+
+					//create link to sermon archive?
+					if ($this->generalConf['SermonArchivePID']) {
+						$tempOutput = $this->tx_linkToPage(
+							$tempOutput,
+							$this->conf['detailviewPID'],
+							array(
+								'tx_servicemgr_pi1[eventId]' => $events[$singleEventOfSeries]['uid'],
+								'tx_servicemgr_pi1[backlink]' => $GLOBALS['TSFE']->id,
+							)
+						);
+					}
+
+					$tempOutput .= '<div class="clear"></div>';
+					$output_events[] = $this->cObj->substituteMarker($singlerow, '###DATA###', $tempOutput);
+				}
+
+				$tempContent = $this->cObj->substituteSubpart($subpart, '###EVENT###', implode(Chr(10), $output_events));
+				$output[] = $this->cObj->substituteMarkerArray($tempContent, $marker);
+			}
+		} else {
+		}
+		return implode(Chr(10), $output);
 	}
 }
 

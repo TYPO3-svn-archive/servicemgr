@@ -54,6 +54,13 @@
 			<label index="error_missingfields">Folgende Felder müssen ebenfalls ausgefüllt werden:</label>
 			<label index="add_new_event">neue Veranstaltung hinzufügen</label>
 			<label index="edit_event">Veranstaltung bearbeiten</label>
+			<label index="Header_GlobalSettings">Globale Einstellungen</label>
+			<label index="Header_GS_Preview">Programmvorschau</label>
+			<label index="L_STARTDATE">Startdatum</label>
+			<label index="L_ENDDATE">Enddatum</label>
+			<label index="L_CUTSERIES">Serien nicht abschneiden</label>
+			<label index="L_NOTCUTEXCEPT">außer Standardserie</label>
+			<label index="L_WARNING_VALUES">(der angezeigte Wert spiegelt nicht die aktuelle Einstellung wieder)</label>
 		</languageKey>
 	</data>
 </T3locallang>

@@ -7,8 +7,10 @@
 	<data type="array">
 		<languageKey index="default" type="array">
 			<label index="tx_servicemgr_events">Events</label>
+			<label index="tx_servicemgr_events.inpreview">Show in preview list</label>
 			<label index="tx_servicemgr_events.datetime">Date &amp; Time</label>
 			<label index="tx_servicemgr_events.subject">Subject</label>
+			<label index="tx_servicemgr_events.subtitle">Subtitle</label>
 			<label index="tx_servicemgr_events.public">Public?</label>
 			<label index="tx_servicemgr_events.series">Series</label>
 			<label index="tx_servicemgr_events.tags">Tags</label>
@@ -19,9 +21,10 @@
 			<label index="tx_servicemgr_events.notes_internal">Internal Notes</label>
 			<label index="tx_servicemgr_series">Series</label>
 			<label index="tx_servicemgr_series.name">Name</label>
+			<label index="tx_servicemgr_series.colorscheme">Colorscheme</label>
 			<label index="tx_servicemgr_tags">Tags</label>
 			<label index="tx_servicemgr_tags.name">Name</label>
-			<label index="tx_servicemgr_tags.parrent">Parrent Tag</label>
+			<label index="tx_servicemgr_tags.parent">Parrent Tag</label>
 			<label index="tx_servicemgr_teamtype">Team Categorys</label>
 			<label index="tx_servicemgr_teamtype.name">Name</label>
 			<label index="tx_servicemgr_dutyschedule">Duty schedule</label>
@@ -36,6 +39,9 @@
 			<label index="tx_servicemgr_sermons">Sermons</label>
 			<label index="tx_servicemgr_sermons.event">Event</label>
 			<label index="tx_servicemgr_sermons.title">Title</label>
+			<label index="tx_servicemgr_sermons.subtitle">Subtitle</label>
+			<label index="tx_servicemgr_sermons.scripture">Scripture</label>
+			<label index="tx_servicemgr_sermons.summary">Summary</label>
 			<label index="tx_servicemgr_sermons.file">File</label>
 			<label index="tx_servicemgr_sermons.filedate">Upload date</label>
 			<label index="tx_servicemgr_sermons.playtime">Playtime</label>
@@ -66,14 +72,17 @@
 			<label index="tt_content.pi_flexform.viewmode">View Mode</label>
 			<label index="tt_content.pi_flexform.latest">Latest</label>
 			<label index="tt_content.pi_flexform.archive">Archive</label>
+			<label index="tt_content.pi_flexform.podcast">Podcast</label>
 			<label index="tt_content.pi_flexform.personal">Personal</label>
 			<label index="tt_content.pi_flexform.list">List</label>
 			<label index="tt_content.pi_flexform.categorizebyseries">Group Events by Series</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="tx_servicemgr_events">Veranstaltungen</label>
+			<label index="tx_servicemgr_events.inpreview">in Programm-Vorschau anzeigen</label>
 			<label index="tx_servicemgr_events.datetime">Datum und Uhrzeit</label>
 			<label index="tx_servicemgr_events.subject">Thema</label>
+			<label index="tx_servicemgr_events.subtitle">Untertitel</label>
 			<label index="tx_servicemgr_events.public">Öffentlich?</label>
 			<label index="tx_servicemgr_events.series">Serie</label>
 			<label index="tx_servicemgr_events.tags">Tags</label>
@@ -84,6 +93,7 @@
 			<label index="tx_servicemgr_events.notes_internal">Interne Bemerkungen</label>
 			<label index="tx_servicemgr_series">Serien</label>
 			<label index="tx_servicemgr_series.name">Name</label>
+			<label index="tx_servicemgr_series.colorscheme">Farbschema</label>
 			<label index="tx_servicemgr_tags">Tags</label>
 			<label index="tx_servicemgr_tags.name">Name</label>
 			<label index="tx_servicemgr_tags.parrent">Übergeordnetes Tag</label>
@@ -101,6 +111,9 @@
 			<label index="tx_servicemgr_sermons">Predigten</label>
 			<label index="tx_servicemgr_sermons.event">Veranstaltung</label>
 			<label index="tx_servicemgr_sermons.title">Titel</label>
+			<label index="tx_servicemgr_sermons.subtitle">Untertitel</label>
+			<label index="tx_servicemgr_sermons.scripture">Bibelstelle</label>
+			<label index="tx_servicemgr_sermons.summary">Zusammenfassung</label>
 			<label index="tx_servicemgr_sermons.file">Datei</label>
 			<label index="tx_servicemgr_sermons.filedate">Upload Datum</label>
 			<label index="tx_servicemgr_sermons.playtime">Dauer</label>
@@ -131,6 +144,7 @@
 			<label index="tt_content.pi_flexform.viewmode">Anzeigemodus</label>
 			<label index="tt_content.pi_flexform.latest">Letzte</label>
 			<label index="tt_content.pi_flexform.archive">Archiv</label>
+			<label index="tt_content.pi_flexform.podcast">Podcast</label>
 			<label index="tt_content.pi_flexform.personal">Persönlich</label>
 			<label index="tt_content.pi_flexform.list">Liste</label>
 			<label index="tt_content.pi_flexform.categorizebyseries">Veranstaltungen nach Serien gruppieren</label>
